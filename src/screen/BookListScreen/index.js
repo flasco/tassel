@@ -18,86 +18,51 @@ let tht;
 class ListRow extends React.Component {
   render() {
     const { rowData, navigate, rowID, SMode } = this.props;
-    if (rowData.img !== '-1') {
-      return (
-        <Swipeout
-          buttonWidth={60}
-          right={[{
-            component: (
-              <View style={{ flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
-                <Icon
-                  name='ios-star-outline'
-                  type='ionicon'
-                  color='#000'
-                  size={24} />
-                <Text style={{ color: '#000', fontSize: 10 }}>养肥</Text>
-              </View>
-            ),
-            onPress: () => {
-              this.props.fattenBook(rowID);
-            },
-            backgroundColor: SMode ? styles.sunnyMode.rowStyle.backgroundColor : styles.nightMode.rowStyle.backgroundColor,
-            color: '#000'
-          }, {
-            component: (
-              <View style={{ flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
-                <Icon
-                  name='ios-trash-outline'
-                  type='ionicon'
-                  color='red'
-                  size={24} />
-                <Text style={{ color: 'red', fontSize: 10 }}>删除</Text>
-              </View>
-            ),
-            onPress: () => {
-              this.props.deleteBook(rowID);
-            },
-            backgroundColor: SMode ? styles.sunnyMode.rowStyle.backgroundColor : styles.nightMode.rowStyle.backgroundColor,
-          }]}
-          backgroundColor={SMode ? styles.sunnyMode.rowStyle.backgroundColor : styles.nightMode.rowStyle.backgroundColor}>
-          <TouchableHighlight style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
-            underlayColor={SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
-            activeOpacity={0.7}
-            onLongPress={() => {
-              navigate('BookDet', { book: rowData });
-            }}
-            onPress={() => {
-              navigate('Read', { book: rowData });
-              setTimeout(() => {
-                tht.props.dispatch(listRead(rowID))
-              }, 1000);
-            }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Image source={{ uri: rowData.img }} style={styles.coverStyle} />
-              <View style={{ paddingLeft: 15 }}>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={SMode ? styles.sunnyMode.titleStyle : styles.nightMode.titleStyle}>{rowData.bookName}</Text>
-                  {rowData.isUpdate && <Badge value={`更新`} containerStyle={SMode ? styles.sunnyMode.badgeStyle : styles.nightMode.badgeStyle} textStyle={{ fontSize: 11 }} />}
-                </View>
-                <Text style={SMode ? styles.sunnyMode.subTitleStyle : styles.nightMode.subTitleStyle}>{rowData.updateNum > 10 ? `距上次点击已更新${rowData.updateNum}章` : `${rowData.latestChapter.length > 15 ? (rowData.latestChapter.substr(0, 15) + '...') : rowData.latestChapter}`}</Text>
-              </View>
+    return (
+      <Swipeout
+        right={[{
+          component: (
+            <View style={{ flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+              <Icon
+                name='ios-trash-outline'
+                type='ionicon'
+                color='red'
+                size={24} />
+              <Text style={{ color: 'red', fontSize: 10 }}>删除</Text>
             </View>
-          </TouchableHighlight>
-        </Swipeout >
-      );
-    } else {
-      return (
+          ),
+          onPress: () => {
+            this.props.deleteBook(rowID);
+          },
+          backgroundColor: SMode ? styles.sunnyMode.rowStyle.backgroundColor : styles.nightMode.rowStyle.backgroundColor,
+          color: 'red'
+        }]}
+        backgroundColor={SMode ? styles.sunnyMode.rowStyle.backgroundColor : styles.nightMode.rowStyle.backgroundColor}>
         <TouchableHighlight style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
-        underlayColor={SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
-        activeOpacity={0.7}
-        onPress={() => {
-          navigate('FattenBlock');
-        }}>
-        <View style={{ flexDirection: 'row' }}>
-          <Image source={ require('../../assert/noImg.jpg')} style={styles.coverStyle} />
-          <View style={{ paddingLeft: 15 }}>
-            <Text style={SMode ? styles.sunnyMode.titleStyle : styles.nightMode.titleStyle}>{rowData.bookName}</Text>
-            <Text style={SMode ? styles.sunnyMode.subTitleStyle : styles.nightMode.subTitleStyle}>{rowData.desc}</Text>
+          underlayColor={SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
+          activeOpacity={0.7}
+          onLongPress={() => {
+            navigate('BookDet', { book: rowData });
+          }}
+          onPress={() => {
+            navigate('Read', { book: rowData });
+            setTimeout(() => {
+              tht.props.dispatch(listRead(rowID))
+            }, 1000);
+          }}>
+          <View style={{ flexDirection: 'row' }}>
+            <Image source={{ uri: rowData.img }} style={styles.coverStyle} />
+            <View style={{ paddingLeft: 15 }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={SMode ? styles.sunnyMode.titleStyle : styles.nightMode.titleStyle}>{rowData.bookName}</Text>
+                {rowData.isUpdate && <Badge value={`更新`} containerStyle={SMode ? styles.sunnyMode.badgeStyle : styles.nightMode.badgeStyle} textStyle={{ fontSize: 11 }} />}
+              </View>
+              <Text style={SMode ? styles.sunnyMode.subTitleStyle : styles.nightMode.subTitleStyle}>{rowData.updateNum > 10 ? `距上次点击已更新${rowData.updateNum}章` : `${rowData.latestChapter.length > 15 ? (rowData.latestChapter.substr(0, 15) + '...') : rowData.latestChapter}`}</Text>
+            </View>
           </View>
-        </View>
-      </TouchableHighlight>
-      )
-    }
+        </TouchableHighlight>
+      </Swipeout >
+    );
   }
 }
 
@@ -165,7 +130,7 @@ class BookPackage extends React.PureComponent {
   renderRow(rowData, sectionID, rowID) {
     const { navigate } = this.props.navigation;
     return (
-      <ListRow rowData={rowData} rowID={rowID} SMode={this.props.SMode} navigate={navigate} deleteBook={this.deleteBook} fattenBook={this.fattenBook} />
+      <ListRow rowData={rowData} rowID={rowID} SMode={this.props.SMode} navigate={navigate} deleteBook={this.deleteBook} />
     )
   }
 
@@ -185,9 +150,6 @@ class BookPackage extends React.PureComponent {
       latestChapter: '待检测',
       latestRead: new Date().getTime()
     }));
-  }
-  fattenBook = (rowID) =>{
-    console.log(rowID);
   }
 
   render() {
