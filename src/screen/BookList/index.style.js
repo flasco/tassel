@@ -47,7 +47,7 @@ export default {
       paddingBottom: 12,
       marginRight:4,
       fontWeight: '400',
-      color:'#969696',
+      color:'#ddd',
     },
     rowStyle: {
       height: 71,

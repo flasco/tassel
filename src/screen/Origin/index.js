@@ -99,15 +99,19 @@ class OriginScreen extends React.Component {
   }
 
   render() {
-    if (this.state.loading) return null;
     const { SMode } = this.props;
+    if (this.state.loading) return (
+      <View style={SMode ? styles.sunnyMode.container : styles.nightMode.container}>
+        <Text style={[{marginTop:15,textAlign:'center',},SMode ? null: {color:'#ddd'}]}>Please Wait...</Text>
+      </View>
+    );
     return (
       <View style={SMode ? styles.sunnyMode.container : styles.nightMode.container}>
         <FlatList
           style={{ flex: 1 }}
           data={this.dataList}
           renderItem={this._renderRow}
-          ItemSeparatorComponent={() => <View style={styles.sunnyMode.solid} />}
+          ItemSeparatorComponent={() => <View style={styles.nightMode.solid} />}
           getItemLayout={(data, index) => ({ length: 70, offset: 71 * index, index })}//行高38，分割线1，所以offset=39
           keyExtractor={this._keyExtractor} />
       </View>

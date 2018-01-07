@@ -26,13 +26,13 @@ export async function content(url) {
 export async function latest(url) {
   let res = '';
   try {
-    res = await axios.get(`${Ip}/Analy_x?action=3&url=${url}`);
+    res = await axios.get(`${Ip}/Analy_x?action=3&url=${url}`, { timeout: 5000 });
     res = res.data;
   } catch (err) {
     res = '抓取失败'
-  } 
+  }
   return res;
-  
+
 }
 
 /**

@@ -47,7 +47,7 @@ export default {
       paddingBottom: 12,
       marginRight:4,
       fontWeight: '400',
-      color:'#969696',
+      color:'#ddd',
     },
     rowStyle: {
       height: 71,
@@ -59,6 +59,9 @@ export default {
       fontSize: 12,
       color: '#646464',
       fontWeight: '100',
+    },
+    badgeStyle:{
+      borderRadius: 0, paddingTop: 2, paddingBottom: 2, padding: 2, backgroundColor: '#e80000'
     },
     solid: {
       height: 1,
