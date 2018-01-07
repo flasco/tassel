@@ -7,7 +7,8 @@ import {
   LOADING_CTL,
   FETCH_FAILED,
   OPERATION_CLEAR,
-  OPERATION_ADD
+  OPERATION_ADD,
+  ORIGIN_CHANGE
 } from '../actions/actionTypes';
 
 import { insertionSort } from '../util/sort'
@@ -41,6 +42,9 @@ export default list = (state = listState, action) => {
       return Object.assign({}, state);
     case OPERATION_ADD:
       state.operationNum++;
+      return Object.assign({}, state);
+    case ORIGIN_CHANGE:
+      state.list[action.id].plantformId = action.change;
       return Object.assign({}, state);
     case LOADING_CTL:
       return Object.assign({}, state, { loadingFlag: action.flag });

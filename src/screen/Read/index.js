@@ -1,28 +1,33 @@
 import React, { Component } from 'react';
-import { Text, View, Dimensions, StatusBar, InteractionManager, 
-  ActionSheetIOS, LayoutAnimation, AsyncStorage,AppState } from 'react-native';
+import {
+  Text, View, Dimensions, StatusBar, InteractionManager,
+  ActionSheetIOS, LayoutAnimation, AsyncStorage, AppState
+} from 'react-native';
 
 
 import async from 'async';
 import dateFormat from 'dateformat';
 import { connect } from 'react-redux';
 
+import { sunnyModeSwitch } from '../../actions/app';
 import Toast from '../../component/Toast';
 import ViewPager from '../../component/viewPager';
 import getContextArr from '../../util/getContextArr';
 import Navigat from '../../component/Navigat';
 import { content, list } from '../../services/book';
 
+import { sleep } from '../../util/sleep'
+
 import styles from './index.style';
 
-import { sunnyModeSwitch } from '../../actions/app';
 
 /**
  * 下载模块
  - code by Czq
  */
-let q = async.queue(function (url, callback) {
-  fetchList(url, () => {
+let q = async.queue(async (url, callback) => {
+  fetchList(url, async () => {
+    await sleep(1000);
     callback(null);
   });
 }, 5);
@@ -99,7 +104,7 @@ class ReadScreen extends React.PureComponent {
     this.cacheLoad = this.cacheLoad.bind(this);
 
     this.initConf();
-    
+
   }
 
   componentWillUnmount() {
@@ -113,7 +118,7 @@ class ReadScreen extends React.PureComponent {
     chapterLstFlag = `${this.currentBook.bookName}_${this.currentBook.plantformId}_list`;
     bookMapFlag = `${this.currentBook.bookName}_${this.currentBook.plantformId}_map`;
 
-    const tm = await AsyncStorage.multiGet([ bookRecordFlag, chapterLstFlag, bookMapFlag])
+    const tm = await AsyncStorage.multiGet([bookRecordFlag, chapterLstFlag, bookMapFlag])
     this.chapterLst = tm[1][1] !== null ? JSON.parse(tm[1][1]) : [];
     this.chapterMap = tm[2][1] !== null ? JSON.parse(tm[2][1]) : new Map();
     if (this.chapterLst.length !== 0) {
@@ -140,6 +145,18 @@ class ReadScreen extends React.PureComponent {
     for (let n = i; n < End; n++) {
       q.push(this.chapterLst[n].key);
     }
+  }
+
+  reload = () => {
+    this.initConf().then(()=>{
+      this.props.navigation.navigate('ChaL', {
+        url: this.currentBook.url,
+        name: this.currentBook.bookName,
+        bookChapterLst: this.chapterLst,
+        chap: this.bookRecord.recordChapterNum,
+        callback: (url) => this.getChapterUrl(url)
+      });
+    })
   }
 
   showAlertSelected() {
@@ -284,7 +301,10 @@ class ReadScreen extends React.PureComponent {
         {this.state.isVisible &&
           <Navigat
             navigation={this.props.navigation}
-            choose={1} /> }
+            currentBook={this.currentBook}
+            reLoad={this.reload}
+            readId={this.props.navigation.state.params.id}
+            choose={1} />}
         {this.state.loadFlag ? (
           <Text style={[styles.centr, !this.props.SMode && (styles.MoonMode_text)]}>
             Loading...</Text>) :

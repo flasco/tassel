@@ -17,3 +17,5 @@ export const FETCH_FAILED = 'FETCH_FAILED';
 
 export const OPERATION_CLEAR = 'OPERATION_CLEAR';
 export const OPERATION_ADD = 'OPERATION_ADD';
+
+export const ORIGIN_CHANGE = 'ORIGIN_CHANGE';

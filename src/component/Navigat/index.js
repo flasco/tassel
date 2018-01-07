@@ -35,6 +35,16 @@ export default class Navigat extends React.PureComponent {
       });
   }
 
+  JmptoChooseSource() {
+    this.props.navigation
+      .navigate('Origin', {
+        book: this.props.currentBook,
+        readId: this.props.readId,
+        reLoad: () => this.props.reLoad(),
+        callback: (url) => this.props.getChapterUrl(url)
+      });
+  }
+
   render() {
     if (this.props.choose === 1) {
       return (
@@ -47,7 +57,7 @@ export default class Navigat extends React.PureComponent {
             }} />
             <Text style={{color:'#fff',fontSize:17,bottom:13,right:24,position:'absolute'}}
               onPress={()=>{
-                alert('should jmp');
+                this.JmptoChooseSource();
               }}>换源</Text>
         </View>
       );

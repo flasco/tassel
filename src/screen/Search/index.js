@@ -7,11 +7,6 @@ import styles from './index.style';
 
 import { search } from '../../services/book';
 
-var UrlId = [
-  'xs.la',
-  'kanshuz',
-];
-
 class SearchScreen extends React.PureComponent {
   constructor(props) {
     super(props);

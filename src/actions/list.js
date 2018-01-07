@@ -7,7 +7,8 @@ import {
   LOADING_CTL,
   FETCH_FAILED,
   OPERATION_CLEAR,
-  OPERATION_ADD
+  OPERATION_ADD,
+  ORIGIN_CHANGE
 } from './actionTypes';
 
 import getNet from '../util/getNet'
@@ -22,6 +23,10 @@ export function listInit() {
         dispatch(receivelistInit(list))
       })
   }
+}
+
+export function changeOrigin(params) {
+  return { type: ORIGIN_CHANGE, ...params }
 }
 
 function receivelistInit(list) {

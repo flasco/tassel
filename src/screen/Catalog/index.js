@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableHighlight, FlatList, Button, InteractionManager } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, Button, InteractionManager } from 'react-native';
 
 import { LargeList } from "react-native-largelist";
 

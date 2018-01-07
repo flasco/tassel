@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { listAdd, listDelete, listUpdate, listInit, listRead, OperationClear } from '../../actions/list'
 import { menuCtl, menuSwitch } from '../../actions/app';
 
-import Menu from '../MenuScreen';
+import Menu from '../Menu';
 import styles from './index.style';
 
 let tht;
@@ -45,7 +45,7 @@ class ListRow extends React.Component {
             navigate('BookDet', { book: rowData });
           }}
           onPress={() => {
-            navigate('Read', { book: rowData });
+            navigate('Read', { book: rowData, id: rowID });
             setTimeout(() => {
               tht.props.dispatch(listRead(rowID))
             }, 1000);

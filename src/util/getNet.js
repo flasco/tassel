@@ -1,6 +1,6 @@
 
 import { AsyncStorage } from 'react-native'
-import { list } from '../services/book';
+import { list, latest } from '../services/book';
 
 export default class getNet {
   static async refreshChapter(booklist) {
@@ -25,25 +25,23 @@ export default class getNet {
   }
 
   static async get(url, bookChapterLst, latech) {
+    const title = await latest(url);
+    if (title === latech) return;
     const data = await list(url);
     let length = data.length;
-    let tit = data[length - 1].title;
-    if (tit === latech) {
-      return;
-    } else {
-      let num = 0;
-      for (let i = length - 1; i >= 0; i--) {
-        /**
-         * 当书籍为未检测的时候不满足条件，num = 0，
-         * 但是考虑到一开始添加书籍的时候就不应该显示更新这个状态，所以就这样~
-         */
-        if(data[i].title === latech){
-          num = length - i - 1;
-          break;
-        }
+    let num = 0;
+    for (let i = length - 1; i >= 0; i--) {
+      /**
+       * 当书籍为未检测的时候不满足条件，num = 0，
+       * 但是考虑到一开始添加书籍的时候就不应该显示更新这个状态，所以就这样~
+       */
+      if (data[i].title === latech) {
+        num = length - i - 1;
+        break;
       }
+
       AsyncStorage.setItem(bookChapterLst, JSON.stringify(data));
-      return { title: tit, num };
+      return { title, num };
     }
   }
 }

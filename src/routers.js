@@ -1,11 +1,12 @@
 import { StackNavigator } from 'react-navigation';
 
-import BookListScreen from './screen/BookListScreen';
-import CatalogScreen from './screen/CatalogScreen';
-import ReadScreen from './screen/ReadScreen';
-import SearchScreen from './screen/SearchScreen';
-import RankScreen from './screen/RankScreen'
-import BookDetScreen from './screen/BookDetScreen';
+import BookListScreen from './screen/BookList';
+import CatalogScreen from './screen/Catalog';
+import ReadScreen from './screen/Read';
+import SearchScreen from './screen/Search';
+import RankScreen from './screen/Rank'
+import BookDetScreen from './screen/BookDet';
+import OriginScreen from './screen/Origin';
 
 SearchScreen.navigationOptions = ({ navigation }) => {
   return { header: null };
@@ -22,6 +23,7 @@ const Tassel = StackNavigator({
   Sear: { screen: SearchScreen },
   RnkL: { screen: RankScreen },
   BookDet: { screen: BookDetScreen },
+  Origin: { screen: OriginScreen },
 }, {
     mode: 'modal',
     navigationOptions: {
