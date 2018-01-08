@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, Button, InteractionManager } from 'react-native';
-
 import { LargeList } from "react-native-largelist";
 
 import { list } from '../../services/book';
@@ -46,13 +45,7 @@ class CatalogScreen extends React.PureComponent {
     this.data = props.navigation.state.params.bookChapterLst;
     this.currentChapterNum = props.navigation.state.params.chap;
   }
-
-  componentDidMount() {
-    setTimeout(() => {
-      this.list.scrollToIndexPath({ section: 0, row: this.currentChapterNum - 5 }, false);
-    }, 100);
-  }
-
+  
   componentWillUnmount() {
     this.setState = (state, callback) => {
       return;
@@ -93,6 +86,7 @@ class CatalogScreen extends React.PureComponent {
           style={{ flex: 1 }}
           numberOfRowsInSection={() => this.data.length}
           heightForCell={() => 38}
+          initialOffsetY={(this.currentChapterNum - 5) * 38}
           renderCell={this.itemRender}
           renderHeader={this._header}
           getItemLayout={(data, index) => ({ length: 38, offset: 39 * index, index })} />

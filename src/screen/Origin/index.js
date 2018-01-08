@@ -77,8 +77,8 @@ class OriginScreen extends React.Component {
         activeOpacity={0.7}
         onPress={() => {
           this.props.dispatch(changeOrigin({
-            id:this.props.navigation.state.params.readId,
-            change:rowData.site
+            id: this.props.navigation.state.params.readId,
+            change: rowData.site
           }))
           this.props.navigation.state.params.reLoad();
           this.props.navigation.goBack();
@@ -102,7 +102,7 @@ class OriginScreen extends React.Component {
     const { SMode } = this.props;
     if (this.state.loading) return (
       <View style={SMode ? styles.sunnyMode.container : styles.nightMode.container}>
-        <Text style={[{marginTop:15,textAlign:'center',},SMode ? null: {color:'#ddd'}]}>Please Wait...</Text>
+        <Text style={[{ marginTop: 15, textAlign: 'center', }, SMode ? null : { color: '#ddd' }]}>Please Wait...</Text>
       </View>
     );
     return (
@@ -111,7 +111,7 @@ class OriginScreen extends React.Component {
           style={{ flex: 1 }}
           data={this.dataList}
           renderItem={this._renderRow}
-          ItemSeparatorComponent={() => <View style={styles.nightMode.solid} />}
+          ItemSeparatorComponent={() => <View style={SMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
           getItemLayout={(data, index) => ({ length: 70, offset: 71 * index, index })}//行高38，分割线1，所以offset=39
           keyExtractor={this._keyExtractor} />
       </View>

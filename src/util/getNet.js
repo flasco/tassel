@@ -28,20 +28,18 @@ export default class getNet {
     const title = await latest(url);
     if (title === latech) return;
     const data = await list(url);
-    let length = data.length;
-    let num = 0;
-    for (let i = length - 1; i >= 0; i--) {
-      /**
+    let length = data.length, num = 0;
+    /**
        * 当书籍为未检测的时候不满足条件，num = 0，
        * 但是考虑到一开始添加书籍的时候就不应该显示更新这个状态，所以就这样~
        */
+    for (let i = length - 1; i >= 0; i--) {
       if (data[i].title === latech) {
         num = length - i - 1;
         break;
       }
-
-      AsyncStorage.setItem(bookChapterLst, JSON.stringify(data));
-      return { title, num };
     }
+    AsyncStorage.setItem(bookChapterLst, JSON.stringify(data));
+    return { title, num };
   }
 }
