@@ -26,10 +26,8 @@ import styles from './index.style';
  - code by Czq
  */
 let q = async.queue(async (url, callback) => {
-  fetchList(url, async () => {
-    await sleep(1000);
-    callback(null);
-  });
+  await fetchList(url);
+  callback();
 }, 5);
 
 q.drain = function () {
@@ -38,7 +36,7 @@ q.drain = function () {
   AsyncStorage.setItem(bookMapFlag, JSON.stringify(tht.chapterMap));
 };
 
-async function fetchList(nurl, callback) {
+async function fetchList(nurl) {
   let n = 100 * (finishTask / allTask) >> 0; //取整
   if (n % 15 === 0) {
     tht.refs.toast.show(`Task process:${n}%`);
@@ -46,14 +44,14 @@ async function fetchList(nurl, callback) {
   try {
     if (tht.chapterMap[nurl] === undefined) {
       const { data } = await content(nurl);
+      await sleep(1000);
       tht.chapterMap[nurl] = data;
     }
     finishTask++;
   } catch (err) {
 
-  } finally {
-    callback();
   }
+  return;
 }
 
 let allTask = 0, finishTask = 0;
