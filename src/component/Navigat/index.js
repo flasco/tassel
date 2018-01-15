@@ -51,11 +51,11 @@ export default class Navigat extends React.PureComponent {
         <View style={styles.Navig}>
           <HeaderBackButton
             title='返回'
-            tintColor={'#fff'}
+            tintColor={'#ddd'}
             onPress={() => {
               this.props.navigation.goBack();
             }} />
-            <Text style={{color:'#fff',fontSize:17,bottom:13,right:24,position:'absolute'}}
+            <Text style={{color:'#ddd',fontSize:17,bottom:13,right:24,position:'absolute'}}
               onPress={()=>{
                 this.JmptoChooseSource();
               }}>换源</Text>

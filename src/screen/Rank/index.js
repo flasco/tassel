@@ -75,7 +75,7 @@ class RankScreen extends React.PureComponent {
     }
   }
 
-  JmpToBook(nam,aut) {
+  JmpToBook(nam, aut) {
     const { navigate } = this.props.navigation;
     navigate('BookDet', {
       bookNam: nam,
@@ -126,9 +126,7 @@ class RankScreen extends React.PureComponent {
       <View style={styles.container}>
         {this.state.loadingFlag ? <Text style={{ textAlign: 'center', marginTop: 12, }}>Fetch RnkList...</Text> :
           <FlatList
-            style={{
-              flex: 1
-            }}
+            style={{ flex: 1 }}
             data={this.state.dataSource}
             renderItem={this._renderRow}
             ItemSeparatorComponent={() => <View style={styles.solid} />}
