@@ -9,8 +9,8 @@
   "dependencies": {
     "axios": "^0.17.1",
     "dateformat": "^3.0.2",
-    "react": "16.0.0",
-    "react-native": "0.51.0",
+    "react": "16.2.0",
+    "react-native": "0.52.0",
     "react-native-elements": "^0.19.0",
     "react-native-largelist": "^1.2.0",
     "react-native-side-menu": "^1.1.3",

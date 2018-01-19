@@ -8,13 +8,8 @@ import { connect } from 'react-redux';
 
 import Toast from '../../component/Toast';
 import { search } from '../../services/book';
-
+import { webSite } from '../../config';
 import styles from './index.style';
-
-let selecter = [
-  'xs.la',
-  'kanshuz',
-];
 
 class BookDetScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -57,7 +52,7 @@ class BookDetScreen extends React.PureComponent {
         author = this.props.navigation.state.params.bookAut;
       const { data } = await search(name, author);
       this.book = data[0];
-      if (this.book === undefined) {
+      if (typeof this.book === 'string') {
         alert('本书没有记录！如果迫切需要加入本书，请及时反馈给开发人员~');
       } else {
         this.setState({
@@ -98,7 +93,7 @@ class BookDetScreen extends React.PureComponent {
             <View style={styles.firstView.right.container}>
               <Text style={styles.firstView.right.tit}>{this.book.bookName}</Text>
               <Text style={styles.firstView.right.subDes}>{this.book.author}</Text>
-              <Text style={styles.firstView.right.subDes}>{selecter[this.book.plantformId - 1]}</Text>
+              <Text style={styles.firstView.right.subDes}>{webSite[this.book.plantformId]}</Text>
             </View>
           </View>
           <View style={styles.secondView.container}>

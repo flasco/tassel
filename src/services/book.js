@@ -20,13 +20,13 @@ export function changeServer() {
 }
 
 export async function content(url) {
-  return await axios.get(`${Ip}/Analy_x?action=2&url=${url}`, { timeout: 5000 });
+  return await axios.get(`${Ip}/analysis?action=2&url=${url}`, { timeout: 5000 });
 }
 
 export async function latest(url) {
   let res = '';
   try {
-    res = await axios.get(`${Ip}/Analy_x?action=3&url=${url}`, { timeout: 5000 });
+    res = await axios.get(`${Ip}/analysis?action=3&url=${url}`, { timeout: 5000 });
     res = res.data;
   } catch (err) {
     res = '抓取失败'
@@ -40,7 +40,7 @@ export async function latest(url) {
  * @param {String} url 
  */
 export async function list(url) {
-  let { data } = await axios.get(`${Ip}/Analy_x?action=1&url=${url}`, { timeout: 5000 });
+  let { data } = await axios.get(`${Ip}/analysis?action=1&url=${url}`, { timeout: 5000 });
   let n = [], i = 0;
   while (i < data.length) {
     n.push({
