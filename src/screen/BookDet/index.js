@@ -40,6 +40,7 @@ class BookDetScreen extends React.PureComponent {
     this.state = {
       isLoading: this.book === undefined,
       contains: this.book !== undefined && this.isContains(this.book),
+      btnLoading: false,
     }
     this.initx = this.initx.bind(this);
 
@@ -64,6 +65,7 @@ class BookDetScreen extends React.PureComponent {
   }
 
   isContains = (book) => {
+    if (!book) return false;
     return this.props.list.filter(x => {
       return x.author === book.author && x.bookName === book.bookName
     }).length > 0;
@@ -72,6 +74,12 @@ class BookDetScreen extends React.PureComponent {
     this.setState = (state, callback) => {
       return;
     };
+  }
+  componentWillReceiveProps(nextProps) {
+    if (!this.state.isLoading && !this.state.contains && this.isContains(this.book)) {
+      this.setState({ contains: true, btnLoading: false })
+      this.refs.toast.show('书籍添加成功..');
+    }
   }
 
   render() {
@@ -98,14 +106,14 @@ class BookDetScreen extends React.PureComponent {
           </View>
           <View style={styles.secondView.container}>
             <Button title={this.state.contains ? '已存在' : '追书'}
-              disabled={this.state.contains}
+              disabled={this.state.btnLoading || this.state.contains}
               disabledStyle={styles.secondView.firstButton.disabledStyle}
               onPress={() => {
-                this.setState({ contains: true })
+                this.setState({ btnLoading: true });
                 this.props.navigation.state.params.addBook(this.book);
-                this.refs.toast.show('书籍添加成功..');
               }}
-              textStyle={this.state.contains ? styles.secondView.firstButton.disText : styles.secondView.firstButton.text}
+              loading={this.state.btnLoading}
+              textStyle={this.state.contains || this.state.btnLoading ? styles.secondView.firstButton.disText : styles.secondView.firstButton.text}
               buttonStyle={styles.secondView.firstButton.buttonStyle} />
             <Button title='开始阅读'
               onPress={() => {
