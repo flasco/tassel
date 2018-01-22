@@ -44,20 +44,17 @@ class BookPackage extends React.PureComponent {
 
     AppState.addEventListener('change', async (e) => {
       if (e === 'inactive' && this.props.operationNum > 0) {
-        this.props.dispatch(createAct('list/operationClear'))
-        // this.props.dispatch(OperationClear())
+        this.props.dispatch(createAct('list/operationClear')())
         await AsyncStorage.setItem('booklist', JSON.stringify(this.props.list))
       }
     });
-
-    // props.dispatch(listInit());
   }
 
   componentDidMount() {
     setTimeout(() => {
       SplashScreen.hide();
     }, 2000);
-    // this.onRefresh();
+    this.onRefresh();
   }
 
   componentWillUnmount() {
@@ -71,15 +68,11 @@ class BookPackage extends React.PureComponent {
   }
 
   onRefresh = () => {
-    console.log(this.props.list);
-    if (this.props.isInit) {
-      this.props.dispatch(createAct('list/listUpdate')())
-    } else {
-      setTimeout(() => {
-        this.props.isInit ?
-          this.props.dispatch(createAct('list/listUpdate')()) : this.onRefresh()
-      }, 521);
-    }
+    setTimeout(() => {
+      this.props.isInit ?
+        this.props.dispatch(createAct('list/listUpdate')()) : this.onRefresh()
+    }, 247)
+
   }
 
   addBook(data) {
@@ -108,8 +101,6 @@ class BookPackage extends React.PureComponent {
           navigate('Read', { book: rowData, id: rowID });
           setTimeout(() => {
             this.props.dispatch(createAct('list/bookRead')({ bookId: rowID }))
-
-            // this.props.dispatch(listRead(rowID))
           }, 1000);
         }}>
         <View style={{ flexDirection: 'row' }}>
@@ -147,7 +138,7 @@ class BookPackage extends React.PureComponent {
 
   render() {
     const menu = <Menu navigation={this.props.navigation} addBook={this.addBook} />;
-    const { dispatch, list, loadingFlag, isInit, SMode } = this.props;
+    const { dispatch, list, loadingFlag, SMode, isInit } = this.props;
     if (!isInit) return null;
     return ((
       <View style={SMode ? styles.sunnyMode.container : styles.nightMode.container}>
@@ -179,7 +170,7 @@ class BookPackage extends React.PureComponent {
 function select(state) {
   return {
     list: state.list.list,
-    isInit: state.list.isInit,
+    isInit: state.list.init,
     menuFlag: state.app.menuFlag,
     loadingFlag: state.list.loadingFlag,
     operationNum: state.list.operationNum,

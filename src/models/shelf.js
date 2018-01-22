@@ -5,10 +5,12 @@ import { insertionSort } from '../util/sort';
 export default {
   namespace: 'list',
   state: {
-    loadingFlag: false,
-    isInit: false,
+    init: false,
     operationNum: 0,
-    errorMes: '',//等待完善抓取失败返回信息的功能。。
+    loadingFlag: false,
+    btnLoading: false,
+    isContain: false,
+    errorMes: '', //等待完善抓取失败返回信息的功能。。
     list: [{
       bookName: '天醒之路',
       author: '蝴蝶蓝',
@@ -32,17 +34,18 @@ export default {
   },
   effects: {
     *operationClear(action, { call, put }) {
-      yield put(createAction('updateState')({ operationNum: 0 }))
+      yield put(createAction('updateState')({ operationNum: 0 }));
     },
     *operationAdd(action, { call, put }) {
-      yield put(createAction('updateState')({ operationNum: state.operationNum + 1 }))
+      yield put(createAction('updateState')({ operationNum: state.operationNum + 1 }));
     },
-    *changeOrigin({ id, change }, { call, put }) {
-      state.list[id].plantformId = change;
-      yield put(createAction('updateState')({ list: state.list }))
+    *changeOrigin({ id, change }, { select, call, put }) {
+      let list = yield select(state => state.list.list);
+      list[id].plantformId = change;
+      yield put(createAction('updateState')({ list }));
     },
     *listUpdate(action, { select, call, put }) {
-      yield put(createAction('updateState')({ loadingFlag: true }))
+      yield put(createAction('updateState')({ loadingFlag: true }));
       let listState = yield select(state => state.list);
       const latestInfo = yield call(refreshChapter, listState.list);
       latestInfo.filter((x, index) => {
@@ -55,50 +58,56 @@ export default {
       });
       yield put(createAction('updateState')({
         list: listState.list, loadingFlag: false, operationNum: listState.operationNum + 1
-      }))
+      }));
     },
     *listInit(action, { call, put }) { //fix
       const list = yield call(Storage.get, 'booklist', false);
       if (list && list.length > 0) {
         list.filter(x => x.latestRead === undefined && (x.latestRead = 0));
-        yield put(createAction('updateState')({ list, isInit: true }));
-      } else {
-        yield put(createAction('updateState')({ isInit: true }))
+        yield put(createAction('updateState')({ list }));
       }
+      yield put(createAction('updateState')({ init: true }));
     },
     *listAdd({ book }, { select, call, put }) {
+      yield put(createAction('updateState')({ btnLoading: true }));
       let listState = yield select(state => state.list);
-      const latestBook = yield call(refreshSingleChapter, book)
+      const latestBook = yield call(refreshSingleChapter, book);
       listState.list.unshift(latestBook);
       yield put(createAction('updateState')({
         list: listState.list,
-        operationNum: listState.operationNum + 1
-      }))
+        operationNum: listState.operationNum + 1,
+        btnLoading: false,
+        isContain: true
+      }));
     },
-    *listDelete({ bookId }, { call, put }) { //fix
+    *setContain({ flag }, { call, put }) {
+      yield put(createAction('updateState')({
+        isContain: flag
+      }));
+    },
+    *listDelete({ bookId }, { select, call, put }) { //fix
       let listState = yield select(state => state.list);
       listState.list.splice(bookId, 1);
       yield put(createAction('updateState')({
         list: listState.list,
         operationNum: listState.operationNum + 1
-      }))
+      }));
     },
-    *bookRead({bookId}, { select, call, put }) {
+    *bookRead({ bookId }, { select, call, put }) {
       let listState = yield select(state => state.list);
-      console.log(bookId)
       listState.list[bookId].isUpdate = false; //阅读开始 清空检测到的更新。
       listState.list[bookId].updateNum = 0;
-      listState.list[bookId].latestRead = new Date().getTime()
-      insertionSort(listState.list)
+      listState.list[bookId].latestRead = new Date().getTime();
+      insertionSort(listState.list);
       yield put(createAction('updateState')({
         list: listState.list,
         operationNum: listState.operationNum + 1
-      }))
+      }));
     },
   },
   subscriptions: {
     setup({ dispatch }) {
-      dispatch({ type: 'listInit' })
+      dispatch({ type: 'listInit' });
     },
   },
 }

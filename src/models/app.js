@@ -12,10 +12,6 @@ export default {
     },
   },
   effects: {
-    // *loadStorage(action, { call, put }) {
-    //   const login = yield call(Storage.get, 'login', false)
-    //   yield put(createAction('updateState')({ login, loading: false }))
-    // },
     *menuSwitch(action, { select, call, put }) {
       let flag = yield select(state => state.app.menuFlag);
       yield put(createAction('updateState')({ menuFlag: !flag }))
@@ -23,9 +19,9 @@ export default {
     *menuCtl({ flag }, { call, put }) {
       yield put(createAction('updateState')({ menuFlag: flag }))
     },
-    *sunnyModeSwitch(action, { call, put }) {
+    *sunnyModeSwitch(action, { select, call, put }) {
       let flag = yield select(state => state.app.sunnyMode);
-      yield put(createAction('updateState')({ sunnyMode: flag }))
+      yield put(createAction('updateState')({ sunnyMode: !flag }))
     },
   },
 }

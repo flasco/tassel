@@ -9,14 +9,13 @@ import async from 'async';
 import dateFormat from 'dateformat';
 import { connect } from 'react-redux';
 
-import { sunnyModeSwitch } from '../../actions/app';
 import Toast from '../../component/Toast';
 import ViewPager from '../../component/viewPager';
 import getContextArr from '../../util/getContextArr';
 import Navigat from '../../component/Navigat';
 import { content, list } from '../../services/book';
 
-import { delay } from '../../util'
+import { delay,createAct } from '../../util'
 
 import styles from './index.style';
 
@@ -270,7 +269,7 @@ class ReadScreen extends React.PureComponent {
   }
 
   SModeChange = () => {
-    this.props.dispatch(sunnyModeSwitch());
+    this.props.dispatch(createAct('app/sunnyModeSwitch')());
   }
 
   getChapterUrl(index) {

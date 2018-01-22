@@ -4,8 +4,7 @@ import { HeaderBackButton } from 'react-navigation';
 import { connect } from 'react-redux';
 
 import { latest } from '../../services/book';
-import { changeOrigin } from '../../actions/list'
-
+import { createAct } from '../../util'
 import { Badge } from 'react-native-elements';
 
 import { webSite } from '../../config';
@@ -76,7 +75,7 @@ class OriginScreen extends React.Component {
         underlayColor={SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
         activeOpacity={0.7}
         onPress={() => {
-          this.props.dispatch(changeOrigin({
+          this.props.dispatch(createAct('list/changeOrigin')({
             id: this.props.navigation.state.params.readId,
             change: rowData.site
           }))

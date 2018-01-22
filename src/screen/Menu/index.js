@@ -4,7 +4,7 @@ import React from 'react';
 import { changeServer } from '../../services/book';
 
 import { connect } from 'react-redux';
-import { OperationAdd } from '../../actions/list';
+import { createAct } from '../../util'
 
 import styles from './index.style';
 const window = Dimensions.get('window');
@@ -28,7 +28,7 @@ class Menu extends React.PureComponent {
   }
 
   async CleanData() {
-    this.props.dispatch(OperationAdd());
+    this.props.dispatch(createAct('list/operationAdd')());
     await AsyncStorage.clear();
     alert('除书架记录之外的数据已经全部清空');
   }

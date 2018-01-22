@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
-
 import { HeaderBackButton } from 'react-navigation';
 import { Button } from 'react-native-elements';
-
 import { connect } from 'react-redux';
 
-import Toast from '../../component/Toast';
+import { createAct } from '../../util';
+
 import { search } from '../../services/book';
 import { webSite } from '../../config';
 import styles from './index.style';
 
-class BookDetScreen extends React.PureComponent {
+class BookDetScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: `书籍详情`,
@@ -39,8 +38,6 @@ class BookDetScreen extends React.PureComponent {
 
     this.state = {
       isLoading: this.book === undefined,
-      contains: this.book !== undefined && this.isContains(this.book),
-      btnLoading: false,
     }
     this.initx = this.initx.bind(this);
 
@@ -58,9 +55,11 @@ class BookDetScreen extends React.PureComponent {
       } else {
         this.setState({
           isLoading: false,
-          contains: this.isContains(this.book)
         })
+        this.props.dispatch(createAct('list/setContain')({ flag: this.isContains(this.book) }))
       }
+    }else {
+      this.props.dispatch(createAct('list/setContain')({ flag: this.isContains(this.book) }))
     }
   }
 
@@ -74,12 +73,6 @@ class BookDetScreen extends React.PureComponent {
     this.setState = (state, callback) => {
       return;
     };
-  }
-  componentWillReceiveProps(nextProps) {
-    if (!this.state.isLoading && !this.state.contains && this.isContains(this.book)) {
-      this.setState({ contains: true, btnLoading: false })
-      this.refs.toast.show('书籍添加成功..');
-    }
   }
 
   render() {
@@ -105,15 +98,14 @@ class BookDetScreen extends React.PureComponent {
             </View>
           </View>
           <View style={styles.secondView.container}>
-            <Button title={this.state.contains ? '已存在' : '追书'}
-              disabled={this.state.btnLoading || this.state.contains}
+            <Button title={this.props.contains ? '已存在' : '追书'}
+              disabled={this.props.btnLoading || this.props.contains}
               disabledStyle={styles.secondView.firstButton.disabledStyle}
               onPress={() => {
-                this.setState({ btnLoading: true });
                 this.props.navigation.state.params.addBook(this.book);
               }}
-              loading={this.state.btnLoading}
-              textStyle={this.state.contains || this.state.btnLoading ? styles.secondView.firstButton.disText : styles.secondView.firstButton.text}
+              loading={this.props.btnLoading}
+              textStyle={this.props.contains || this.props.btnLoading ? styles.secondView.firstButton.disText : styles.secondView.firstButton.text}
               buttonStyle={styles.secondView.firstButton.buttonStyle} />
             <Button title='开始阅读'
               onPress={() => {
@@ -128,7 +120,6 @@ class BookDetScreen extends React.PureComponent {
           <Text style={styles.Desc}>{this.book.desc}</Text>
           <View style={styles.solid} />
           <Text style={[styles.Desc, { textAlign: 'center' }]}>To be continued...</Text>
-          <Toast ref="toast" />
         </View>
       );
     }
@@ -138,6 +129,8 @@ class BookDetScreen extends React.PureComponent {
 function select(state) {
   return {
     list: state.list.list,
+    btnLoading: state.list.btnLoading,
+    contains: state.list.isContain,
   }
 }
 

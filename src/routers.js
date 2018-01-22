@@ -1,4 +1,10 @@
-import { StackNavigator } from 'react-navigation';
+import React, { PureComponent } from 'react'
+import {
+  StackNavigator, addNavigationHelpers,
+  NavigationActions,
+} from 'react-navigation';
+
+import { connect } from 'react-redux'
 
 import BookListScreen from './screen/BookList';
 import CatalogScreen from './screen/Catalog';
@@ -31,4 +37,34 @@ const Tassel = StackNavigator({
     }
   });
 
-export default Tassel;
+// function getCurrentScreen(navigationState) {
+//   if (!navigationState) {
+//     return null
+//   }
+//   const route = navigationState.routes[navigationState.index]
+//   if (route.routes) {
+//     return getCurrentScreen(route)
+//   }
+//   return route.routeName
+// }
+
+
+class Router extends PureComponent {
+  render() {
+    const { dispatch, router } = this.props
+    const navigation = addNavigationHelpers({ dispatch, state: router })
+    return <Tassel navigation={navigation} />
+  }
+}
+
+export function routerReducer(state, action = {}) {
+  return Tassel.router.getStateForAction(action, state)
+}
+
+function select(state) {
+  return {
+    router: state.router
+  }
+}
+
+export default connect(select)(Router);
