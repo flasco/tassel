@@ -1,6 +1,6 @@
 import { createAction, Storage } from '../util';
 import { refreshChapter, refreshSingleChapter } from '../util/getNet';
-import { insertionSort } from '../util/sort';
+import { insertionSort } from '../util';
 
 export default {
   namespace: 'list',
