@@ -16,7 +16,7 @@ import getContextArr from '../../util/getContextArr';
 import Navigat from '../../component/Navigat';
 import { content, list } from '../../services/book';
 
-import { sleep } from '../../util/sleep'
+import { delay } from '../../util'
 
 import styles from './index.style';
 
@@ -44,7 +44,7 @@ async function fetchList(nurl) {
   try {
     if (tht.chapterMap[nurl] === undefined) {
       const { data } = await content(nurl);
-      await sleep(1000);
+      await delay(1000);
       tht.chapterMap[nurl] = data;
     }
     finishTask++;

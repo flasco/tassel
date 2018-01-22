@@ -1,12 +1,19 @@
-import { Provider } from 'react-redux'
 import React from 'react';
 import Tassel from './routers';
 
-import store from './store';
+import dva from './util/dva';
 
+import appModel from './models/app'
+import shelfModel from './models/shelf'
 
-export default () => (
-  <Provider store={store}>
-    <Tassel />
-  </Provider>
-);
+const app = dva({
+  initialState: {},
+  models: [appModel, shelfModel],
+  onError(e) {
+    console.log('onError', e)
+  },
+})
+
+const App = app.start(<Tassel />)
+
+export default App;

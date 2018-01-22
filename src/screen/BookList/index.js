@@ -9,8 +9,7 @@ import SplashScreen from 'react-native-splash-screen';
 import SwipeableQuickActions from 'SwipeableQuickActions';
 import { connect } from 'react-redux';
 
-import { listAdd, listDelete, listUpdate, listInit, listRead, OperationClear } from '../../actions/list'
-import { menuCtl, menuSwitch } from '../../actions/app';
+import { createAct } from '../../util'
 
 import Menu from '../Menu';
 import styles from './index.style';
@@ -26,7 +25,7 @@ class BookPackage extends React.PureComponent {
       headerRight: (
         <Icon
           name='ios-add'
-          onPress={() => { tht.props.dispatch(menuSwitch()); }}
+          onPress={() => { tht.props.dispatch(createAct('app/menuSwitch')()); }}
           underlayColor={'transparent'}
           type='ionicon'
           color='#ddd'
@@ -45,19 +44,20 @@ class BookPackage extends React.PureComponent {
 
     AppState.addEventListener('change', async (e) => {
       if (e === 'inactive' && this.props.operationNum > 0) {
-        this.props.dispatch(OperationClear())
+        this.props.dispatch(createAct('list/operationClear'))
+        // this.props.dispatch(OperationClear())
         await AsyncStorage.setItem('booklist', JSON.stringify(this.props.list))
       }
     });
 
-    props.dispatch(listInit());
+    // props.dispatch(listInit());
   }
 
   componentDidMount() {
     setTimeout(() => {
       SplashScreen.hide();
     }, 2000);
-    this.onRefresh();
+    // this.onRefresh();
   }
 
   componentWillUnmount() {
@@ -67,25 +67,29 @@ class BookPackage extends React.PureComponent {
   }
 
   deleteBook(deleteId) {
-    this.props.dispatch(listDelete(deleteId));
+    this.props.dispatch(createAct('list/listDelete')({ bookId: deleteId }))
   }
 
   onRefresh = () => {
+    console.log(this.props.list);
     if (this.props.isInit) {
-      this.props.dispatch(listUpdate(this.props.list))
+      this.props.dispatch(createAct('list/listUpdate')())
     } else {
       setTimeout(() => {
-        this.props.isInit ? this.props.dispatch(listUpdate(this.props.list)) : this.onRefresh()
+        this.props.isInit ?
+          this.props.dispatch(createAct('list/listUpdate')()) : this.onRefresh()
       }, 521);
     }
   }
 
   addBook(data) {
-    this.props.dispatch(listAdd({
-      ...data,
-      latestChapter: '待检测',
-      latestRead: new Date().getTime()
-    }));
+    this.props.dispatch(createAct('list/listAdd')({
+      book: {
+        ...data,
+        latestChapter: '待检测',
+        latestRead: new Date().getTime()
+      }
+    }))
   }
 
   renderRow = (item) => {
@@ -103,7 +107,9 @@ class BookPackage extends React.PureComponent {
         onPress={() => {
           navigate('Read', { book: rowData, id: rowID });
           setTimeout(() => {
-            this.props.dispatch(listRead(rowID))
+            this.props.dispatch(createAct('list/bookRead')({ bookId: rowID }))
+
+            // this.props.dispatch(listRead(rowID))
           }, 1000);
         }}>
         <View style={{ flexDirection: 'row' }}>
@@ -149,7 +155,7 @@ class BookPackage extends React.PureComponent {
         <SideMenu
           menu={menu}
           isOpen={this.props.menuFlag}
-          onChange={openFlag => dispatch(menuCtl(openFlag))}
+          onChange={openFlag => dispatch(createAct('app/menuCtl')({ flag: openFlag }))}
           menuPosition={'right'}
           disableGestures={true}>
           <View style={SMode ? styles.sunnyMode.container : styles.nightMode.container}>
