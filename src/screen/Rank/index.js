@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TextInput, TouchableHighlight, Alert, ActivityIndicator } from 'react-native';
 import React, { Component } from 'react';
 
 import { HeaderBackButton } from 'react-navigation'
@@ -84,14 +84,16 @@ class RankScreen extends React.PureComponent {
   _renderRow(item) {
     let rowData = item.item;
     return (
-      <TouchableOpacity
+      <TouchableHighlight
+        underlayColor='#eeeeee'
+        activeOpacity={0.7}
         onPress={() => { tht.JmpToBook(rowData.name, rowData.author); }}>
         <View style={{ height: 70 }}>
           <Text style={styles.rowStyle}>
             {`[${rowData.type}]  ${rowData.name} - ${rowData.author}\n${rowData.latestChapter.length > 23 ? (rowData.latestChapter.substr(0, 23) + '...') : rowData.latestChapter}`}
           </Text>
         </View>
-      </TouchableOpacity>
+      </TouchableHighlight>
     );
   }
 
