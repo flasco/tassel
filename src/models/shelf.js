@@ -25,7 +25,36 @@ export default {
         '1': 'http://www.xs.la/0_64/',
         '2': 'http://www.kanshuzhong.com/book/36456/',
       }
+    }, {
+      bookName: '养肥区',
+      author: 'admin',
+      img: '-1',
+      desc: '书籍变肥的地方~',
+      latestChapter: '待检测',
+      plantformId: 1,
+      latestRead: 0,
+      isUpdate: false,
+      updateNum: 0,
+      source: {
+        '1': '',
+        '2': '',
+      }
     }],
+    fattenList: [{
+      bookName: '天醒',
+      author: '蝴蝶',
+      img: 'http://www.xs.la/BookFiles/BookImages/642.jpg',
+      desc: '“苏唐摔门而出：“什么条件啊你玩裸睡？！”\n......',
+      latestChapter: '第二十五章 春色无边',
+      plantformId: 1,
+      latestRead: 0,
+      isUpdate: false,
+      updateNum: 0,
+      source: {
+        '1': 'http://www.xs.la/0_642/',
+        '2': 'http://www.kanshuzhong.com/book/222/',
+      }
+    }]
   },
   reducers: {
     updateState(state, { payload }) {
@@ -47,24 +76,37 @@ export default {
     *listUpdate(action, { select, call, put }) {
       yield put(createAction('updateState')({ loadingFlag: true }));
       let listState = yield select(state => state.list);
-      const latestInfo = yield call(refreshChapter, listState.list);
+      const latestInfo = yield call(refreshChapter, [...listState.list, ...listState.fattenList]); //fattenList
+      let lengthX = listState.list.length - 1;
       latestInfo.filter((x, index) => {
         if (x !== undefined) {
-          let updateNum = listState.list[index].updateNum + x.num; //记录之前的更新章节
-          listState.list[index].latestChapter = x.title;
-          listState.list[index].isUpdate = updateNum > 0;
-          listState.list[index].updateNum = updateNum;
+          if (index < lengthX) {
+            let updateNum = listState.list[index].updateNum + x.num; //记录之前的更新章节
+            listState.list[index].latestChapter = x.title;
+            listState.list[index].isUpdate = updateNum > 0;
+            listState.list[index].updateNum = updateNum;
+          } else {
+            let Tmp = index - lengthX;
+            let updateNum = listState.fattenList[Tmp].updateNum + x.num; //记录之前的更新章节
+            listState.fattenList[Tmp].latestChapter = x.title;
+            listState.fattenList[Tmp].isUpdate = updateNum > 0;
+            listState.fattenList[Tmp].updateNum = updateNum;
+          }
         }
       });
       yield put(createAction('updateState')({
-        list: listState.list, loadingFlag: false, operationNum: listState.operationNum + 1
+        list: listState.list,
+        loadingFlag: false,
+        fattenList: listState.fattenList,
+        operationNum: listState.operationNum + 1,
       }));
     },
     *listInit(action, { call, put }) { //fix
       const list = yield call(Storage.get, 'booklist', false);
+      const fattenList = yield call(Storage.get, 'fattenList', false);
       if (list && list.length > 0) {
         list.filter(x => x.latestRead === undefined && (x.latestRead = 0));
-        yield put(createAction('updateState')({ list }));
+        yield put(createAction('updateState')({ list, fattenList }));
       }
       yield put(createAction('updateState')({ init: true }));
     },

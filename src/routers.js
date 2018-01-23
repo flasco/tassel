@@ -13,6 +13,7 @@ import SearchScreen from './screen/Search';
 import RankScreen from './screen/Rank'
 import BookDetScreen from './screen/BookDet';
 import OriginScreen from './screen/Origin';
+import FattenListScreen from './screen/FattenList'
 
 SearchScreen.navigationOptions = ({ navigation }) => {
   return { header: null };
@@ -30,6 +31,7 @@ const Tassel = StackNavigator({
   RnkL: { screen: RankScreen },
   BookDet: { screen: BookDetScreen },
   Origin: { screen: OriginScreen },
+  FattenBlock: { screen: FattenListScreen },
 }, {
     mode: 'modal',
     navigationOptions: {

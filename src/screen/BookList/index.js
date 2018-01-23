@@ -45,8 +45,11 @@ class BookPackage extends React.PureComponent {
     AppState.addEventListener('change', async (e) => {
       if (e === 'inactive' && this.props.operationNum > 0) {
         this.props.dispatch(createAct('list/operationClear')())
-        await AsyncStorage.setItem('appState', JSON.stringify(this.props.app))
-        await AsyncStorage.setItem('booklist', JSON.stringify(this.props.list))
+        await AsyncStorage.multiSet([
+          ['appState', JSON.stringify(this.props.app)],
+          ['booklist', JSON.stringify(this.props.list)],
+          ['fattenList', JSON.stringify(this.props.fattenList)]
+        ]);
       }
     });
   }
@@ -55,7 +58,7 @@ class BookPackage extends React.PureComponent {
     setTimeout(() => {
       SplashScreen.hide();
     }, 2000);
-    this.onRefresh();
+    // this.onRefresh();
   }
 
   componentWillUnmount() {
@@ -91,6 +94,24 @@ class BookPackage extends React.PureComponent {
     let rowID = item.index;
     let SMode = this.props.SMode;
     let { navigate } = this.props.navigation;
+    if (rowData.img === '-1') {
+      return (
+        <TouchableHighlight style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
+          underlayColor={SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
+          activeOpacity={0.7}
+          onPress={() => {
+            navigate('FattenBlock');
+          }}>
+          <View style={{ flexDirection: 'row' }}>
+            <Image source={require('../../assert/noImg.jpg')} style={styles.coverStyle} />
+            <View style={{ paddingLeft: 15 }}>
+              <Text style={SMode ? styles.sunnyMode.titleStyle : styles.nightMode.titleStyle}>{rowData.bookName}</Text>
+              <Text style={SMode ? styles.sunnyMode.subTitleStyle : styles.nightMode.subTitleStyle}>{rowData.desc}</Text>
+            </View>
+          </View>
+        </TouchableHighlight>
+      )
+    }
     return (
       <TouchableHighlight style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
         underlayColor={SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
@@ -120,11 +141,23 @@ class BookPackage extends React.PureComponent {
 
   renderActions = (rowData, sectionId, rowId) => {
     let SMode = this.props.SMode;
+    if (rowData.item.img === '-1') return null;
     return (
       <SwipeableQuickActions style={{ backgroundColor: SMode ? styles.sunnyMode.rowStyle.backgroundColor : styles.nightMode.rowStyle.backgroundColor }}>
         <TouchableHighlight
           onPress={() => this.deleteBook(rowId)}>
-          <View style={{ width: 70, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+          <View style={{ width: 50, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+            <Icon
+              name='ios-star-outline'
+              type='ionicon'
+              color='#000'
+              size={24} />
+            <Text style={{ color: '#000', fontSize: 10 }}>养肥</Text>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight
+          onPress={() => this.deleteBook(rowId)}>
+          <View style={{ width: 50, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
             <Icon
               name='ios-trash-outline'
               type='ionicon'
@@ -157,7 +190,7 @@ class BookPackage extends React.PureComponent {
               onRefresh={this.onRefresh}
               refreshing={loadingFlag}
               ItemSeparatorComponent={() => <View style={SMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
-              maxSwipeDistance={80}
+              maxSwipeDistance={100}
               renderQuickActions={this.renderActions}
               renderItem={this.renderRow}
               keyExtractor={(item, index) => `${item.bookName}-${item.author}`} />
@@ -171,6 +204,7 @@ class BookPackage extends React.PureComponent {
 function select(state) {
   return {
     list: state.list.list,
+    fattenList: state.list.fattenList,
     isInit: state.list.init,
     menuFlag: state.app.menuFlag,
     loadingFlag: state.list.loadingFlag,

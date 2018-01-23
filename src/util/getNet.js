@@ -5,6 +5,7 @@ import { list, latest } from '../services/book';
 export async function refreshChapter(booklist) {
   let tasks = [];
   for (let i = 0, j = booklist.length; i < j; i++) {
+    if(booklist[i].img === '-1') continue;
     let bookChapterLst = `${booklist[i].bookName}_${booklist[i].plantformId}_list`;
     let latech = booklist[i].latestChapter;
     tasks.push(get(booklist[i].source[booklist[i].plantformId], bookChapterLst, latech))
