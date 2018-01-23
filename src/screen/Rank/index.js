@@ -44,9 +44,6 @@ class RankScreen extends React.PureComponent {
       fetchFlag: false,
       FooterText: '上拉加载',
     };
-  }
-
-  componentDidMount() {
     this.getNet(currentPag++);
   }
 
@@ -89,9 +86,7 @@ class RankScreen extends React.PureComponent {
     return (
       <TouchableOpacity
         onPress={() => { tht.JmpToBook(rowData.name, rowData.author); }}>
-        <View style={{
-          height: 70
-        }}>
+        <View style={{ height: 70 }}>
           <Text style={styles.rowStyle}>
             {`[${rowData.type}]  ${rowData.name} - ${rowData.author}\n${rowData.latestChapter.length > 23 ? (rowData.latestChapter.substr(0, 23) + '...') : rowData.latestChapter}`}
           </Text>
@@ -134,8 +129,7 @@ class RankScreen extends React.PureComponent {
             keyExtractor={this._keyExtractor}
             onEndReached={this._onEndReached}
             ListFooterComponent={this._footer}
-            onEndReachedThreshold={-0.1}
-          />}
+            onEndReachedThreshold={-0.1} />}
       </View>
     );
   }

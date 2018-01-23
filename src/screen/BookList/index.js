@@ -45,6 +45,7 @@ class BookPackage extends React.PureComponent {
     AppState.addEventListener('change', async (e) => {
       if (e === 'inactive' && this.props.operationNum > 0) {
         this.props.dispatch(createAct('list/operationClear')())
+        await AsyncStorage.setItem('appState', JSON.stringify(this.props.app))
         await AsyncStorage.setItem('booklist', JSON.stringify(this.props.list))
       }
     });
@@ -175,6 +176,7 @@ function select(state) {
     loadingFlag: state.list.loadingFlag,
     operationNum: state.list.operationNum,
     SMode: state.app.sunnyMode,
+    app: state.app
   }
 }
 

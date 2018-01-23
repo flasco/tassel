@@ -15,7 +15,7 @@ import getContextArr from '../../util/getContextArr';
 import Navigat from '../../component/Navigat';
 import { content, list } from '../../services/book';
 
-import { delay,createAct } from '../../util'
+import { delay, createAct } from '../../util'
 
 import styles from './index.style';
 
@@ -145,7 +145,7 @@ class ReadScreen extends React.PureComponent {
   }
 
   reload = () => {
-    this.initConf().then(()=>{
+    this.initConf().then(() => {
       this.props.navigation.navigate('ChaL', {
         url: this.currentBook.url,
         name: this.currentBook.bookName,
@@ -220,6 +220,7 @@ class ReadScreen extends React.PureComponent {
         return;
       }
     }
+    this.props.dispatch(createAct('app/readAdd')({ num: this.chapterMap[nurl].content.length }))
     this.setState({
       currentItem: this.chapterMap[nurl],
       loadFlag: false,

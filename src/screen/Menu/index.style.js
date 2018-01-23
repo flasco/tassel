@@ -6,11 +6,23 @@ export default {
     backgroundColor: '#222222',
     padding: 10,
   },
+  itemX: {
+    height: 40,
+    flexDirection: 'row',
+    alignItems:'center',
+    paddingLeft:10,
+    marginBottom: 7,
+    backgroundColor: '#2c2c2c'
+  },
+  itemY:{
+    fontSize: 13,
+    fontWeight: '300',
+    color: '#EBEBEB',
+  },
   item: {
     fontSize: 15,
     fontWeight: '300',
-    paddingTop: 10,
-    padding: 8,
+    padding: 10,
     height: 42,
     marginBottom: 7,
     color: '#EBEBEB',

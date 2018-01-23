@@ -1,10 +1,12 @@
 import { createAction, Storage } from '../util'
+import storage from '../util/storage';
 
 export default {
   namespace: 'app',
   state: {
     menuFlag: false,
     sunnyMode: true,
+    readNum: 0,
   },
   reducers: {
     updateState(state, { payload }) {
@@ -12,6 +14,10 @@ export default {
     },
   },
   effects: {
+    *appInit(action, { call, put }) {
+      const appState = yield call(storage.get, 'appState');
+      yield put(createAction('updateState')({ ...appState }))
+    },
     *menuSwitch(action, { select, call, put }) {
       let flag = yield select(state => state.app.menuFlag);
       yield put(createAction('updateState')({ menuFlag: !flag }))
@@ -22,6 +28,15 @@ export default {
     },
     *menuCtl({ flag }, { call, put }) {
       yield put(createAction('updateState')({ menuFlag: flag }))
+    },
+    *readAdd({ num }, { select, call, put }) {
+      const re = yield select(state => state.app.readNum);
+      yield put(createAction('updateState')({ readNum: re + num }));
+    },
+  },
+  subscriptions: {
+    setup({ dispatch }) {
+      dispatch({ type: 'appInit' });
     },
   },
 }
