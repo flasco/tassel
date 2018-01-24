@@ -72,11 +72,14 @@ class BookPackage extends React.PureComponent {
   }
 
   onRefresh = () => {
-    setTimeout(() => {
-      this.props.isInit ?
-        this.props.dispatch(createAct('list/listUpdate')()) : this.onRefresh()
-    }, 247)
-
+    if (this.props.isInit) {
+      this.props.dispatch(createAct('list/listUpdate')())
+    } else {
+      setTimeout(() => {
+        this.props.isInit ?
+          this.props.dispatch(createAct('list/listUpdate')()) : this.onRefresh()
+      }, 247)
+    }
   }
 
   addBook(data) {

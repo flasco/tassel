@@ -63,7 +63,7 @@ class FattenListScreen extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.deleteBook = this.deleteBook.bind(this);
+    this.moveOutBook = this.moveOutBook.bind(this);
     this.renderRow = this.renderRow.bind(this);
   }
 
@@ -73,7 +73,7 @@ class FattenListScreen extends React.PureComponent {
     };
   }
 
-  deleteBook(deleteId) {
+  moveOutBook(bookId) {
     // this.props.dispatch(listDelete(deleteId));
   }
 
@@ -108,7 +108,7 @@ class FattenListScreen extends React.PureComponent {
     return (
       <SwipeableQuickActions style={{ backgroundColor: SMode ? styles.sunnyMode.rowStyle.backgroundColor : styles.nightMode.rowStyle.backgroundColor }}>
         <TouchableHighlight
-          onPress={() => this.deleteBook(rowId)}>
+          onPress={() => this.moveOutBook(rowId)}>
           <View style={{ width: 70, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
             <Icon
               name='ios-return-left'
