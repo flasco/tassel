@@ -1,19 +1,18 @@
 
 import axios from 'axios';
+import { serverIp } from '../config';
 
-const ServerIp = 'https://flasco.leanapp.cn';
 const StorageIp = 'https://testdb.leanapp.cn';
-const ServerSpareIp = 'https://flascospare.leanapp.cn';
-let Ip = ServerIp;
+const currenthours = new Date().getHours();
+let Ip = currenthours > 9 && currenthours < 22 ?serverIp[0] : serverIp[1] ;
 
 export function changeServer() {
-  let currentHours = new Date().getHours();
   let msg = '当前无需切换';
-  if (Ip !== ServerSpareIp) {
-    Ip = ServerSpareIp;
+  if (Ip !== serverIp[0]) {
+    Ip = serverIp[0];
     msg = '服务器已切换至备用';
-  } else if (Ip !== ServerIp) {
-    Ip = ServerIp;
+  } else if (Ip !== serverIp[1]) {
+    Ip = serverIp[1];
     msg = '服务器已切换至主线';
   }
   alert(msg);

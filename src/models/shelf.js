@@ -16,7 +16,7 @@ export default {
       author: '蝴蝶蓝',
       img: 'http://www.xs.la/BookFiles/BookImages/64.jpg',
       desc: '“路平，起床上课。”\n“再睡五分钟。”\n“给我起来！”\n哗！阳光洒下，照遍路平全身。\n“啊！！！”惊叫声顿时响彻云霄，将路平的睡意彻底击碎，之后已是苏唐摔门而出的怒吼：“什么条件啊你玩裸睡？！”\n......',
-      latestChapter: '待检测',
+      latestChapter: '上架感言!',
       plantformId: 1,
       latestRead: 0,
       isUpdate: false,
@@ -25,36 +25,8 @@ export default {
         '1': 'http://www.xs.la/0_64/',
         '2': 'http://www.kanshuzhong.com/book/36456/',
       }
-    }, {
-      bookName: '养肥区',
-      author: 'admin',
-      img: '-1',
-      desc: '书籍变肥的地方~',
-      latestChapter: '待检测',
-      plantformId: 1,
-      latestRead: 0,
-      isUpdate: false,
-      updateNum: 0,
-      source: {
-        '1': '',
-        '2': '',
-      }
     }],
-    fattenList: [{
-      bookName: '天醒',
-      author: '蝴蝶',
-      img: 'http://www.xs.la/BookFiles/BookImages/642.jpg',
-      desc: '“苏唐摔门而出：“什么条件啊你玩裸睡？！”\n......',
-      latestChapter: '第二十五章 春色无边',
-      plantformId: 1,
-      latestRead: 0,
-      isUpdate: false,
-      updateNum: 0,
-      source: {
-        '1': 'http://www.xs.la/0_642/',
-        '2': 'http://www.kanshuzhong.com/book/222/',
-      }
-    }]
+    fattenList: []
   },
   reducers: {
     updateState(state, { payload }) {
@@ -77,23 +49,35 @@ export default {
       yield put(createAction('updateState')({ loadingFlag: true }));
       let listState = yield select(state => state.list);
       const latestInfo = yield call(refreshChapter, [...listState.list, ...listState.fattenList]); //fattenList
-      let lengthX = listState.list.length - 1;
-      latestInfo.filter((x, index) => {
-        if (x !== undefined) {
-          if (index < lengthX) {
+      if (listState.fattenList.length > 0) {
+        let lengthX = listState.list.length - 1;
+        latestInfo.filter((x, index) => {
+          if (x !== undefined) {
+            if (index <= lengthX) {
+              let updateNum = listState.list[index].updateNum + x.num; //记录之前的更新章节
+              listState.list[index].latestChapter = x.title;
+              listState.list[index].isUpdate = updateNum > 0;
+              listState.list[index].updateNum = updateNum;
+            } else {
+              let Tmp = index - lengthX;
+              let updateNum = listState.fattenList[Tmp].updateNum + x.num; //记录之前的更新章节
+              listState.fattenList[Tmp].latestChapter = x.title;
+              listState.fattenList[Tmp].isUpdate = updateNum > 0;
+              listState.fattenList[Tmp].updateNum = updateNum;
+            }
+          }
+        });
+      } else {
+        latestInfo.filter((x, index) => {
+          if (x !== undefined) {
             let updateNum = listState.list[index].updateNum + x.num; //记录之前的更新章节
             listState.list[index].latestChapter = x.title;
             listState.list[index].isUpdate = updateNum > 0;
             listState.list[index].updateNum = updateNum;
-          } else {
-            let Tmp = index - lengthX;
-            let updateNum = listState.fattenList[Tmp].updateNum + x.num; //记录之前的更新章节
-            listState.fattenList[Tmp].latestChapter = x.title;
-            listState.fattenList[Tmp].isUpdate = updateNum > 0;
-            listState.fattenList[Tmp].updateNum = updateNum;
           }
-        }
-      });
+        });
+      }
+
       yield put(createAction('updateState')({
         list: listState.list,
         loadingFlag: false,
@@ -143,6 +127,48 @@ export default {
       insertionSort(listState.list);
       yield put(createAction('updateState')({
         list: listState.list,
+        operationNum: listState.operationNum + 1
+      }));
+    },
+    *fattenBook({ bookId }, { select, call, put }) {
+      let listState = yield select(state => state.list);
+      let book = listState.list.splice(bookId, 1);
+      if (listState.fattenList.length === 0) {
+        listState.list.push({
+          bookName: '养肥区',
+          author: 'admin',
+          img: '-1',
+          desc: '书籍变肥的地方~',
+          latestChapter: '待检测',
+          plantformId: 1,
+          latestRead: -1,
+          isUpdate: false,
+          updateNum: 0,
+          source: {
+            '1': '',
+            '2': '',
+          }
+        });
+      }
+      listState.fattenList.push(...book);
+      yield put(createAction('updateState')({
+        list: [...listState.list],
+        fattenList: [...listState.fattenList],
+        operationNum: listState.operationNum + 1,
+      }));
+    },
+    *moveBook({ bookId }, { select, call, put }) {
+      let listState = yield select(state => state.list);
+      let book = listState.fattenList.splice(bookId, 1);
+      insertionSort(listState.list);
+      if (listState.fattenList.length === 0) {
+        listState.list.pop(); //弹出养肥区（因为养肥区的readTime为0，排序之后必定在最后）
+      }
+      listState.list.push(...book);
+      insertionSort(listState.list);
+      yield put(createAction('updateState')({
+        list: [...listState.list],
+        fattenList: [...listState.fattenList],
         operationNum: listState.operationNum + 1
       }));
     },

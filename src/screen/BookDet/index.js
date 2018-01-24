@@ -58,7 +58,7 @@ class BookDetScreen extends React.Component {
         })
         this.props.dispatch(createAct('list/setContain')({ flag: this.isContains(this.book) }))
       }
-    }else {
+    } else {
       this.props.dispatch(createAct('list/setContain')({ flag: this.isContains(this.book) }))
     }
   }
@@ -66,6 +66,8 @@ class BookDetScreen extends React.Component {
   isContains = (book) => {
     if (!book) return false;
     return this.props.list.filter(x => {
+      return x.author === book.author && x.bookName === book.bookName
+    }).length + this.props.fattenList.filter(x => {
       return x.author === book.author && x.bookName === book.bookName
     }).length > 0;
   }
@@ -129,6 +131,7 @@ class BookDetScreen extends React.Component {
 function select(state) {
   return {
     list: state.list.list,
+    fattenList: state.list.fattenList,
     btnLoading: state.list.btnLoading,
     contains: state.list.isContain,
   }

@@ -58,7 +58,7 @@ class BookPackage extends React.PureComponent {
     setTimeout(() => {
       SplashScreen.hide();
     }, 2000);
-    // this.onRefresh();
+    this.onRefresh();
   }
 
   componentWillUnmount() {
@@ -82,12 +82,18 @@ class BookPackage extends React.PureComponent {
     }
   }
 
+  fattenBook = (bookId) => {
+    this.props.dispatch(createAct('list/fattenBook')({ bookId }));
+  }
+
   addBook(data) {
     this.props.dispatch(createAct('list/listAdd')({
       book: {
         ...data,
         latestChapter: '待检测',
-        latestRead: new Date().getTime()
+        latestRead: new Date().getTime(),
+        isUpdate: false,
+        updateNum: 0,
       }
     }))
   }
@@ -142,13 +148,15 @@ class BookPackage extends React.PureComponent {
     );
   }
 
-  renderActions = (rowData, sectionId, rowId) => {
+  renderActions = (item) => {
     let SMode = this.props.SMode;
-    if (rowData.item.img === '-1') return null;
+    let rowData = item.item;
+    let rowId = item.index;
+    if (rowData.img === '-1') return null;
     return (
       <SwipeableQuickActions style={{ backgroundColor: SMode ? styles.sunnyMode.rowStyle.backgroundColor : styles.nightMode.rowStyle.backgroundColor }}>
         <TouchableHighlight
-          onPress={() => this.deleteBook(rowId)}>
+          onPress={() => this.fattenBook(rowId)}>
           <View style={{ width: 50, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
             <Icon
               name='ios-star-outline'
