@@ -9,10 +9,10 @@ let Ip = ServerIp;
 export function changeServer() {
   let currentHours = new Date().getHours();
   let msg = '当前无需切换';
-  if ((currentHours >= 21 || currentHours < 9) && Ip !== ServerSpareIp) {
+  if (Ip !== ServerSpareIp) {
     Ip = ServerSpareIp;
     msg = '服务器已切换至备用';
-  } else if (currentHours < 21 && currentHours >= 9 && Ip !== ServerIp) {
+  } else if (Ip !== ServerIp) {
     Ip = ServerIp;
     msg = '服务器已切换至主线';
   }
