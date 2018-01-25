@@ -68,5 +68,4 @@ export default {
       backgroundColor: '#1e1e1e'
     }
   }
-  
 }

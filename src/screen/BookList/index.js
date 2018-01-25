@@ -113,7 +113,6 @@ class BookPackage extends React.PureComponent {
           }}>
           <View style={{ flexDirection: 'row' }}>
             <Image source={require('../../assert/noImg.jpg')} style={styles.coverStyle} />
-
             <View style={{ paddingLeft: 15 }}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={SMode ? styles.sunnyMode.titleStyle : styles.nightMode.titleStyle}>{rowData.bookName}</Text>
