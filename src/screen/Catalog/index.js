@@ -45,7 +45,7 @@ class CatalogScreen extends React.PureComponent {
     this.data = props.navigation.state.params.bookChapterLst;
     this.currentChapterNum = props.navigation.state.params.chap;
   }
-  
+
   componentWillUnmount() {
     this.setState = (state, callback) => {
       return;
@@ -58,13 +58,13 @@ class CatalogScreen extends React.PureComponent {
       <View>
         <View style={this.props.SMode ? styles.sunnyMode.solid : styles.nightMode.solid} />
         <TouchableHighlight style={{ height: 38 }}
-          underlayColor={this.props.SMode?styles.sunnyMode.underlayColor:styles.nightMode.underlayColor}
+          underlayColor={this.props.SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
           activeOpacity={0.7}
           onPress={() => {
             this.props.navigation.state.params.callback(index);
             this.props.navigation.goBack();
           }}>
-          <Text style={[styles.sunnyMode.rowStyle, this.currentChapterNum === index ? styles.red : false]}>{item.title}</Text>
+          <Text style={[this.props.SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle, this.currentChapterNum === index ? styles.red : false]}>{item.title}</Text>
         </TouchableHighlight>
       </View>
     );
@@ -85,11 +85,11 @@ class CatalogScreen extends React.PureComponent {
           ref={(q) => this.list = q}
           style={{ flex: 1 }}
           numberOfRowsInSection={() => this.data.length}
-          heightForCell={() => 38}
-          initialOffsetY={(this.currentChapterNum - 5) * 38}
+          heightForCell={() => 39}
+          initialOffsetY={(this.currentChapterNum - 5) * 39}
           renderCell={this.itemRender}
           renderHeader={this._header}
-          getItemLayout={(data, index) => ({ length: 38, offset: 39 * index, index })} />
+          getItemLayout={(data, index) => ({ length: 39, offset: 39 * index, index })} />
       </View>
     );
   }
