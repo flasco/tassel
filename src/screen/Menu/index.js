@@ -27,8 +27,9 @@ class Menu extends React.PureComponent {
 
   async CleanData() {
     this.props.dispatch(createAct('list/operationAdd')());
-    await AsyncStorage.clear();
-    alert('除书架记录之外的数据已经全部清空');
+    // await AsyncStorage.clear(); 
+    // alert('除书架记录之外的数据已经全部清空');
+    alert('清理功能暂时屏蔽，等待修复。。');
   }
 
   navigate = (routeName, params) => {

@@ -79,7 +79,7 @@ class RankScreen extends React.PureComponent {
     });
   }
 
-  renderRow(item) {
+  renderRow = (item) => {
     let rowData = item.item;
     return (
       <TouchableHighlight
