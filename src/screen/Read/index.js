@@ -123,10 +123,15 @@ class ReadScreen extends React.PureComponent {
     }
 
     if (this.chapterLst.length === 0) {
-      this.refs.toast.show('章节内容缺失，正在抓取中...');
+      this.refs.toast.show('章节内容缺失，走心抓取中...');
       this.chapterLst = await list(this.currentBook.source[this.currentBook.plantformId]);
-      this.bookRecord = { recordChapterNum: 0, recordPage: 1 };
-      AsyncStorage.setItem(chapterLstFlag, JSON.stringify(this.chapterLst));
+      if (this.chapterLst.length < 1) {
+        this.refs.toast.show('抓取失败...');
+        return ;
+      } else {
+        this.bookRecord = { recordChapterNum: 0, recordPage: 1 };
+        AsyncStorage.setItem(chapterLstFlag, JSON.stringify(this.chapterLst));
+      }
     }
 
     this.getNet(this.bookRecord.recordChapterNum, 0);
@@ -301,7 +306,6 @@ class ReadScreen extends React.PureComponent {
             navigation={this.props.navigation}
             currentBook={this.currentBook}
             reLoad={this.reload}
-            readId={this.props.navigation.state.params.id}
             choose={1} />}
         {this.state.loadFlag ? (
           <Text style={[styles.centr, !this.props.SMode && (styles.MoonMode_text)]}>

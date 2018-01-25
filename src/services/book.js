@@ -4,16 +4,16 @@ import { serverIp } from '../config';
 
 const StorageIp = 'https://testdb.leanapp.cn';
 const currenthours = new Date().getHours();
-let Ip = currenthours > 9 && currenthours < 22 ?serverIp[0] : serverIp[1] ;
+let Ip = currenthours > 9 && currenthours < 22 ? serverIp[0] : serverIp[1];
 
 export function changeServer() {
   let msg = '当前无需切换';
   if (Ip !== serverIp[0]) {
     Ip = serverIp[0];
-    msg = '服务器已切换至备用';
+    msg = '服务器已切换至主线';
   } else if (Ip !== serverIp[1]) {
     Ip = serverIp[1];
-    msg = '服务器已切换至主线';
+    msg = '服务器已切换至备用';
   }
   alert(msg);
 }
@@ -39,7 +39,10 @@ export async function latest(url) {
  * @param {String} url 
  */
 export async function list(url) {
-  let { data } = await axios.get(`${Ip}/analysis?action=1&url=${url}`, { timeout: 5000 });
+  let { err, data } = await axios.get(`${Ip}/analysis?action=1&url=${url}`, { timeout: 5000 });
+  if(err){
+    return [];
+  }
   let n = [], i = 0;
   while (i < data.length) {
     n.push({
