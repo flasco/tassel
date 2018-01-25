@@ -23,7 +23,7 @@ export default {
       backgroundColor: '#f2f2f2'
     },
     badgeStyle:{
-      borderRadius: 0, paddingTop: 2, paddingBottom: 2, padding: 2, backgroundColor: '#e80000'
+      borderRadius: 0, paddingTop: 2, paddingBottom: 2, padding: 2, backgroundColor: '#49c6f1'
     },
     subTitleStyle: {
       fontSize: 12,
@@ -56,7 +56,7 @@ export default {
       backgroundColor: '#282828'
     },
     badgeStyle:{
-      borderRadius: 0, paddingTop: 2, paddingBottom: 2, padding: 2, backgroundColor: '#9b001b'
+      borderRadius: 0, paddingTop: 2, paddingBottom: 2, padding: 2, backgroundColor: '#49c6f1'
     },
     subTitleStyle: {
       fontSize: 12,

@@ -11,6 +11,7 @@ export default {
     btnLoading: false,
     isContain: false,
     errorMes: '', //等待完善抓取失败返回信息的功能。。
+    isFatten: false,
     list: [{
       bookName: '天醒之路',
       author: '蝴蝶蓝',
@@ -64,12 +65,14 @@ export default {
           listState.fattenList[index].latestChapter = x.title;
           listState.fattenList[index].isUpdate = updateNum > 0;
           listState.fattenList[index].updateNum = updateNum;
+          !listState.isFatten && updateNum > 30 && (listState.isFatten = true);
         }
       });
 
       yield put(createAction('updateState')({
         list: listState.list,
         loadingFlag: false,
+        isFatten: listState.isFatten,
         fattenList: listState.fattenList,
         operationNum: listState.operationNum + 1,
       }));

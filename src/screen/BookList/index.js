@@ -113,8 +113,12 @@ class BookPackage extends React.PureComponent {
           }}>
           <View style={{ flexDirection: 'row' }}>
             <Image source={require('../../assert/noImg.jpg')} style={styles.coverStyle} />
+
             <View style={{ paddingLeft: 15 }}>
-              <Text style={SMode ? styles.sunnyMode.titleStyle : styles.nightMode.titleStyle}>{rowData.bookName}</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={SMode ? styles.sunnyMode.titleStyle : styles.nightMode.titleStyle}>{rowData.bookName}</Text>
+                {this.props.isFatten && <Badge value={`待杀`} containerStyle={styles.fattenBadgeStyle} textStyle={{ fontSize: 11 }} />}
+              </View>
               <Text style={SMode ? styles.sunnyMode.subTitleStyle : styles.nightMode.subTitleStyle}>{rowData.desc}</Text>
             </View>
           </View>
@@ -139,7 +143,7 @@ class BookPackage extends React.PureComponent {
           <View style={{ paddingLeft: 15 }}>
             <View style={{ flexDirection: 'row' }}>
               <Text style={SMode ? styles.sunnyMode.titleStyle : styles.nightMode.titleStyle}>{rowData.bookName}</Text>
-              {rowData.isUpdate && <Badge value={`更新`} containerStyle={SMode ? styles.sunnyMode.badgeStyle : styles.nightMode.badgeStyle} textStyle={{ fontSize: 11 }} />}
+              {rowData.isUpdate && <Badge value={`更新`} containerStyle={styles.badgeStyle} textStyle={{ fontSize: 11 }} />}
             </View>
             <Text style={SMode ? styles.sunnyMode.subTitleStyle : styles.nightMode.subTitleStyle}>{rowData.updateNum > 10 ? `距上次点击已更新${rowData.updateNum}章` : `${rowData.latestChapter.length > 15 ? (rowData.latestChapter.substr(0, 15) + '...') : rowData.latestChapter}`}</Text>
           </View>
@@ -215,6 +219,8 @@ class BookPackage extends React.PureComponent {
 function select(state) {
   return {
     list: state.list.list,
+    fattenList: state.list.fattenList,
+    isFatten: state.list.isFatten,
     isInit: state.list.init,
     menuFlag: state.app.menuFlag,
     loadingFlag: state.list.loadingFlag,
