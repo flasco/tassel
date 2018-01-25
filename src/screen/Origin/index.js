@@ -75,8 +75,9 @@ class OriginScreen extends React.Component {
         underlayColor={SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
         activeOpacity={0.7}
         onPress={() => {
+          console.log(this.props.navigation.state.params.readId)
           this.props.dispatch(createAct('list/changeOrigin')({
-            id: this.props.navigation.state.params.readId,
+            id: 0, //因为那时候已经因为排序而来到了第一名。
             change: rowData.site
           }))
           this.props.navigation.state.params.reLoad();

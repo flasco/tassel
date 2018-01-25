@@ -39,7 +39,6 @@ export default class Navigat extends React.PureComponent {
     this.props.navigation
       .navigate('Origin', {
         book: this.props.currentBook,
-        readId: this.props.readId,
         reLoad: () => this.props.reLoad(),
         callback: (url) => this.props.getChapterUrl(url)
       });

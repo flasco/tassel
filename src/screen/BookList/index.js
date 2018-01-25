@@ -129,7 +129,7 @@ class BookPackage extends React.PureComponent {
           navigate('BookDet', { book: rowData });
         }}
         onPress={() => {
-          navigate('Read', { book: rowData, id: rowID });
+          navigate('Read', { book: rowData });
           setTimeout(() => {
             this.props.dispatch(createAct('list/bookRead')({ bookId: rowID }))
           }, 1000);
