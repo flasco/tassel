@@ -48,35 +48,24 @@ export default {
     *listUpdate(action, { select, call, put }) {
       yield put(createAction('updateState')({ loadingFlag: true }));
       let listState = yield select(state => state.list);
-      const latestInfo = yield call(refreshChapter, [...listState.list, ...listState.fattenList]); //fattenList
-      if (listState.fattenList.length > 0) {
-        let lengthX = listState.list.length - 1;
-        latestInfo.filter((x, index) => {
-          if (x !== undefined) {
-            if (index <= lengthX) {
-              let updateNum = listState.list[index].updateNum + x.num; //记录之前的更新章节
-              listState.list[index].latestChapter = x.title;
-              listState.list[index].isUpdate = updateNum > 0;
-              listState.list[index].updateNum = updateNum;
-            } else {
-              let Tmp = index - lengthX;
-              let updateNum = listState.fattenList[Tmp].updateNum + x.num; //记录之前的更新章节
-              listState.fattenList[Tmp].latestChapter = x.title;
-              listState.fattenList[Tmp].isUpdate = updateNum > 0;
-              listState.fattenList[Tmp].updateNum = updateNum;
-            }
-          }
-        });
-      } else {
-        latestInfo.filter((x, index) => {
-          if (x !== undefined) {
-            let updateNum = listState.list[index].updateNum + x.num; //记录之前的更新章节
-            listState.list[index].latestChapter = x.title;
-            listState.list[index].isUpdate = updateNum > 0;
-            listState.list[index].updateNum = updateNum;
-          }
-        });
-      }
+      let tasks = [refreshChapter(listState.list), refreshChapter(listState.fattenList)];
+      const resArr = yield call(Promise.all, tasks);
+      resArr[0].filter((x, index) => {
+        if (x !== undefined) {
+          let updateNum = listState.list[index].updateNum + x.num;
+          listState.list[index].latestChapter = x.title;
+          listState.list[index].isUpdate = updateNum > 0;
+          listState.list[index].updateNum = updateNum;
+        }
+      });
+      resArr[1].filter((x, index) => {
+        if (x !== undefined) {
+          let updateNum = listState.fattenList[index].updateNum + x.num;
+          listState.fattenList[index].latestChapter = x.title;
+          listState.fattenList[index].isUpdate = updateNum > 0;
+          listState.fattenList[index].updateNum = updateNum;
+        }
+      });
 
       yield put(createAction('updateState')({
         list: listState.list,
