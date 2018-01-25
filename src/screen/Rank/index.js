@@ -97,7 +97,7 @@ class RankScreen extends React.PureComponent {
     );
   }
 
-  _keyExtractor = (item, index) => item.name;
+  _keyExtractor = (item, index) => `${item.name}${index}`;
 
   _onEndReached() {
     if (this.state.fetchFlag === true) return;
