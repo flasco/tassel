@@ -18,9 +18,7 @@ class BookDetScreen extends React.Component {
         <HeaderBackButton
           title='返回'
           tintColor={'#ddd'}
-          onPress={() => {
-            navigation.goBack();
-          }} />
+          onPress={() => navigation.goBack()} />
       ),
       headerStyle: {
         backgroundColor: '#000'
@@ -39,38 +37,37 @@ class BookDetScreen extends React.Component {
     this.state = {
       isLoading: this.book === undefined,
     }
-    this.initx = this.initx.bind(this);
 
     this.initx();
   }
 
-  async initx() {
+  initx = async () => {
     if (this.state.isLoading) {
       let name = this.props.navigation.state.params.bookNam,
         author = this.props.navigation.state.params.bookAut;
       const { data } = await search(name, author);
       this.book = data[0];
       if (typeof this.book === 'string') {
+        // 如果后台没有搜索到本书会返回一段字符串。
         alert('本书没有记录！如果迫切需要加入本书，请及时反馈给开发人员~');
       } else {
-        this.setState({
-          isLoading: false,
-        })
-        this.props.dispatch(createAct('list/setContain')({ flag: this.isContains(this.book) }))
+        this.setState({ isLoading: false });
+        this.props.dispatch(createAct('list/setContain')({ flag: this.isContains(this.book) }));
       }
     } else {
-      this.props.dispatch(createAct('list/setContain')({ flag: this.isContains(this.book) }))
+      this.props.dispatch(createAct('list/setContain')({ flag: this.isContains(this.book) }));
     }
   }
 
   isContains = (book) => {
     if (!book) return false;
-    return this.props.list.filter(x => {
-      return x.author === book.author && x.bookName === book.bookName
-    }).length + this.props.fattenList.filter(x => {
-      return x.author === book.author && x.bookName === book.bookName
-    }).length > 0;
+    return this.props.list.filter(x =>
+      x.author === book.author && x.bookName === book.bookName
+    ).length + this.props.fattenList.filter(x =>
+      x.author === book.author && x.bookName === book.bookName
+    ).length > 0;
   }
+
   componentWillUnmount() {
     this.setState = (state, callback) => {
       return;

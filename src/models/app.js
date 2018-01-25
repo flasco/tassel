@@ -1,5 +1,4 @@
 import { createAction, Storage } from '../util'
-import storage from '../util/storage';
 
 export default {
   namespace: 'app',
@@ -15,7 +14,7 @@ export default {
   },
   effects: {
     *appInit(action, { call, put }) {
-      const appState = yield call(storage.get, 'appState');
+      const appState = yield call(Storage.get, 'appState');
       yield put(createAction('updateState')({ ...appState }))
     },
     *menuSwitch(action, { select, call, put }) {

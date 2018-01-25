@@ -215,7 +215,6 @@ class BookPackage extends React.PureComponent {
 function select(state) {
   return {
     list: state.list.list,
-    fattenList: state.list.fattenList,
     isInit: state.list.init,
     menuFlag: state.app.menuFlag,
     loadingFlag: state.list.loadingFlag,
