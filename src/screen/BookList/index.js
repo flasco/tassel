@@ -16,7 +16,7 @@ import styles from './index.style';
 
 let tht;
 
-class BookPackage extends React.PureComponent {
+class BookListScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: '古意流苏',
@@ -108,9 +108,7 @@ class BookPackage extends React.PureComponent {
         <TouchableHighlight style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
           underlayColor={SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
           activeOpacity={0.7}
-          onPress={() => {
-            navigate('FattenBlock');
-          }}>
+          onPress={() => navigate('FattenBlock')}>
           <View style={{ flexDirection: 'row' }}>
             <Image source={require('../../assert/noImg.jpg')} style={styles.coverStyle} />
             <View style={{ paddingLeft: 15 }}>
@@ -128,9 +126,7 @@ class BookPackage extends React.PureComponent {
       <TouchableHighlight style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
         underlayColor={SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
         activeOpacity={0.7}
-        onLongPress={() => {
-          navigate('BookDet', { book: rowData });
-        }}
+        onLongPress={() => navigate('BookDet', { book: rowData })}
         onPress={() => {
           navigate('Read', { book: rowData });
           setTimeout(() => {
@@ -189,30 +185,28 @@ class BookPackage extends React.PureComponent {
     const menu = <Menu navigation={this.props.navigation} addBook={this.addBook} />;
     const { dispatch, list, loadingFlag, SMode, isInit } = this.props;
     if (!isInit) return null;
-    return ((
-      <View style={SMode ? styles.sunnyMode.container : styles.nightMode.container}>
-        <StatusBar barStyle='light-content' />
-        <SideMenu
-          menu={menu}
-          isOpen={this.props.menuFlag}
-          onChange={openFlag => dispatch(createAct('app/menuCtl')({ flag: openFlag }))}
-          menuPosition={'right'}
-          disableGestures={true}>
-          <View style={SMode ? styles.sunnyMode.container : styles.nightMode.container}>
-            <SwipeableFlatList
-              data={list}
-              bounceFirstRowOnMount={false}//屏蔽第一次滑动
-              onRefresh={this.onRefresh}
-              refreshing={loadingFlag}
-              ItemSeparatorComponent={() => <View style={SMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
-              maxSwipeDistance={100}
-              renderQuickActions={this.renderActions}
-              renderItem={this.renderRow}
-              keyExtractor={(item, index) => `${item.bookName}-${item.author}`} />
-          </View>
-        </SideMenu>
-      </View>
-    ));
+    return (
+      <SideMenu
+        menu={menu}
+        isOpen={this.props.menuFlag}
+        onChange={openFlag => dispatch(createAct('app/menuCtl')({ flag: openFlag }))}
+        menuPosition={'right'}
+        disableGestures={true}>
+        <View style={SMode ? styles.sunnyMode.container : styles.nightMode.container}>
+          <StatusBar barStyle='light-content' />
+          <SwipeableFlatList
+            data={list}
+            bounceFirstRowOnMount={false}//屏蔽第一次滑动
+            onRefresh={this.onRefresh}
+            refreshing={loadingFlag}
+            ItemSeparatorComponent={() => <View style={SMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
+            maxSwipeDistance={100}
+            renderQuickActions={this.renderActions}
+            renderItem={this.renderRow}
+            keyExtractor={(item, index) => `${item.bookName}-${item.author}`} />
+        </View>
+      </SideMenu>
+    );
   }
 }
 
@@ -230,4 +224,4 @@ function select(state) {
   }
 }
 
-export default connect(select)(BookPackage);
+export default connect(select)(BookListScreen);

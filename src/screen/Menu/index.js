@@ -1,9 +1,8 @@
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity, AsyncStorage, TouchableWithoutFeedback, Linking, Image } from 'react-native';
 import React from 'react';
+import { Text, View, TouchableOpacity, AsyncStorage, Linking } from 'react-native';
+import { connect } from 'react-redux';
 
 import { changeServer } from '../../services/book';
-
-import { connect } from 'react-redux';
 import { createAct, NavigationActions } from '../../util';
 
 import styles from './index.style';

@@ -1,17 +1,16 @@
 import React from 'react';
 import { Text, View, FlatList, TouchableHighlight } from 'react-native';
 import { HeaderBackButton } from 'react-navigation';
+import { Badge } from 'react-native-elements';
 import { connect } from 'react-redux';
 
 import { latest } from '../../services/book';
-import { createAct } from '../../util'
-import { Badge } from 'react-native-elements';
-
 import { webSite } from '../../config';
+import { createAct } from '../../util';
 
 import styles from './index.style';
 
-class OriginScreen extends React.Component {
+class OriginScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: `${navigation.state.params.book.bookName}`,

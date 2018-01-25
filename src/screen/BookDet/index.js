@@ -10,7 +10,7 @@ import { search } from '../../services/book';
 import { webSite } from '../../config';
 import styles from './index.style';
 
-class BookDetScreen extends React.Component {
+class BookDetScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: `书籍详情`,

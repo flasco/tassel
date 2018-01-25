@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, Button, InteractionManager } from 'react-native';
 import { LargeList } from "react-native-largelist";
+import { HeaderBackButton } from 'react-navigation';
 
 import { list } from '../../services/book';
-import { HeaderBackButton } from 'react-navigation';
 import { connect } from 'react-redux';
 
 import styles from './index.style';

@@ -7,7 +7,6 @@ import { rnk } from '../../services/book';
 
 import styles from './index.style';
 
-let tht;
 class RankScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
@@ -34,17 +33,16 @@ class RankScreen extends React.PureComponent {
 
     this.getNet = this.getNet.bind(this);
     this.JmpToBook = this.JmpToBook.bind(this);
-    this._onEndReached = this._onEndReached.bind(this);
+    this.onEndReached = this.onEndReached.bind(this);
 
-    tht = this;
-    currentPag = 1;
+    this.currentPage = 1;
     this.state = {
       dataSource: [],
       loadingFlag: true,
       fetchFlag: false,
       FooterText: '上拉加载',
     };
-    this.getNet(currentPag++);
+    this.getNet(this.currentPage++);
   }
 
   componentWillUnmount() {
@@ -81,13 +79,13 @@ class RankScreen extends React.PureComponent {
     });
   }
 
-  _renderRow(item) {
+  renderRow(item) {
     let rowData = item.item;
     return (
       <TouchableHighlight
         underlayColor='#eeeeee'
         activeOpacity={0.7}
-        onPress={() => { tht.JmpToBook(rowData.name, rowData.author); }}>
+        onPress={() => { this.JmpToBook(rowData.name, rowData.author); }}>
         <View style={{ height: 70 }}>
           <Text style={styles.rowStyle}>
             {`[${rowData.type}]  ${rowData.name} - ${rowData.author}\n${rowData.latestChapter.length > 23 ? (rowData.latestChapter.substr(0, 23) + '...') : rowData.latestChapter}`}
@@ -99,13 +97,13 @@ class RankScreen extends React.PureComponent {
 
   _keyExtractor = (item, index) => `${item.name}${index}`;
 
-  _onEndReached() {
+  onEndReached() {
     if (this.state.fetchFlag === true) return;
     this.setState({
       FooterText: '正在加载中...',
       fetchFlag: true,
     }, () => {
-      this.getNet(currentPag++);
+      this.getNet(this.currentPage++);
     });
   }
 
@@ -125,11 +123,11 @@ class RankScreen extends React.PureComponent {
           <FlatList
             style={{ flex: 1 }}
             data={this.state.dataSource}
-            renderItem={this._renderRow}
+            renderItem={this.renderRow}
             ItemSeparatorComponent={() => <View style={styles.solid} />}
-            getItemLayout={(data, index) => ({ length: 70, offset: 71 * index, index })}//行高38，分割线1，所以offset=39
+            getItemLayout={(data, index) => ({ length: 70, offset: 71 * index, index })}//行高70，分割线1，所以offset=71
             keyExtractor={this._keyExtractor}
-            onEndReached={this._onEndReached}
+            onEndReached={this.onEndReached}
             ListFooterComponent={this._footer}
             onEndReachedThreshold={-0.1} />}
       </View>
