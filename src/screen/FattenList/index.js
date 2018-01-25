@@ -67,6 +67,7 @@ class FattenListScreen extends React.PureComponent {
     let SMode = this.props.SMode;
     let rowData = item.item;
     let rowId = item.index;
+    const fattenColor = SMode ? '#000' : '#ddd';
     return (
       <SwipeableQuickActions style={{ backgroundColor: SMode ? styles.sunnyMode.rowStyle.backgroundColor : styles.nightMode.rowStyle.backgroundColor }}>
         <TouchableHighlight
@@ -75,9 +76,9 @@ class FattenListScreen extends React.PureComponent {
             <Icon
               name='ios-return-left'
               type='ionicon'
-              color='#000'
+              color={fattenColor}
               size={24} />
-            <Text style={{ color: '#000', fontSize: 10 }}>移出</Text>
+            <Text style={{ color: fattenColor, fontSize: 10 }}>移出</Text>
           </View>
         </TouchableHighlight>
       </SwipeableQuickActions>

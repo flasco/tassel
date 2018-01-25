@@ -4,7 +4,7 @@ import { serverIp } from '../config';
 
 const StorageIp = 'https://testdb.leanapp.cn';
 const currenthours = new Date().getHours();
-let Ip = currenthours > 9 && currenthours < 22 ? serverIp[0] : serverIp[1];
+let Ip = currenthours >= 9 && currenthours < 22 ? serverIp[0] : serverIp[1];
 
 export function changeServer() {
   let msg = '当前无需切换';

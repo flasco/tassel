@@ -155,6 +155,7 @@ class BookPackage extends React.PureComponent {
     let SMode = this.props.SMode;
     let rowData = item.item;
     let rowId = item.index;
+    const fattenColor = SMode ? '#000' : '#ddd';
     if (rowData.img === '-1') return null;
     return (
       <SwipeableQuickActions style={{ backgroundColor: SMode ? styles.sunnyMode.rowStyle.backgroundColor : styles.nightMode.rowStyle.backgroundColor }}>
@@ -164,9 +165,9 @@ class BookPackage extends React.PureComponent {
             <Icon
               name='ios-star-outline'
               type='ionicon'
-              color='#000'
+              color={fattenColor}
               size={24} />
-            <Text style={{ color: '#000', fontSize: 10 }}>养肥</Text>
+            <Text style={{ color: fattenColor, fontSize: 10 }}>养肥</Text>
           </View>
         </TouchableHighlight>
         <TouchableHighlight
