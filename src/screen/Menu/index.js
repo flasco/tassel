@@ -1,9 +1,9 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, AsyncStorage, Linking } from 'react-native';
+import { Text, View, TouchableOpacity, Linking } from 'react-native';
 import { connect } from 'react-redux';
 
 import { changeServer } from '../../services/book';
-import { createAct, NavigationActions } from '../../util';
+import { createAct, NavigationActions, Storage } from '../../util';
 
 import styles from './index.style';
 
@@ -27,9 +27,9 @@ class Menu extends React.PureComponent {
 
   async CleanData() {
     this.props.dispatch(createAct('list/operationAdd')());
-    // await AsyncStorage.clear(); 
-    // alert('除书架记录之外的数据已经全部清空');
-    alert('清理功能暂时屏蔽，等待修复。。');
+    Storage.clear(0);  // 清理缓存
+    Storage.clear(1);  // 清理章节目录
+    alert('缓存已清理');
   }
 
   navigate = (routeName, params) => {

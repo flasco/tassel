@@ -1,7 +1,26 @@
 import { AsyncStorage } from 'react-native'
+let keyMap;
+get('Tassel@keyMap', [
+  new Set(),  //cacheMap:
+  new Set(),  //listMap:
+  new Set(),  //recordMap:
+]).then(val => {
+  keyMap = typeof val === 'string' ? JSON.parse(val) : val;
+});
 
-function clear() {
-  return AsyncStorage.clear();
+
+function mapSave() { // type < 0的时候全部清空
+  AsyncStorage.setItem('Tassel@keyMap', JSON.stringify(keyMap));
+}
+
+function clear(type = 0) { // type < 0的时候全部清空
+  if (type > -1 && type < 3) {
+    multiRemove(keyMap[type]).then(()=>{
+      keyMap[type] = new Set();
+    })
+  }else{
+    AsyncStorage.clear();
+  }
 }
 
 function get(key, defaultValue = null) {
@@ -10,7 +29,14 @@ function get(key, defaultValue = null) {
   )
 }
 
-function set(key, value) {
+/**
+ * 
+ * @param {string} key 
+ * @param {*} value 
+ * @param {number} type 存储的级别定义
+ */
+function set(key, value, type = 0) {
+  type > -1 && type < 3 && keyMap[type].add(key);  //type = 0 默认是cache
   return AsyncStorage.setItem(key, JSON.stringify(value));
 }
 
@@ -18,17 +44,17 @@ function remove(key) {
   return AsyncStorage.removeItem(key);
 }
 
-function multiGet(...keys) {
+function multiGet(keys) {
   return AsyncStorage.multiGet([...keys]).then(stores => {
     const data = {};
     stores.forEach((result, i, store) => {
-      data[store[i][0]] = JSON.parse(store[i][1]);
+      data[i] = JSON.parse(store[i][1]);
     });
     return data;
   })
 }
 
-function multiRemove(...keys) {
+function multiRemove(keys) {
   return AsyncStorage.multiRemove([...keys]);
 }
 
@@ -39,4 +65,5 @@ export default {
   remove,
   multiGet,
   multiRemove,
+  mapSave
 }

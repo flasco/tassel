@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-  Text, View, Dimensions, StatusBar,
-  ActionSheetIOS, LayoutAnimation, AsyncStorage
+  Text, View, Dimensions,
+  StatusBar, ActionSheetIOS, LayoutAnimation
 } from 'react-native';
 
 import async from 'async';
@@ -13,7 +13,7 @@ import getContextArr from '../../util/getContextArr';
 import Navigat from '../../component/Navigat';
 import { content, list } from '../../services/book';
 
-import { delay, createAct } from '../../util'
+import { delay, createAct, Storage } from '../../util'
 
 import styles from './index.style';
 
@@ -29,7 +29,7 @@ let q = async.queue(async (url, callback) => {
 q.drain = function () {
   tht.refs.toast.show(`Task finished at ${finishTask}/${allTask}`);
   finishTask = 0;
-  AsyncStorage.setItem(bookMapFlag, JSON.stringify(tht.chapterMap));
+  Storage.set(bookMapFlag, tht.chapterMap)
 };
 
 async function fetchList(nurl) {
@@ -93,12 +93,10 @@ class ReadScreen extends React.PureComponent {
     chapterLstFlag = `${this.currentBook.bookName}_${this.currentBook.plantformId}_list`;
     bookMapFlag = `${this.currentBook.bookName}_${this.currentBook.plantformId}_map`;
 
-    const tm = await AsyncStorage.multiGet([bookRecordFlag, chapterLstFlag, bookMapFlag])
-    this.chapterLst = tm[1][1] !== null ? JSON.parse(tm[1][1]) : [];
-    this.chapterMap = tm[2][1] !== null ? JSON.parse(tm[2][1]) : new Map();
-    if (this.chapterLst.length !== 0) {
-      this.bookRecord = tm[0][1] !== null ? JSON.parse(tm[0][1]) : { recordChapterNum: 0, recordPage: 1 };
-    }
+    const storageResArr = await Storage.multiGet([bookRecordFlag, chapterLstFlag, bookMapFlag]);
+    this.chapterLst = storageResArr[1] || [];
+    this.chapterMap = storageResArr[2] || new Map();
+    this.bookRecord = storageResArr[0] || { recordChapterNum: 0, recordPage: 1 };
 
     if (this.chapterLst.length === 0) {
       this.refs.toast.show('章节内容缺失，走心抓取中...');
@@ -107,8 +105,7 @@ class ReadScreen extends React.PureComponent {
         this.refs.toast.show('抓取失败...');
         return;
       } else {
-        this.bookRecord = { recordChapterNum: 0, recordPage: 1 };
-        AsyncStorage.setItem(chapterLstFlag, JSON.stringify(this.chapterLst));
+        Storage.set(chapterLstFlag, this.chapterLst, 1);
       }
     }
     this.getNet(this.bookRecord.recordChapterNum, 0);
@@ -170,7 +167,7 @@ class ReadScreen extends React.PureComponent {
       try {
         const { data } = await content(nurl);
         this.chapterMap[nurl] = data;
-        await AsyncStorage.setItem(bookMapFlag, JSON.stringify(this.chapterMap));
+        Storage.set(bookMapFlag, this.chapterMap)
       } catch (err) {
         this.refs.toast.show('fetch err');
       }
@@ -180,14 +177,14 @@ class ReadScreen extends React.PureComponent {
   async getNet(index, direct) {
     index = (index <= this.chapterLst.length - 1 && index > -1) ? index : 0; //修复index的越界问题
     this.bookRecord.recordChapterNum = index;
-    AsyncStorage.setItem(bookRecordFlag, JSON.stringify(this.bookRecord)); //保存书籍的阅读信息
+    Storage.set(bookRecordFlag, this.bookRecord, 2); //保存书籍的阅读信息
     let nurl = this.chapterLst[index].key;
 
     if (this.chapterMap[nurl] === undefined) {
       try {
         const { data } = await content(nurl);
         this.chapterMap[nurl] = data;
-        AsyncStorage.setItem(bookMapFlag, JSON.stringify(this.chapterMap));
+        Storage.set(bookMapFlag, this.chapterMap)
       } catch (err) {
         let epp = { title: '网络连接超时啦啦啦啦啦', content: '网络连接超时.', prev: 'error', next: 'error' };
         this.setState({
@@ -263,7 +260,7 @@ class ReadScreen extends React.PureComponent {
   getCurrentPage(page) {
     page = page === 0 ? 1 : page;
     this.bookRecord.recordPage = page;
-    AsyncStorage.setItem(bookRecordFlag, JSON.stringify(this.bookRecord));
+    Storage.set(bookRecordFlag, this.bookRecord, 2);
   }
 
   render() {

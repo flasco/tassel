@@ -38,25 +38,32 @@ export default {
     *operationClear(action, { call, put }) {
       yield put(createAction('updateState')({ operationNum: 0 }));
     },
-    *operationAdd(action, { call, put }) {
-      yield put(createAction('updateState')({ operationNum: state.operationNum + 1 }));
+    *operationAdd(action, { select,call, put }) {
+      let operationNum = yield select(state => state.list.operationNum) + 1;
+      yield put(createAction('updateState')({ operationNum }));
     },
     *changeOrigin({ id, change }, { select, call, put }) {
       let list = yield select(state => state.list.list);
       list[id].plantformId = change;
       yield put(createAction('updateState')({ list }));
     },
-    *listUpdate(action, { select, call, put }) {
+    *listUpdate({ callback }, { select, call, put }) {
       yield put(createAction('updateState')({ loadingFlag: true }));
       let listState = yield select(state => state.list);
       let tasks = [refreshChapter(listState.list), refreshChapter(listState.fattenList)];
       const resArr = yield call(Promise.all, tasks);
+      let updateBook = 0;
       resArr[0].filter((x, index) => {
         if (x !== undefined) {
           let updateNum = listState.list[index].updateNum + x.num;
           listState.list[index].latestChapter = x.title;
           listState.list[index].isUpdate = updateNum > 0;
           listState.list[index].updateNum = updateNum;
+          if (x.num !== -1) {
+            updateBook++
+          } else {
+            callback && callback(`有一本书籍抓取失败了。。`);
+          }
         }
       });
       resArr[1].filter((x, index) => {
@@ -68,7 +75,7 @@ export default {
           !listState.isFatten && updateNum > 30 && (listState.isFatten = true);
         }
       });
-
+      callback && callback(`${updateBook}本书有更新`);
       yield put(createAction('updateState')({
         list: listState.list,
         loadingFlag: false,

@@ -1,6 +1,6 @@
 
-import { AsyncStorage } from 'react-native'
 import { list, latest } from '../services/book';
+import { Storage } from './index'
 
 export async function refreshChapter(booklist) {
   let tasks = [];
@@ -40,6 +40,6 @@ export async function get(url, bookChapterLst, latech) {
       break;
     }
   }
-  AsyncStorage.setItem(bookChapterLst, JSON.stringify(data));
+  Storage.set(bookChapterLst, data, 1);
   return { title, num };
 }

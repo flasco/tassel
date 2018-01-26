@@ -9,7 +9,9 @@ import SplashScreen from 'react-native-splash-screen';
 import SwipeableQuickActions from 'SwipeableQuickActions';
 import { connect } from 'react-redux';
 
-import { createAct } from '../../util'
+import { createAct,Storage } from '../../util';
+import Toast from '../../component/Toast';
+
 
 import Menu from '../Menu';
 import styles from './index.style';
@@ -44,7 +46,8 @@ class BookListScreen extends React.PureComponent {
 
     AppState.addEventListener('change', async (e) => {
       if (e === 'inactive' && this.props.operationNum > 0) {
-        this.props.dispatch(createAct('list/operationClear')())
+        this.props.dispatch(createAct('list/operationClear')());
+        Storage.mapSave();
         await AsyncStorage.multiSet([
           ['appState', JSON.stringify(this.props.app)],
           ['booklist', JSON.stringify(this.props.list)],
@@ -71,13 +74,21 @@ class BookListScreen extends React.PureComponent {
     this.props.dispatch(createAct('list/listDelete')({ bookId: deleteId }))
   }
 
+  callback = (msg) => {
+    this.refs.toast.show(msg);
+  }
+
   onRefresh = () => {
     if (this.props.isInit) {
-      this.props.dispatch(createAct('list/listUpdate')())
+      this.props.dispatch(createAct('list/listUpdate')({
+        callback: this.callback
+      }))
     } else {
       setTimeout(() => {
         this.props.isInit ?
-          this.props.dispatch(createAct('list/listUpdate')()) : this.onRefresh()
+          this.props.dispatch(createAct('list/listUpdate')({
+            callback: this.callback
+          })) : this.onRefresh()
       }, 247)
     }
   }
@@ -204,6 +215,7 @@ class BookListScreen extends React.PureComponent {
             renderQuickActions={this.renderActions}
             renderItem={this.renderRow}
             keyExtractor={(item, index) => `${item.bookName}-${item.author}`} />
+            <Toast ref="toast" />
         </View>
       </SideMenu>
     );
