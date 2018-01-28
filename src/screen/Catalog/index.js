@@ -58,7 +58,7 @@ class CatalogScreen extends React.PureComponent {
       <View>
         <View style={this.props.SMode ? styles.sunnyMode.solid : styles.nightMode.solid} />
         <TouchableHighlight style={{ height: 38 }}
-          underlayColor={this.props.SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
+          underlayColor={'transparent'}
           activeOpacity={0.7}
           onPress={() => {
             this.props.navigation.state.params.callback(index);

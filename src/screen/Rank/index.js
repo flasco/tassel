@@ -91,7 +91,7 @@ class RankScreen extends React.PureComponent {
     let rowData = item.item;
     return (
       <TouchableHighlight
-        underlayColor='#eeeeee'
+        underlayColor={'transparent'}
         activeOpacity={0.7}
         onPress={() => { this.JmpToBook(rowData.name, rowData.author); }}>
         <View style={{ height: 70 }}>

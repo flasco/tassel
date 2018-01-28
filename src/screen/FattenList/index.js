@@ -71,6 +71,7 @@ class FattenListScreen extends React.PureComponent {
     return (
       <SwipeableQuickActions style={{ backgroundColor: SMode ? styles.sunnyMode.rowStyle.backgroundColor : styles.nightMode.rowStyle.backgroundColor }}>
         <TouchableHighlight
+          underlayColor={'transparent'}
           onPress={() => this.moveBook(rowId)}>
           <View style={{ width: 70, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
             <Icon

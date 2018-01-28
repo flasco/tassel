@@ -1,13 +1,15 @@
 import { AsyncStorage } from 'react-native'
-let keyMap;
+let keyMap = [];
 get('Tassel@keyMap', [
   new Set(),  //cacheMap:
   new Set(),  //listMap:
   new Set(),  //recordMap:
 ]).then(val => {
-  keyMap = typeof val === 'string' ? JSON.parse(val) : val;
+  val = typeof val === 'string' ? JSON.parse(val) : val;
+  for (let i = 0; i < 3; i++) {
+    keyMap[i] = val[i].size !== undefined ? val[i] : new Set(); //检测是否为set类型
+  }
 });
-
 
 function mapSave() { // type < 0的时候全部清空
   AsyncStorage.setItem('Tassel@keyMap', JSON.stringify(keyMap));
@@ -15,10 +17,10 @@ function mapSave() { // type < 0的时候全部清空
 
 function clear(type = 0) { // type < 0的时候全部清空
   if (type > -1 && type < 3) {
-    multiRemove(keyMap[type]).then(()=>{
+    multiRemove(keyMap[type]).then(() => {
       keyMap[type] = new Set();
     })
-  }else{
+  } else {
     AsyncStorage.clear();
   }
 }

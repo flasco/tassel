@@ -71,7 +71,7 @@ class OriginScreen extends React.PureComponent {
     const { SMode } = this.props;
     return (
       <TouchableHighlight style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
-        underlayColor={SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
+        underlayColor={'transparent'}
         activeOpacity={0.7}
         onPress={() => {
           this.props.dispatch(createAct('list/changeOrigin')({

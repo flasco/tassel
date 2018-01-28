@@ -9,7 +9,7 @@ import SplashScreen from 'react-native-splash-screen';
 import SwipeableQuickActions from 'SwipeableQuickActions';
 import { connect } from 'react-redux';
 
-import { createAct,Storage } from '../../util';
+import { createAct, Storage } from '../../util';
 import Toast from '../../component/Toast';
 
 
@@ -112,7 +112,7 @@ class BookListScreen extends React.PureComponent {
   renderRow = (item) => {
     let rowData = item.item;
     let rowID = item.index;
-    let SMode = this.props.SMode;
+    let SMode = this.props.app.sunnyMode;
     let { navigate } = this.props.navigation;
     if (rowData.img === '-1') {
       return (
@@ -159,7 +159,7 @@ class BookListScreen extends React.PureComponent {
   }
 
   renderActions = (item) => {
-    let SMode = this.props.SMode;
+    let SMode = this.props.app.sunnyMode;
     let rowData = item.item;
     let rowId = item.index;
     const fattenColor = SMode ? '#000' : '#ddd';
@@ -167,6 +167,7 @@ class BookListScreen extends React.PureComponent {
     return (
       <SwipeableQuickActions style={{ backgroundColor: SMode ? styles.sunnyMode.rowStyle.backgroundColor : styles.nightMode.rowStyle.backgroundColor }}>
         <TouchableHighlight
+          underlayColor={'transparent'}
           onPress={() => this.fattenBook(rowId)}>
           <View style={{ width: 50, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
             <Icon
@@ -178,6 +179,7 @@ class BookListScreen extends React.PureComponent {
           </View>
         </TouchableHighlight>
         <TouchableHighlight
+          underlayColor={'transparent'}
           onPress={() => this.deleteBook(rowId)}>
           <View style={{ width: 50, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
             <Icon
@@ -193,46 +195,44 @@ class BookListScreen extends React.PureComponent {
   }
 
   render() {
+    if (!this.props.isInit) return null;
     const menu = <Menu navigation={this.props.navigation} addBook={this.addBook} />;
-    const { dispatch, list, loadingFlag, SMode, isInit } = this.props;
-    if (!isInit) return null;
+    const { dispatch, list, app: { menuFlag, sunnyMode } } = this.props;
     return (
       <SideMenu
         menu={menu}
-        isOpen={this.props.menuFlag}
+        isOpen={menuFlag}
         onChange={openFlag => dispatch(createAct('app/menuCtl')({ flag: openFlag }))}
         menuPosition={'right'}
         disableGestures={true}>
-        <View style={SMode ? styles.sunnyMode.container : styles.nightMode.container}>
+        <View style={sunnyMode ? styles.sunnyMode.container : styles.nightMode.container}>
           <StatusBar barStyle='light-content' />
           <SwipeableFlatList
             data={list}
             bounceFirstRowOnMount={false}//屏蔽第一次滑动
             onRefresh={this.onRefresh}
-            refreshing={loadingFlag}
-            ItemSeparatorComponent={() => <View style={SMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
+            refreshing={this.props.loadingFlag}
+            ItemSeparatorComponent={() => <View style={sunnyMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
             maxSwipeDistance={100}
             renderQuickActions={this.renderActions}
             renderItem={this.renderRow}
             keyExtractor={(item, index) => `${item.bookName}-${item.author}`} />
-            <Toast ref="toast" />
+          <Toast ref="toast" />
         </View>
       </SideMenu>
     );
   }
 }
 
-function select(state) {
+function select({ list, app }) {
   return {
-    list: state.list.list,
-    fattenList: state.list.fattenList,
-    isFatten: state.list.isFatten,
-    isInit: state.list.init,
-    menuFlag: state.app.menuFlag,
-    loadingFlag: state.list.loadingFlag,
-    operationNum: state.list.operationNum,
-    SMode: state.app.sunnyMode,
-    app: state.app
+    app,
+    list: list.list,
+    isInit: list.init,
+    isFatten: list.isFatten,
+    fattenList: list.fattenList,
+    loadingFlag: list.loadingFlag,
+    operationNum: list.operationNum,
   }
 }
 

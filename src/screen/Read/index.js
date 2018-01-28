@@ -98,7 +98,7 @@ class ReadScreen extends React.PureComponent {
     if (this.chapterLst.length === 0) {
       this.refs.toast.show('章节内容缺失，走心抓取中...');
       this.chapterLst = await list(this.currentBook.source[this.currentBook.plantformId]);
-      if (this.chapterLst !== -1) {
+      if (this.chapterLst === -1) {
         this.refs.toast.show('抓取失败...');
         return;
       } else {

@@ -45,7 +45,11 @@ class BookDetScreen extends React.PureComponent {
     if (this.state.isLoading) {
       let name = this.props.navigation.state.params.bookNam,
         author = this.props.navigation.state.params.bookAut;
-      const { data } = await search(name, author);
+      const data = await search(name, author);
+      if(data === -1) {
+        alert('抓取失败');
+        return ;
+      }
       this.book = data[0];
       if (typeof this.book === 'string') {
         // 如果后台没有搜索到本书会返回一段字符串。
