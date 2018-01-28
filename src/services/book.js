@@ -19,19 +19,21 @@ export function changeServer() {
 }
 
 export async function content(url) {
-  return await axios.get(`${Ip}/analysis?action=2&url=${url}`, { timeout: 5000 });
+  try {
+    const { data } = await axios.get(`${Ip}/analysis?action=2&url=${url}`, { timeout: 5000 });
+    return data;
+  } catch (error) {
+    return -1;
+  }
 }
 
 export async function latest(url) {
-  let res = '';
   try {
-    res = await axios.get(`${Ip}/analysis?action=3&url=${url}`, { timeout: 5000 });
-    res = res.data;
+    const { data } = await axios.get(`${Ip}/analysis?action=3&url=${url}`, { timeout: 5000 });
+    return data;
   } catch (err) {
-    res = '抓取失败'
+    return '抓取失败';
   }
-  return res;
-
 }
 
 /**
@@ -39,25 +41,39 @@ export async function latest(url) {
  * @param {String} url 
  */
 export async function list(url) {
-  let { err, data } = await axios.get(`${Ip}/analysis?action=1&url=${url}`, { timeout: 5000 });
-  if(err){
+  try {
+    let { data } = await axios.get(`${Ip}/analysis?action=1&url=${url}`, { timeout: 5000 });
+    let n = [], i = 0;
+    while (i < data.length) {
+      n.push({
+        key: data[i].url,
+        title: (data[i].title.length > 25 ? data[i].title.substr(0, 18) + '...' : data[i].title)
+      });
+      i++;
+    }
+    return n;
+  } catch (error) {
     return [];
   }
-  let n = [], i = 0;
-  while (i < data.length) {
-    n.push({
-      key: data[i].url,
-      title: (data[i].title.length > 25 ? data[i].title.substr(0, 18) + '...' : data[i].title)
-    });
-    i++;
-  }
-  return n;
+
+
 }
 
 export async function rnk(page) {
-  return await axios.get(`${Ip}/rnklist?p=${page}`, { timeout: 5000 });
+  try {
+    const { data } = await axios.get(`${Ip}/rnklist?p=${page}`, { timeout: 5000 });
+    return data;
+  } catch (error) {
+    return -1;
+  }
 }
 
 export async function search(name, author = '', pid = '') {
-  return await axios.get(`${StorageIp}/sear?name=${name}&aut=${author}&pid=${pid}`, { timeout: 5000 });
+  try {
+    const { data } = await axios.get(`${StorageIp}/sear?name=${name}&aut=${author}&pid=${pid}`, { timeout: 5000 });
+    return data;
+  } catch (error) {
+    return -1;
+  }
+
 }

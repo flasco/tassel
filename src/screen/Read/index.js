@@ -35,16 +35,13 @@ q.drain = function () {
 async function fetchList(nurl) {
   let n = 100 * (finishTask / allTask) >> 0; //取整
   if (n % 15 === 0) tht.refs.toast.show(`Task process:${n}%`);
-  try {
-    if (tht.chapterMap[nurl] === undefined) {
-      const { data } = await content(nurl);
-      await delay(1000);
-      tht.chapterMap[nurl] = data;
-    }
-    finishTask++;
-  } catch (err) {
-
+  if (tht.chapterMap[nurl] === undefined) {
+    const data = await content(nurl);
+    await delay(1000);  //设置抓取延时
+    data !== -1 && (tht.chapterMap[nurl] = data);
   }
+  finishTask++;
+
   return;
 }
 
@@ -101,7 +98,7 @@ class ReadScreen extends React.PureComponent {
     if (this.chapterLst.length === 0) {
       this.refs.toast.show('章节内容缺失，走心抓取中...');
       this.chapterLst = await list(this.currentBook.source[this.currentBook.plantformId]);
-      if (this.chapterLst.length < 1) {
+      if (this.chapterLst !== -1) {
         this.refs.toast.show('抓取失败...');
         return;
       } else {
@@ -164,11 +161,11 @@ class ReadScreen extends React.PureComponent {
 
   async cacheLoad(nurl) {
     if (this.chapterMap[nurl] === undefined) {
-      try {
-        const { data } = await content(nurl);
+      const data = await content(nurl);
+      if (data !== -1) {
         this.chapterMap[nurl] = data;
         Storage.set(bookMapFlag, this.chapterMap)
-      } catch (err) {
+      } else {
         this.refs.toast.show('fetch err');
       }
     }
@@ -181,11 +178,11 @@ class ReadScreen extends React.PureComponent {
     let nurl = this.chapterLst[index].key;
 
     if (this.chapterMap[nurl] === undefined) {
-      try {
-        const { data } = await content(nurl);
+      const data = await content(nurl);
+      if (data !== -1) {
         this.chapterMap[nurl] = data;
         Storage.set(bookMapFlag, this.chapterMap)
-      } catch (err) {
+      } else {
         let epp = { title: '网络连接超时啦啦啦啦啦', content: '网络连接超时.', prev: 'error', next: 'error' };
         this.setState({
           currentItem: epp,

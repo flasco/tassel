@@ -53,7 +53,15 @@ class RankScreen extends React.PureComponent {
   }
 
   async getNet(page = 1) {
-    const { data } = await rnk(page);
+    const data = await rnk(page);
+    if(data === -1){
+      this.setState({
+        dataSource: [],
+        fetchFlag: false,
+        FooterText: '加载失败',
+      });
+      return ;
+    }
     let source = this.state.dataSource;
     source.push(...data);
     if (page === 1) {
