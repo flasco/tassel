@@ -6,7 +6,7 @@ This is a novel reader app powered by react-native 0.52.2.
 
 it have shelf, fattenList, read page, record and so on.
 
-Tip: it just support chinese novel.
+Tip: it just support chinese novel, if you interested about another language, you can try to change it by yourself.
 
 example pic: wait to be added.
 
