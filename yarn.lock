@@ -3753,9 +3753,9 @@ react-native-vector-icons@^4.5.0:
     prop-types "^15.5.10"
     yargs "^8.0.2"
 
-react-native@0.52.0:
-  version "0.52.0"
-  resolved "http://registry.npm.taobao.org/react-native/download/react-native-0.52.0.tgz#9784663a2aa40b30c87d4c9c06ef26cf8d419d91"
+react-native@0.52.2:
+  version "0.52.2"
+  resolved "http://registry.npm.taobao.org/react-native/download/react-native-0.52.2.tgz#1ae9a4c4441bd6e54a8ffc8aae4ac2b5c7cccd68"
   dependencies:
     absolute-path "^0.0.0"
     art "^0.10.0"
@@ -3812,7 +3812,7 @@ react-native@0.52.0:
     xmldoc "^0.4.0"
     yargs "^9.0.0"
 
-react-navigation@^1.0.0-beta.26:
+react-navigation@^1.0.0-beta.27:
   version "1.0.0-beta.27"
   resolved "http://registry.npm.taobao.org/react-navigation/download/react-navigation-1.0.0-beta.27.tgz#e6263b01975cd790e32b3711c2eb6cead96c102c"
   dependencies:
