@@ -31,7 +31,7 @@ export default {
     },
     solid: {
       height: 1,
-      backgroundColor: '#1e1e1e',
+      backgroundColor: '#535353',
       marginLeft: 15,
       marginRight: 20
     },

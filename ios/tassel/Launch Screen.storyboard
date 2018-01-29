@@ -21,7 +21,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="IndexY.png" translatesAutoresizingMaskIntoConstraints="NO" id="Y3Z-fI-eFy">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="IndexX.png" translatesAutoresizingMaskIntoConstraints="NO" id="Y3Z-fI-eFy">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -46,6 +46,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="IndexY.png" width="1242" height="2208"/>
+        <image name="IndexX.png" width="1242" height="2208"/>
     </resources>
 </document>

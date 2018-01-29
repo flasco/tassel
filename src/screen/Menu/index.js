@@ -1,13 +1,11 @@
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity, AsyncStorage, TouchableWithoutFeedback, Linking } from 'react-native';
 import React from 'react';
+import { Text, View, TouchableOpacity, Linking } from 'react-native';
+import { connect } from 'react-redux';
 
 import { changeServer } from '../../services/book';
-
-import { connect } from 'react-redux';
-import { OperationAdd } from '../../actions/list';
+import { createAct, NavigationActions, Storage } from '../../util';
 
 import styles from './index.style';
-const window = Dimensions.get('window');
 
 class Menu extends React.PureComponent {
   constructor(props) {
@@ -28,19 +26,28 @@ class Menu extends React.PureComponent {
   }
 
   async CleanData() {
-    this.props.dispatch(OperationAdd());
-    await AsyncStorage.clear();
-    alert('除书架记录之外的数据已经全部清空');
+    this.props.dispatch(createAct('list/operationAdd')());
+    Storage.clear(0);  // 清理缓存
+    Storage.clear(1);  // 清理章节目录
+    alert('缓存已清理');
+  }
+
+  navigate = (routeName, params) => {
+    this.props.dispatch(NavigationActions.navigate({
+      routeName, params
+    }))
   }
 
   render() {
-    const { navigate } = this.props.navigation;
     return (
       <View style={styles.menu}>
-        <TouchableOpacity onPress={() => navigate('Sear', { addBook: this.props.addBook })}>
+        <View style={styles.itemX}>
+          <Text style={styles.itemY} >{`当前已阅读字数:  ${(this.props.readNum / 10000).toFixed(2)} W`}</Text>
+        </View>
+        <TouchableOpacity onPress={() => this.navigate('Sear', { addBook: this.props.addBook })}>
           <Text style={styles.item} >Search</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => { navigate('RnkL', { addBook: this.props.addBook }); }}>
+        <TouchableOpacity onPress={() => this.navigate('RnkL', { addBook: this.props.addBook })}>
           <Text style={styles.item} >RankList</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.leanMore}>
@@ -58,6 +65,8 @@ class Menu extends React.PureComponent {
 }
 
 function select(state) {
-  return {}
+  return {
+    readNum: state.app.readNum
+  }
 }
 export default connect(select)(Menu);

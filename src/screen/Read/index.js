@@ -1,25 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
-  Text, View, Dimensions, StatusBar, InteractionManager,
-  ActionSheetIOS, LayoutAnimation, AsyncStorage, AppState
+  Text, View, Dimensions,
+  StatusBar, ActionSheetIOS, LayoutAnimation
 } from 'react-native';
 
-
 import async from 'async';
-import dateFormat from 'dateformat';
 import { connect } from 'react-redux';
 
-import { sunnyModeSwitch } from '../../actions/app';
 import Toast from '../../component/Toast';
 import ViewPager from '../../component/viewPager';
 import getContextArr from '../../util/getContextArr';
 import Navigat from '../../component/Navigat';
 import { content, list } from '../../services/book';
 
-import { sleep } from '../../util/sleep'
+import { delay, createAct, Storage } from '../../util'
 
 import styles from './index.style';
-
 
 /**
  * 下载模块
@@ -33,47 +29,25 @@ let q = async.queue(async (url, callback) => {
 q.drain = function () {
   tht.refs.toast.show(`Task finished at ${finishTask}/${allTask}`);
   finishTask = 0;
-  AsyncStorage.setItem(bookMapFlag, JSON.stringify(tht.chapterMap));
+  Storage.set(bookMapFlag, tht.chapterMap)
 };
 
 async function fetchList(nurl) {
   let n = 100 * (finishTask / allTask) >> 0; //取整
-  if (n % 15 === 0) {
-    tht.refs.toast.show(`Task process:${n}%`);
+  if (n % 15 === 0) tht.refs.toast.show(`Task process:${n}%`);
+  if (tht.chapterMap[nurl] === undefined) {
+    const data = await content(nurl);
+    await delay(1000);  //设置抓取延时
+    data !== -1 && (tht.chapterMap[nurl] = data);
   }
-  try {
-    if (tht.chapterMap[nurl] === undefined) {
-      const { data } = await content(nurl);
-      await sleep(1000);
-      tht.chapterMap[nurl] = data;
-    }
-    finishTask++;
-  } catch (err) {
+  finishTask++;
 
-  }
   return;
 }
 
 let allTask = 0, finishTask = 0;
-
 let tht, bookMapFlag, bookRecordFlag, chapterLstFlag;
-
 const { height, width } = Dimensions.get('window');
-
-class Readitems extends React.PureComponent {
-  render() {
-    return (
-      <View style={[styles.container, this.props.SMode ? (styles.SunnyMode_container) : (styles.MoonMode_container)]}>
-        <Text style={[styles.title, this.props.SMode ? (styles.SunnyMode_Title) : (styles.MoonMode_Title)]}>{this.props.title}</Text>
-        <Text style={[styles.textsize, this.props.SMode ? (styles.SunnyMode_text) : (styles.MoonMode_text)]} numberOfLines={21}>{this.props.data}</Text>
-        <View style={styles.bottView}>
-          <Text style={[styles.bottom1, !this.props.SMode && (styles.MoonMode_Bottom)]}>{dateFormat(new Date(), 'H:MM')}</Text>
-          <Text style={[styles.bottom2, !this.props.SMode && (styles.MoonMode_Bottom)]} >{this.props.presPag}/{this.props.totalPage} </Text>
-        </View>
-      </View>
-    );
-  }
-}
 
 class ReadScreen extends React.PureComponent {
   constructor(props) {
@@ -116,22 +90,22 @@ class ReadScreen extends React.PureComponent {
     chapterLstFlag = `${this.currentBook.bookName}_${this.currentBook.plantformId}_list`;
     bookMapFlag = `${this.currentBook.bookName}_${this.currentBook.plantformId}_map`;
 
-    const tm = await AsyncStorage.multiGet([bookRecordFlag, chapterLstFlag, bookMapFlag])
-    this.chapterLst = tm[1][1] !== null ? JSON.parse(tm[1][1]) : [];
-    this.chapterMap = tm[2][1] !== null ? JSON.parse(tm[2][1]) : new Map();
-    if (this.chapterLst.length !== 0) {
-      this.bookRecord = tm[0][1] !== null ? JSON.parse(tm[0][1]) : { recordChapterNum: 0, recordPage: 1 };
-    }
+    const storageResArr = await Storage.multiGet([bookRecordFlag, chapterLstFlag, bookMapFlag]);
+    this.chapterLst = storageResArr[1] || [];
+    this.chapterMap = storageResArr[2] || new Map();
+    this.bookRecord = storageResArr[0] || { recordChapterNum: 0, recordPage: 1 };
 
     if (this.chapterLst.length === 0) {
-      this.refs.toast.show('章节内容缺失，正在抓取中...');
+      this.refs.toast.show('章节内容缺失，走心抓取中...');
       this.chapterLst = await list(this.currentBook.source[this.currentBook.plantformId]);
-      this.bookRecord = { recordChapterNum: 0, recordPage: 1 };
-      AsyncStorage.setItem(chapterLstFlag, JSON.stringify(this.chapterLst));
+      if (this.chapterLst === -1) {
+        this.refs.toast.show('抓取失败...');
+        return;
+      } else {
+        Storage.set(chapterLstFlag, this.chapterLst, 1);
+      }
     }
-
     this.getNet(this.bookRecord.recordChapterNum, 0);
-
     this.bookRecord.recordPage = 1;    //修复进入章节后从目录进入新章节页数记录不正确的bug
   }
 
@@ -146,7 +120,7 @@ class ReadScreen extends React.PureComponent {
   }
 
   reload = () => {
-    this.initConf().then(()=>{
+    this.initConf().then(() => {
       this.props.navigation.navigate('ChaL', {
         url: this.currentBook.url,
         name: this.currentBook.bookName,
@@ -166,52 +140,49 @@ class ReadScreen extends React.PureComponent {
       ],
       cancelButtonIndex: 2,
     }, (buttonIndex) => {
-      switch (buttonIndex) {
-        case 0: {//50章
-          this.download_Chapter(50); break;
-        }
-        case 1: {//150章
-          this.download_Chapter(150); break;
-        }
-      }
+      let operateArr = [50, 150];
+      this.download_Chapter(operateArr[buttonIndex]);
     });
   }
 
   renderPage(data, pageID) {
+    const { SMode } = this.props;
     return (
-      <Readitems
-        title={this.state.currentItem.title}
-        SMode={this.props.SMode}
-        data={data}
-        presPag={Number(pageID) + 1}
-        totalPage={totalPage} />
+      <View style={[styles.container, SMode ? (styles.SunnyMode_container) : (styles.MoonMode_container)]}>
+        <Text style={[styles.title, SMode ? (styles.SunnyMode_Title) : (styles.MoonMode_Title)]}>{this.state.currentItem.title}</Text>
+        <Text style={[styles.textsize, SMode ? (styles.SunnyMode_text) : (styles.MoonMode_text)]} numberOfLines={21}>{data}</Text>
+        <View style={styles.bottView}>
+          <Text style={[styles.bottom1, !SMode && (styles.MoonMode_Bottom)]}>{new Date().toTimeString().substring(0, 5)}</Text>
+          <Text style={[styles.bottom2, !SMode && (styles.MoonMode_Bottom)]} >{`${+pageID + 1}/${totalPage}`} </Text>
+        </View>
+      </View>
     );
   }
 
   async cacheLoad(nurl) {
     if (this.chapterMap[nurl] === undefined) {
-      try {
-        const { data } = await content(nurl);
+      const data = await content(nurl);
+      if (data !== -1) {
         this.chapterMap[nurl] = data;
-        await AsyncStorage.setItem(bookMapFlag, JSON.stringify(this.chapterMap));
-      } catch (err) {
+        Storage.set(bookMapFlag, this.chapterMap)
+      } else {
         this.refs.toast.show('fetch err');
       }
     }
   }
 
   async getNet(index, direct) {
-    index = (index <= this.chapterLst.length - 1 && index > -1) ? index : 0;
+    index = (index <= this.chapterLst.length - 1 && index > -1) ? index : 0; //修复index的越界问题
     this.bookRecord.recordChapterNum = index;
-    AsyncStorage.setItem(bookRecordFlag, JSON.stringify(this.bookRecord));
+    Storage.set(bookRecordFlag, this.bookRecord, 2); //保存书籍的阅读信息
     let nurl = this.chapterLst[index].key;
 
     if (this.chapterMap[nurl] === undefined) {
-      try {
-        const { data } = await content(nurl);
+      const data = await content(nurl);
+      if (data !== -1) {
         this.chapterMap[nurl] = data;
-        AsyncStorage.setItem(bookMapFlag, JSON.stringify(this.chapterMap));
-      } catch (err) {
+        Storage.set(bookMapFlag, this.chapterMap)
+      } else {
         let epp = { title: '网络连接超时啦啦啦啦啦', content: '网络连接超时.', prev: 'error', next: 'error' };
         this.setState({
           currentItem: epp,
@@ -221,12 +192,13 @@ class ReadScreen extends React.PureComponent {
         return;
       }
     }
+    this.props.dispatch(createAct('app/readAdd')({ num: this.chapterMap[nurl].content.length })) //添加阅读的字数
     this.setState({
       currentItem: this.chapterMap[nurl],
       loadFlag: false,
       goFlag: direct,
     });
-    index < this.chapterLst.length - 1 && this.cacheLoad(this.chapterLst[index + 1].key);
+    index < this.chapterLst.length - 1 && this.cacheLoad(this.chapterLst[index + 1].key); //如果当前章节小于倒数第二章就开始预加载
   }
 
   getNextPage() {
@@ -261,7 +233,7 @@ class ReadScreen extends React.PureComponent {
       update: { // 视图更新
         type: LayoutAnimation.Types.linear,
       },
-      delete: {
+      delete: { // 视图消失
         type: LayoutAnimation.Types.linear,
         property: LayoutAnimation.Properties.opacity,// opacity
       }
@@ -270,7 +242,7 @@ class ReadScreen extends React.PureComponent {
   }
 
   SModeChange = () => {
-    this.props.dispatch(sunnyModeSwitch());
+    this.props.dispatch(createAct('app/sunnyModeSwitch')());
   }
 
   getChapterUrl(index) {
@@ -278,56 +250,54 @@ class ReadScreen extends React.PureComponent {
       loadFlag: true,
       isVisible: false
     }, () => {
-      tht.getNet(index, 1);
+      this.getNet(index, 1);
     });
   }
 
-  getCurrentPage(pag) {
-    pag = pag === 0 ? 1 : pag;
-    this.bookRecord.recordPage = pag;
-    AsyncStorage.setItem(bookRecordFlag, JSON.stringify(this.bookRecord));
+  getCurrentPage(page) {
+    page = page === 0 ? 1 : page;
+    this.bookRecord.recordPage = page;
+    Storage.set(bookRecordFlag, this.bookRecord, 2);
   }
 
   render() {
     const ds = new ViewPager.DataSource({ pageHasChanged: (p1, p2) => p1 !== p2 });
+    const { SMode, navigation } = this.props;
     return (
-      <View style={[styles.container, this.props.SMode ? (styles.SunnyMode_container) : (styles.MoonMode_container)]}>
+      <View style={[styles.container, SMode ? (styles.SunnyMode_container) : (styles.MoonMode_container)]}>
         <StatusBar
           barStyle="light-content"
           hidden={!this.state.isVisible}
           animation={true} />
         {this.state.isVisible &&
           <Navigat
-            navigation={this.props.navigation}
+            navigation={navigation}
             currentBook={this.currentBook}
             reLoad={this.reload}
-            readId={this.props.navigation.state.params.id}
             choose={1} />}
         {this.state.loadFlag ? (
-          <Text style={[styles.centr, !this.props.SMode && (styles.MoonMode_text)]}>
-            Loading...</Text>) :
-          (<ViewPager
-            dataSource={ds.cloneWithPages(getContextArr(this.state.currentItem.content, width))}
-            renderPage={this.renderPage}
-            getNextPage={this.getNextPage}
-            getPrevPage={this.getPrevPage}
-            getCurrentPage={this.getCurrentPage}
-            clickBoard={this.clickBoard}
-            initialPage={this.bookRecord.recordPage - 1}
-            locked={this.state.isVisible}
-            Gpag={this.state.goFlag} />)}
+          <Text style={[styles.centr, !SMode && (styles.MoonMode_text)]}>
+            Loading...</Text>) : (<ViewPager
+              dataSource={ds.cloneWithPages(getContextArr(this.state.currentItem.content, width))}
+              renderPage={this.renderPage}
+              getNextPage={this.getNextPage}
+              getPrevPage={this.getPrevPage}
+              getCurrentPage={this.getCurrentPage}
+              clickBoard={this.clickBoard}
+              initialPage={this.bookRecord.recordPage - 1}
+              locked={this.state.isVisible}
+              Gpag={this.state.goFlag} />)}
         <Toast ref="toast" />
-        {this.state.isVisible &&
-          <Navigat
-            urlx={this.currentBook.url}
-            currentChapter={this.bookRecord.recordChapterNum}
-            bname={this.currentBook.bookName}
-            bookChapterLst={this.chapterLst}
-            getChapterUrl={this.getChapterUrl}
-            navigation={this.props.navigation}
-            showAlertSelected={this.showAlertSelected}
-            SModeChange={this.SModeChange}
-            choose={2} />}
+        {this.state.isVisible && <Navigat
+          urlx={this.currentBook.url}
+          currentChapter={this.bookRecord.recordChapterNum}
+          bname={this.currentBook.bookName}
+          bookChapterLst={this.chapterLst}
+          getChapterUrl={this.getChapterUrl}
+          navigation={navigation}
+          showAlertSelected={this.showAlertSelected}
+          SModeChange={this.SModeChange}
+          choose={2} />}
       </View>
     );
   }

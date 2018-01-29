@@ -1,18 +1,16 @@
 import React from 'react';
 import { Text, View, FlatList, TouchableHighlight } from 'react-native';
 import { HeaderBackButton } from 'react-navigation';
+import { Badge } from 'react-native-elements';
 import { connect } from 'react-redux';
 
 import { latest } from '../../services/book';
-import { changeOrigin } from '../../actions/list'
-
-import { Badge } from 'react-native-elements';
-
 import { webSite } from '../../config';
+import { createAct } from '../../util';
 
 import styles from './index.style';
 
-class OriginScreen extends React.Component {
+class OriginScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: `${navigation.state.params.book.bookName}`,
@@ -73,11 +71,11 @@ class OriginScreen extends React.Component {
     const { SMode } = this.props;
     return (
       <TouchableHighlight style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
-        underlayColor={SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
+        underlayColor={'transparent'}
         activeOpacity={0.7}
         onPress={() => {
-          this.props.dispatch(changeOrigin({
-            id: this.props.navigation.state.params.readId,
+          this.props.dispatch(createAct('list/changeOrigin')({
+            id: 0, //因为那时候已经因为排序而来到了第一名。
             change: rowData.site
           }))
           this.props.navigation.state.params.reLoad();

@@ -41,9 +41,8 @@ class SearchScreen extends React.PureComponent {
   }
 
   async SearchBook(text) {
-    let { data } = await search(text);
-    // console.log(data);
-    if (data === 'error...') {
+    let data = await search(text);
+    if (data === 'error...' || data === -1) {
       this.setState({
         dataSource: '',
         hint: '无相关搜索结果。'

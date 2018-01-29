@@ -9,15 +9,16 @@ import SplashScreen from 'react-native-splash-screen';
 import SwipeableQuickActions from 'SwipeableQuickActions';
 import { connect } from 'react-redux';
 
-import { listAdd, listDelete, listUpdate, listInit, listRead, OperationClear } from '../../actions/list'
-import { menuCtl, menuSwitch } from '../../actions/app';
+import { createAct, Storage } from '../../util';
+import Toast from '../../component/Toast';
+
 
 import Menu from '../Menu';
 import styles from './index.style';
 
 let tht;
 
-class BookPackage extends React.PureComponent {
+class BookListScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: '古意流苏',
@@ -26,7 +27,7 @@ class BookPackage extends React.PureComponent {
       headerRight: (
         <Icon
           name='ios-add'
-          onPress={() => { tht.props.dispatch(menuSwitch()); }}
+          onPress={() => { tht.props.dispatch(createAct('app/menuSwitch')()); }}
           underlayColor={'transparent'}
           type='ionicon'
           color='#ddd'
@@ -45,12 +46,15 @@ class BookPackage extends React.PureComponent {
 
     AppState.addEventListener('change', async (e) => {
       if (e === 'inactive' && this.props.operationNum > 0) {
-        this.props.dispatch(OperationClear())
-        await AsyncStorage.setItem('booklist', JSON.stringify(this.props.list))
+        this.props.dispatch(createAct('list/operationClear')());
+        Storage.mapSave();
+        await AsyncStorage.multiSet([
+          ['appState', JSON.stringify(this.props.app)],
+          ['booklist', JSON.stringify(this.props.list)],
+          ['fattenList', JSON.stringify(this.props.fattenList)]
+        ]);
       }
     });
-
-    props.dispatch(listInit());
   }
 
   componentDidMount() {
@@ -67,43 +71,77 @@ class BookPackage extends React.PureComponent {
   }
 
   deleteBook(deleteId) {
-    this.props.dispatch(listDelete(deleteId));
+    this.props.dispatch(createAct('list/listDelete')({ bookId: deleteId }))
+  }
+
+  callback = (msg) => {
+    this.refs.toast.show(msg);
   }
 
   onRefresh = () => {
     if (this.props.isInit) {
-      this.props.dispatch(listUpdate(this.props.list))
+      this.props.dispatch(createAct('list/listUpdate')({
+        callback: this.callback
+      }))
     } else {
       setTimeout(() => {
-        this.props.isInit ? this.props.dispatch(listUpdate(this.props.list)) : this.onRefresh()
-      }, 521);
+        this.props.isInit ?
+          this.props.dispatch(createAct('list/listUpdate')({
+            callback: this.callback
+          })) : this.onRefresh()
+      }, 247)
     }
   }
 
+  fattenBook = (bookId) => {
+    this.props.dispatch(createAct('list/fattenBook')({ bookId }));
+  }
+
   addBook(data) {
-    this.props.dispatch(listAdd({
-      ...data,
-      latestChapter: '待检测',
-      latestRead: new Date().getTime()
-    }));
+    this.props.dispatch(createAct('list/listAdd')({
+      book: {
+        ...data,
+        latestChapter: '待检测',
+        latestRead: new Date().getTime(),
+        isUpdate: false,
+        updateNum: 0,
+      }
+    }))
   }
 
   renderRow = (item) => {
     let rowData = item.item;
     let rowID = item.index;
-    let SMode = this.props.SMode;
+    let SMode = this.props.app.sunnyMode;
     let { navigate } = this.props.navigation;
+    if (rowData.img === '-1') {
+      return (
+        <TouchableHighlight style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
+          underlayColor={SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
+          activeOpacity={0.7}
+          onPress={() => navigate('FattenBlock')}>
+          <View style={{ flexDirection: 'row' }}>
+            <Image source={require('../../assert/noImg.jpg')} style={styles.coverStyle} />
+            <View style={{ paddingLeft: 15 }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={SMode ? styles.sunnyMode.titleStyle : styles.nightMode.titleStyle}>{rowData.bookName}</Text>
+                {this.props.isFatten && <Badge value={`待杀`} containerStyle={styles.fattenBadgeStyle} textStyle={{ fontSize: 11 }} />}
+              </View>
+              <Text style={SMode ? styles.sunnyMode.subTitleStyle : styles.nightMode.subTitleStyle}>{rowData.desc}</Text>
+            </View>
+          </View>
+        </TouchableHighlight>
+      )
+    }
     return (
       <TouchableHighlight style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
         underlayColor={SMode ? styles.sunnyMode.underlayColor : styles.nightMode.underlayColor}
         activeOpacity={0.7}
-        onLongPress={() => {
-          navigate('BookDet', { book: rowData });
-        }}
+        onLongPress={() => navigate('BookDet', { book: rowData })}
         onPress={() => {
-          navigate('Read', { book: rowData, id: rowID });
+          navigate('Read', { book: rowData });
           setTimeout(() => {
-            this.props.dispatch(listRead(rowID))
+            this.props.dispatch(createAct('list/bookRead')({ bookId: rowID }))
           }, 1000);
         }}>
         <View style={{ flexDirection: 'row' }}>
@@ -111,7 +149,7 @@ class BookPackage extends React.PureComponent {
           <View style={{ paddingLeft: 15 }}>
             <View style={{ flexDirection: 'row' }}>
               <Text style={SMode ? styles.sunnyMode.titleStyle : styles.nightMode.titleStyle}>{rowData.bookName}</Text>
-              {rowData.isUpdate && <Badge value={`更新`} containerStyle={SMode ? styles.sunnyMode.badgeStyle : styles.nightMode.badgeStyle} textStyle={{ fontSize: 11 }} />}
+              {rowData.isUpdate && <Badge value={`更新`} containerStyle={styles.badgeStyle} textStyle={{ fontSize: 11 }} />}
             </View>
             <Text style={SMode ? styles.sunnyMode.subTitleStyle : styles.nightMode.subTitleStyle}>{rowData.updateNum > 10 ? `距上次点击已更新${rowData.updateNum}章` : `${rowData.latestChapter.length > 15 ? (rowData.latestChapter.substr(0, 15) + '...') : rowData.latestChapter}`}</Text>
           </View>
@@ -120,13 +158,30 @@ class BookPackage extends React.PureComponent {
     );
   }
 
-  renderActions = (rowData, sectionId, rowId) => {
-    let SMode = this.props.SMode;
+  renderActions = (item) => {
+    let SMode = this.props.app.sunnyMode;
+    let rowData = item.item;
+    let rowId = item.index;
+    const fattenColor = SMode ? '#000' : '#ddd';
+    if (rowData.img === '-1') return null;
     return (
       <SwipeableQuickActions style={{ backgroundColor: SMode ? styles.sunnyMode.rowStyle.backgroundColor : styles.nightMode.rowStyle.backgroundColor }}>
         <TouchableHighlight
+          underlayColor={'transparent'}
+          onPress={() => this.fattenBook(rowId)}>
+          <View style={{ width: 50, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+            <Icon
+              name='ios-star-outline'
+              type='ionicon'
+              color={fattenColor}
+              size={24} />
+            <Text style={{ color: fattenColor, fontSize: 10 }}>养肥</Text>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight
+          underlayColor={'transparent'}
           onPress={() => this.deleteBook(rowId)}>
-          <View style={{ width: 70, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+          <View style={{ width: 50, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
             <Icon
               name='ios-trash-outline'
               type='ionicon'
@@ -140,45 +195,45 @@ class BookPackage extends React.PureComponent {
   }
 
   render() {
+    if (!this.props.isInit) return null;
     const menu = <Menu navigation={this.props.navigation} addBook={this.addBook} />;
-    const { dispatch, list, loadingFlag, isInit, SMode } = this.props;
-    if (!isInit) return null;
-    return ((
-      <View style={SMode ? styles.sunnyMode.container : styles.nightMode.container}>
-        <StatusBar barStyle='light-content' />
-        <SideMenu
-          menu={menu}
-          isOpen={this.props.menuFlag}
-          onChange={openFlag => dispatch(menuCtl(openFlag))}
-          menuPosition={'right'}
-          disableGestures={true}>
-          <View style={SMode ? styles.sunnyMode.container : styles.nightMode.container}>
-            <SwipeableFlatList
-              data={list}
-              bounceFirstRowOnMount={false}//屏蔽第一次滑动
-              onRefresh={this.onRefresh}
-              refreshing={loadingFlag}
-              ItemSeparatorComponent={() => <View style={SMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
-              maxSwipeDistance={80}
-              renderQuickActions={this.renderActions}
-              renderItem={this.renderRow}
-              keyExtractor={(item, index) => `${item.bookName}-${item.author}`} />
-          </View>
-        </SideMenu>
-      </View>
-    ));
+    const { dispatch, list, app: { menuFlag, sunnyMode } } = this.props;
+    return (
+      <SideMenu
+        menu={menu}
+        isOpen={menuFlag}
+        onChange={openFlag => dispatch(createAct('app/menuCtl')({ flag: openFlag }))}
+        menuPosition={'right'}
+        disableGestures={true}>
+        <View style={sunnyMode ? styles.sunnyMode.container : styles.nightMode.container}>
+          <StatusBar barStyle='light-content' />
+          <SwipeableFlatList
+            data={list}
+            bounceFirstRowOnMount={false}//屏蔽第一次滑动
+            onRefresh={this.onRefresh}
+            refreshing={this.props.loadingFlag}
+            ItemSeparatorComponent={() => <View style={sunnyMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
+            maxSwipeDistance={100}
+            renderQuickActions={this.renderActions}
+            renderItem={this.renderRow}
+            keyExtractor={(item, index) => `${item.bookName}-${item.author}`} />
+          <Toast ref="toast" />
+        </View>
+      </SideMenu>
+    );
   }
 }
 
-function select(state) {
+function select({ list, app }) {
   return {
-    list: state.list.list,
-    isInit: state.list.isInit,
-    menuFlag: state.app.menuFlag,
-    loadingFlag: state.list.loadingFlag,
-    operationNum: state.list.operationNum,
-    SMode: state.app.sunnyMode,
+    app,
+    list: list.list,
+    isInit: list.init,
+    isFatten: list.isFatten,
+    fattenList: list.fattenList,
+    loadingFlag: list.loadingFlag,
+    operationNum: list.operationNum,
   }
 }
 
-export default connect(select)(BookPackage);
+export default connect(select)(BookListScreen);

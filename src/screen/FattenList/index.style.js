@@ -3,12 +3,6 @@ export default {
     width: 39,
     height: 51
   },
-  fattenBadgeStyle:{
-    borderRadius: 0, paddingTop: 2, paddingBottom: 2, padding: 2, backgroundColor: '#49c6f1'
-  },
-  badgeStyle:{
-    borderRadius: 0, paddingTop: 2, paddingBottom: 2, padding: 2, backgroundColor: '#e80000'
-  },
   sunnyMode:{
     container: {
       flex: 1,
@@ -27,6 +21,9 @@ export default {
       paddingLeft:10,
       paddingTop:10,
       backgroundColor: '#f2f2f2'
+    },
+    badgeStyle:{
+      borderRadius: 0, paddingTop: 2, paddingBottom: 2, padding: 2, backgroundColor: '#49c6f1'
     },
     subTitleStyle: {
       fontSize: 12,
@@ -58,6 +55,9 @@ export default {
       paddingTop:10,
       backgroundColor: '#282828'
     },
+    badgeStyle:{
+      borderRadius: 0, paddingTop: 2, paddingBottom: 2, padding: 2, backgroundColor: '#49c6f1'
+    },
     subTitleStyle: {
       fontSize: 12,
       color: '#646464',
@@ -68,5 +68,4 @@ export default {
       backgroundColor: '#1e1e1e'
     }
   }
-  
 }

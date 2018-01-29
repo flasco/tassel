@@ -1,38 +1,39 @@
 
 import axios from 'axios';
+import { serverIp } from '../config';
 
-const ServerIp = 'https://flasco.leanapp.cn';
 const StorageIp = 'https://testdb.leanapp.cn';
-const ServerSpareIp = 'https://flascospare.leanapp.cn';
-let Ip = ServerIp;
+const currenthours = new Date().getHours();
+let Ip = currenthours >= 9 && currenthours < 22 ? serverIp[0] : serverIp[1];
 
 export function changeServer() {
-  let currentHours = new Date().getHours();
   let msg = '当前无需切换';
-  if ((currentHours >= 21 || currentHours < 9) && Ip !== ServerSpareIp) {
-    Ip = ServerSpareIp;
-    msg = '服务器已切换至备用';
-  } else if (currentHours < 21 && currentHours >= 9 && Ip !== ServerIp) {
-    Ip = ServerIp;
+  if (Ip !== serverIp[0]) {
+    Ip = serverIp[0];
     msg = '服务器已切换至主线';
+  } else if (Ip !== serverIp[1]) {
+    Ip = serverIp[1];
+    msg = '服务器已切换至备用';
   }
   alert(msg);
 }
 
 export async function content(url) {
-  return await axios.get(`${Ip}/analysis?action=2&url=${url}`, { timeout: 5000 });
+  try {
+    const { data } = await axios.get(`${Ip}/analysis?action=2&url=${url}`, { timeout: 5000 });
+    return data;
+  } catch (error) {
+    return -1;
+  }
 }
 
 export async function latest(url) {
-  let res = '';
   try {
-    res = await axios.get(`${Ip}/analysis?action=3&url=${url}`, { timeout: 5000 });
-    res = res.data;
+    const { data } = await axios.get(`${Ip}/analysis?action=3&url=${url}`, { timeout: 5000 });
+    return data;
   } catch (err) {
-    res = '抓取失败'
+    return '抓取失败';
   }
-  return res;
-
 }
 
 /**
@@ -40,22 +41,39 @@ export async function latest(url) {
  * @param {String} url 
  */
 export async function list(url) {
-  let { data } = await axios.get(`${Ip}/analysis?action=1&url=${url}`, { timeout: 5000 });
-  let n = [], i = 0;
-  while (i < data.length) {
-    n.push({
-      key: data[i].url,
-      title: (data[i].title.length > 25 ? data[i].title.substr(0, 18) + '...' : data[i].title)
-    });
-    i++;
+  try {
+    let { data } = await axios.get(`${Ip}/analysis?action=1&url=${url}`, { timeout: 5000 });
+    let n = [], i = 0;
+    while (i < data.length) {
+      n.push({
+        key: data[i].url,
+        title: (data[i].title.length > 25 ? data[i].title.substr(0, 18) + '...' : data[i].title)
+      });
+      i++;
+    }
+    return n;
+  } catch (error) {
+    return [];
   }
-  return n;
+
+
 }
 
 export async function rnk(page) {
-  return await axios.get(`${Ip}/rnklist?p=${page}`, { timeout: 5000 });
+  try {
+    const { data } = await axios.get(`${Ip}/rnklist?p=${page}`, { timeout: 5000 });
+    return data;
+  } catch (error) {
+    return -1;
+  }
 }
 
 export async function search(name, author = '', pid = '') {
-  return await axios.get(`${StorageIp}/sear?name=${name}&aut=${author}&pid=${pid}`, { timeout: 5000 });
+  try {
+    const { data } = await axios.get(`${StorageIp}/sear?name=${name}&aut=${author}&pid=${pid}`, { timeout: 5000 });
+    return data;
+  } catch (error) {
+    return -1;
+  }
+
 }
