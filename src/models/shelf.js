@@ -35,10 +35,25 @@ export default {
     },
   },
   effects: {
+    *listInit(action, { call, put }) { //fix
+      const list = yield call(Storage.get, 'booklist');
+      const fattenList = yield call(Storage.get, 'fattenList');
+      // 截止2018-02-07 之前的所有app用户需要走一遍这个代码更新一下source， 2018-02-14之后删除。
+      list && list.length > 0 && list.filter(x => {
+        x.latestRead === undefined && (x.latestRead = 0)
+        x.source[1] && x.source[1].indexOf('m.xs') === -1 && (x.source[1] = x.source[1].replace(/www/, 'm'));
+      });
+      fattenList && fattenList.length > 0 && fattenList.filter(x => {
+        x.latestRead === undefined && (x.latestRead = 0)
+        x.source[1] && x.source[1].indexOf('m.xs') === -1 && (x.source[1] = x.source[1].replace(/www/, 'm'));
+      });
+
+      yield put(createAction('updateState')({ init: true, list, fattenList }));
+    },
     *operationClear(action, { call, put }) {
       yield put(createAction('updateState')({ operationNum: 0 }));
     },
-    *operationAdd(action, { select,call, put }) {
+    *operationAdd(action, { select, call, put }) {
       let operationNum = yield select(state => state.list.operationNum) + 1;
       yield put(createAction('updateState')({ operationNum }));
     },
@@ -83,15 +98,6 @@ export default {
         fattenList: listState.fattenList,
         operationNum: listState.operationNum + 1,
       }));
-    },
-    *listInit(action, { call, put }) { //fix
-      const list = yield call(Storage.get, 'booklist', false);
-      const fattenList = yield call(Storage.get, 'fattenList', false);
-      if (list && list.length > 0) {
-        list.filter(x => x.latestRead === undefined && (x.latestRead = 0));
-        yield put(createAction('updateState')({ list, fattenList }));
-      }
-      yield put(createAction('updateState')({ init: true }));
     },
     *listAdd({ book }, { select, call, put }) {
       yield put(createAction('updateState')({ btnLoading: true }));
@@ -149,7 +155,7 @@ export default {
           }
         });
       }
-      listState.fattenList.push(...book);
+      listState.fattenList.unshift(...book);
       yield put(createAction('updateState')({
         list: [...listState.list],
         fattenList: [...listState.fattenList],
@@ -163,8 +169,7 @@ export default {
       if (listState.fattenList.length === 0) {
         listState.list.pop(); //弹出养肥区（因为养肥区的readTime为0，排序之后必定在最后）
       }
-      listState.list.push(...book);
-      insertionSort(listState.list);
+      listState.list.unshift(...book);
       yield put(createAction('updateState')({
         list: [...listState.list],
         fattenList: [...listState.fattenList],

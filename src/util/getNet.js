@@ -40,7 +40,6 @@ export async function get(url, bookChapterLst, latech) {
       break;
     }
   }
-  console.log(bookChapterLst)
   Storage.set(bookChapterLst, data, 1);
   return { title, num };
 }

@@ -147,9 +147,11 @@ class ReadScreen extends React.PureComponent {
 
   renderPage(data, pageID) {
     const { SMode } = this.props;
+    let title = this.state.currentItem.title;
+    title = title.length > 25 ? title.substr(0, 25) + '...' : title;
     return (
       <View style={[styles.container, SMode ? (styles.SunnyMode_container) : (styles.MoonMode_container)]}>
-        <Text style={[styles.title, SMode ? (styles.SunnyMode_Title) : (styles.MoonMode_Title)]}>{this.state.currentItem.title}</Text>
+        <Text style={[styles.title, SMode ? (styles.SunnyMode_Title) : (styles.MoonMode_Title)]}>{title}</Text>
         <Text style={[styles.textsize, SMode ? (styles.SunnyMode_text) : (styles.MoonMode_text)]} numberOfLines={21}>{data}</Text>
         <View style={styles.bottView}>
           <Text style={[styles.bottom1, !SMode && (styles.MoonMode_Bottom)]}>{new Date().toTimeString().substring(0, 5)}</Text>

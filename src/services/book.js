@@ -42,6 +42,7 @@ export async function latest(url) {
  */
 export async function list(url) {
   try {
+    url.indexOf('m.xs') !== -1 && (url = url + 'all.html')
     let { data } = await axios.get(`${Ip}/analysis?action=1&url=${url}`, { timeout: 5000 });
     let n = [], i = 0;
     while (i < data.length) {
