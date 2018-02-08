@@ -39,14 +39,14 @@ export default {
       const list = yield call(Storage.get, 'booklist');
       const fattenList = yield call(Storage.get, 'fattenList');
       // 截止2018-02-07 之前的所有app用户需要走一遍这个代码更新一下source， 2018-02-14之后删除。
-      list && list.length > 0 && list.filter(x => {
-        x.latestRead === undefined && (x.latestRead = 0)
-        x.source[1] && x.source[1].indexOf('m.xs') === -1 && (x.source[1] = x.source[1].replace(/www/, 'm'));
-      });
-      fattenList && fattenList.length > 0 && fattenList.filter(x => {
-        x.latestRead === undefined && (x.latestRead = 0)
-        x.source[1] && x.source[1].indexOf('m.xs') === -1 && (x.source[1] = x.source[1].replace(/www/, 'm'));
-      });
+      // list && list.length > 0 && list.filter(x => {
+      //   x.latestRead === undefined && (x.latestRead = 0)
+      //   x.source[1] && x.source[1].indexOf('m.xs') === -1 && (x.source[1] = x.source[1].replace(/www/, 'm'));
+      // });
+      // fattenList && fattenList.length > 0 && fattenList.filter(x => {
+      //   x.latestRead === undefined && (x.latestRead = 0)
+      //   x.source[1] && x.source[1].indexOf('m.xs') === -1 && (x.source[1] = x.source[1].replace(/www/, 'm'));
+      // });
 
       yield put(createAction('updateState')({ init: true, list, fattenList }));
     },

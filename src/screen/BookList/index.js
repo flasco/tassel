@@ -10,10 +10,10 @@ import SwipeableQuickActions from 'SwipeableQuickActions';
 import { connect } from 'react-redux';
 
 import { createAct, Storage } from '../../util';
-import Toast from '../../component/Toast';
-
 
 import Menu from '../Menu';
+import Toast from '../../component/Toast';
+
 import styles from './index.style';
 
 let tht;
@@ -199,27 +199,29 @@ class BookListScreen extends React.PureComponent {
     const menu = <Menu navigation={this.props.navigation} addBook={this.addBook} />;
     const { dispatch, list, app: { menuFlag, sunnyMode } } = this.props;
     return (
-      <SideMenu
-        menu={menu}
-        isOpen={menuFlag}
-        onChange={openFlag => dispatch(createAct('app/menuCtl')({ flag: openFlag }))}
-        menuPosition={'right'}
-        disableGestures={true}>
-        <View style={sunnyMode ? styles.sunnyMode.container : styles.nightMode.container}>
-          <StatusBar barStyle='light-content' />
-          <SwipeableFlatList
-            data={list}
-            bounceFirstRowOnMount={false}//屏蔽第一次滑动
-            onRefresh={this.onRefresh}
-            refreshing={this.props.loadingFlag}
-            ItemSeparatorComponent={() => <View style={sunnyMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
-            maxSwipeDistance={100}
-            renderQuickActions={this.renderActions}
-            renderItem={this.renderRow}
-            keyExtractor={(item, index) => `${item.bookName}-${item.author}`} />
-          <Toast ref="toast" />
-        </View>
-      </SideMenu>
+      <View style={sunnyMode ? styles.sunnyMode.container : styles.nightMode.container}>
+        <SideMenu
+          menu={menu}
+          isOpen={menuFlag}
+          onChange={openFlag => dispatch(createAct('app/menuCtl')({ flag: openFlag }))}
+          menuPosition={'right'}
+          disableGestures={true}>
+          <View style={sunnyMode ? styles.sunnyMode.container : styles.nightMode.container}>
+            <StatusBar barStyle='light-content' />
+            <SwipeableFlatList
+              data={list}
+              bounceFirstRowOnMount={false}//屏蔽第一次滑动
+              onRefresh={this.onRefresh}
+              refreshing={this.props.loadingFlag}
+              ItemSeparatorComponent={() => <View style={sunnyMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
+              maxSwipeDistance={100}
+              renderQuickActions={this.renderActions}
+              renderItem={this.renderRow}
+              keyExtractor={(item, index) => `${item.bookName}-${item.author}`} />
+            <Toast ref="toast" />
+          </View>
+        </SideMenu>
+      </View>
     );
   }
 }
