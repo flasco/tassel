@@ -10,10 +10,10 @@ import SwipeableQuickActions from 'SwipeableQuickActions';
 import { connect } from 'react-redux';
 
 import { createAct, Storage } from '../../util';
-import Toast from '../../component/Toast';
-
 
 import Menu from '../Menu';
+import Toast from '../../component/Toast';
+
 import styles from './index.style';
 
 let tht;
@@ -71,7 +71,10 @@ class BookListScreen extends React.PureComponent {
   }
 
   deleteBook(deleteId) {
-    this.props.dispatch(createAct('list/listDelete')({ bookId: deleteId }))
+    this.props.dispatch(createAct('list/listDelete')({
+      list: this.props.list,
+      bookId: deleteId
+    }))
   }
 
   callback = (msg) => {
@@ -81,12 +84,18 @@ class BookListScreen extends React.PureComponent {
   onRefresh = () => {
     if (this.props.isInit) {
       this.props.dispatch(createAct('list/listUpdate')({
+        list: this.props.list,
+        fattenList: this.props.fattenList,
+        isFatten: this.props.isFatten,
         callback: this.callback
       }))
     } else {
       setTimeout(() => {
         this.props.isInit ?
           this.props.dispatch(createAct('list/listUpdate')({
+            list: this.props.list,
+            fattenList: this.props.fattenList,
+            isFatten: this.props.isFatten,
             callback: this.callback
           })) : this.onRefresh()
       }, 247)
@@ -94,11 +103,12 @@ class BookListScreen extends React.PureComponent {
   }
 
   fattenBook = (bookId) => {
-    this.props.dispatch(createAct('list/fattenBook')({ bookId }));
+    this.props.dispatch(createAct('list/fattenBook')({ fattenList: this.props.fattenList, list: this.props.list, bookId }));
   }
 
   addBook(data) {
     this.props.dispatch(createAct('list/listAdd')({
+      list: this.props.list,
       book: {
         ...data,
         latestChapter: '待检测',
@@ -141,7 +151,7 @@ class BookListScreen extends React.PureComponent {
         onPress={() => {
           navigate('Read', { book: rowData });
           setTimeout(() => {
-            this.props.dispatch(createAct('list/bookRead')({ bookId: rowID }))
+            this.props.dispatch(createAct('list/bookRead')({ list: this.props.list, bookId: rowID }))
           }, 1000);
         }}>
         <View style={{ flexDirection: 'row' }}>
@@ -199,27 +209,29 @@ class BookListScreen extends React.PureComponent {
     const menu = <Menu navigation={this.props.navigation} addBook={this.addBook} />;
     const { dispatch, list, app: { menuFlag, sunnyMode } } = this.props;
     return (
-      <SideMenu
-        menu={menu}
-        isOpen={menuFlag}
-        onChange={openFlag => dispatch(createAct('app/menuCtl')({ flag: openFlag }))}
-        menuPosition={'right'}
-        disableGestures={true}>
-        <View style={sunnyMode ? styles.sunnyMode.container : styles.nightMode.container}>
-          <StatusBar barStyle='light-content' />
-          <SwipeableFlatList
-            data={list}
-            bounceFirstRowOnMount={false}//屏蔽第一次滑动
-            onRefresh={this.onRefresh}
-            refreshing={this.props.loadingFlag}
-            ItemSeparatorComponent={() => <View style={sunnyMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
-            maxSwipeDistance={100}
-            renderQuickActions={this.renderActions}
-            renderItem={this.renderRow}
-            keyExtractor={(item, index) => `${item.bookName}-${item.author}`} />
-          <Toast ref="toast" />
-        </View>
-      </SideMenu>
+      <View style={sunnyMode ? styles.sunnyMode.container : styles.nightMode.container}>
+        <SideMenu
+          menu={menu}
+          isOpen={menuFlag}
+          onChange={openFlag => dispatch(createAct('app/menuCtl')({ flag: openFlag }))}
+          menuPosition={'right'}
+          disableGestures={true}>
+          <View style={sunnyMode ? styles.sunnyMode.container : styles.nightMode.container}>
+            <StatusBar barStyle='light-content' />
+            <SwipeableFlatList
+              data={list}
+              bounceFirstRowOnMount={false}//屏蔽第一次滑动
+              onRefresh={this.onRefresh}
+              refreshing={this.props.loadingFlag}
+              ItemSeparatorComponent={() => <View style={sunnyMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
+              maxSwipeDistance={100}
+              renderQuickActions={this.renderActions}
+              renderItem={this.renderRow}
+              keyExtractor={(item, index) => `${item.bookName}-${item.author}`} />
+            <Toast ref="toast" />
+          </View>
+        </SideMenu>
+      </View>
     );
   }
 }

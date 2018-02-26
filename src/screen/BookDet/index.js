@@ -46,15 +46,16 @@ class BookDetScreen extends React.PureComponent {
       let name = this.props.navigation.state.params.bookNam,
         author = this.props.navigation.state.params.bookAut;
       const data = await search(name, author);
-      if(data === -1) {
+      if (data === -1) {
         alert('抓取失败');
-        return ;
+        return;
       }
       this.book = data[0];
       if (typeof this.book === 'string') {
         // 如果后台没有搜索到本书会返回一段字符串。
         alert('本书没有记录！如果迫切需要加入本书，请及时反馈给开发人员~');
       } else {
+        this.book.source[1] && this.book.source[1].indexOf('m.xs') === -1 && ( this.book.source[1] = this.book.source[1].replace(/www/,'m'));
         this.setState({ isLoading: false });
         this.props.dispatch(createAct('list/setContain')({ flag: this.isContains(this.book) }));
       }
@@ -65,11 +66,8 @@ class BookDetScreen extends React.PureComponent {
 
   isContains = (book) => {
     if (!book) return false;
-    return this.props.list.filter(x =>
-      x.author === book.author && x.bookName === book.bookName
-    ).length + this.props.fattenList.filter(x =>
-      x.author === book.author && x.bookName === book.bookName
-    ).length > 0;
+    return this.props.list.some(x => x.author === book.author && x.bookName === book.bookName) ||
+      this.props.fattenList.some(x => x.author === book.author && x.bookName === book.bookName)
   }
 
   componentWillUnmount() {

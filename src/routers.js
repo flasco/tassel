@@ -3,8 +3,12 @@ import {
   StackNavigator, addNavigationHelpers,
   NavigationActions,
 } from 'react-navigation';
+import {
+  createReduxBoundAddListener,
+  createReactNavigationReduxMiddleware,
+} from 'react-navigation-redux-helpers';
 
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 import BookListScreen from './screen/BookList';
 import CatalogScreen from './screen/Catalog';
@@ -13,7 +17,7 @@ import SearchScreen from './screen/Search';
 import RankScreen from './screen/Rank'
 import BookDetScreen from './screen/BookDet';
 import OriginScreen from './screen/Origin';
-import FattenListScreen from './screen/FattenList'
+import FattenListScreen from './screen/FattenList';
 
 SearchScreen.navigationOptions = ({ navigation }) => {
   return { header: null };
@@ -39,22 +43,20 @@ const Tassel = StackNavigator({
     }
   });
 
-// function getCurrentScreen(navigationState) {
-//   if (!navigationState) {
-//     return null
-//   }
-//   const route = navigationState.routes[navigationState.index]
-//   if (route.routes) {
-//     return getCurrentScreen(route)
-//   }
-//   return route.routeName
-// }
-
+export const routerMiddleware = createReactNavigationReduxMiddleware(
+  'root',
+  state => state.router
+)
+const addListener = createReduxBoundAddListener('root')
 
 class Router extends PureComponent {
   render() {
     const { dispatch, router } = this.props
-    const navigation = addNavigationHelpers({ dispatch, state: router })
+    const navigation = addNavigationHelpers({
+      dispatch,
+      state: router,
+      addListener,
+    })
     return <Tassel navigation={navigation} />
   }
 }
