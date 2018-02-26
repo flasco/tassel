@@ -11,26 +11,38 @@ export default {
     updateState(state, { payload }) {
       return { ...state, ...payload }
     },
+    readNumAdd(state, { payload }) {
+      return {
+        ...state,
+        readNum: state.readNum + payload
+      }
+    },
+    modeSwitch(state, { payload }) {
+      return { ...state, menuFlag: !state.menuFlag }
+    },
+    modeContrl(state, { payload }) {
+      return { ...state, menuFlag: payload }
+    },
+    sunnyModeSwh(state, { payload }) {
+      return { ...state, sunnyMode: !state.sunnyMode }
+    }
   },
   effects: {
     *appInit(action, { call, put }) {
       const appState = yield call(Storage.get, 'appState');
       yield put(createAction('updateState')({ ...appState }))
     },
-    *menuSwitch(action, { select, call, put }) {
-      let flag = yield select(state => state.app.menuFlag);
-      yield put(createAction('updateState')({ menuFlag: !flag }))
+    *menuSwitch(action, { call, put }) {
+      yield put(createAction('modeSwitch')())
     },
-    *sunnyModeSwitch(action, { select, call, put }) {
-      let flag = yield select(state => state.app.sunnyMode);
-      yield put(createAction('updateState')({ sunnyMode: !flag }))
+    *sunnyModeSwitch(action, { call, put }) {
+      yield put(createAction('sunnyModeSwh')())
     },
     *menuCtl({ flag }, { call, put }) {
-      yield put(createAction('updateState')({ menuFlag: flag }))
+      yield put(createAction('modeContrl')(flag))
     },
-    *readAdd({ num }, { select, call, put }) {
-      const re = yield select(state => state.app.readNum);
-      yield put(createAction('updateState')({ readNum: re + num }));
+    *readAdd({ num }, { call, put }) {
+      yield put(createAction('readNumAdd')(num));
     },
   },
   subscriptions: {
