@@ -71,7 +71,10 @@ class BookListScreen extends React.PureComponent {
   }
 
   deleteBook(deleteId) {
-    this.props.dispatch(createAct('list/listDelete')({ bookId: deleteId }))
+    this.props.dispatch(createAct('list/listDelete')({
+      list: this.props.list,
+      bookId: deleteId
+    }))
   }
 
   callback = (msg) => {
@@ -81,12 +84,18 @@ class BookListScreen extends React.PureComponent {
   onRefresh = () => {
     if (this.props.isInit) {
       this.props.dispatch(createAct('list/listUpdate')({
+        list: this.props.list,
+        fattenList: this.props.fattenList,
+        isFatten: this.props.isFatten,
         callback: this.callback
       }))
     } else {
       setTimeout(() => {
         this.props.isInit ?
           this.props.dispatch(createAct('list/listUpdate')({
+            list: this.props.list,
+            fattenList: this.props.fattenList,
+            isFatten: this.props.isFatten,
             callback: this.callback
           })) : this.onRefresh()
       }, 247)
@@ -94,11 +103,12 @@ class BookListScreen extends React.PureComponent {
   }
 
   fattenBook = (bookId) => {
-    this.props.dispatch(createAct('list/fattenBook')({ bookId }));
+    this.props.dispatch(createAct('list/fattenBook')({ fattenList: this.props.fattenList, list: this.props.list, bookId }));
   }
 
   addBook(data) {
     this.props.dispatch(createAct('list/listAdd')({
+      list: this.props.list,
       book: {
         ...data,
         latestChapter: '待检测',
@@ -141,7 +151,7 @@ class BookListScreen extends React.PureComponent {
         onPress={() => {
           navigate('Read', { book: rowData });
           setTimeout(() => {
-            this.props.dispatch(createAct('list/bookRead')({ bookId: rowID }))
+            this.props.dispatch(createAct('list/bookRead')({ list: this.props.list, bookId: rowID }))
           }, 1000);
         }}>
         <View style={{ flexDirection: 'row' }}>

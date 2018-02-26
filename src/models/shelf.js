@@ -10,7 +10,6 @@ export default {
     loadingFlag: false,
     btnLoading: false,
     isContain: false,
-    errorMes: '', //等待完善抓取失败返回信息的功能。。
     isFatten: false,
     list: [{
       bookName: '天醒之路',
@@ -33,47 +32,49 @@ export default {
     updateState(state, { payload }) {
       return { ...state, ...payload }
     },
+    operationSet(state, { payload }) {
+      return {
+        ...state,
+        operationNum: payload > 0 ? state.operationNum + 1 : 0
+      }
+    },
+    originChange(state, { payload }) {
+      let list = state.list;
+      list[payload.id].plantformId = payload.change;
+      return { list, ...state }
+    },
+    containSet(state, { payload }) {
+      return { ...state, isContain: payload }
+    }
   },
   effects: {
-    *listInit(action, { call, put }) { //fix
-      const list = yield call(Storage.get, 'booklist');
-      const fattenList = yield call(Storage.get, 'fattenList');
-      // 截止2018-02-07 之前的所有app用户需要走一遍这个代码更新一下source， 2018-02-14之后删除。
-      // list && list.length > 0 && list.filter(x => {
-      //   x.latestRead === undefined && (x.latestRead = 0)
-      //   x.source[1] && x.source[1].indexOf('m.xs') === -1 && (x.source[1] = x.source[1].replace(/www/, 'm'));
-      // });
-      // fattenList && fattenList.length > 0 && fattenList.filter(x => {
-      //   x.latestRead === undefined && (x.latestRead = 0)
-      //   x.source[1] && x.source[1].indexOf('m.xs') === -1 && (x.source[1] = x.source[1].replace(/www/, 'm'));
-      // });
-
-      yield put(createAction('updateState')({ init: true, list, fattenList }));
+    *listInit(action, { call, put }) {
+      const resArr = yield call(Storage.multiGet, ['booklist', 'fattenList']);
+      yield put(createAction('updateState')({
+        init: true,
+        list: resArr[0],
+        fattenList: resArr[1]
+      }));
     },
     *operationClear(action, { call, put }) {
-      yield put(createAction('updateState')({ operationNum: 0 }));
+      yield put(createAction('operationSet')(0));
     },
-    *operationAdd(action, { select, call, put }) {
-      let operationNum = yield select(state => state.list.operationNum) + 1;
-      yield put(createAction('updateState')({ operationNum }));
+    *operationAdd(action, { call, put }) {
+      yield put(createAction('operationSet')(1));
     },
-    *changeOrigin({ id, change }, { select, call, put }) {
-      let list = yield select(state => state.list.list);
-      list[id].plantformId = change;
-      yield put(createAction('updateState')({ list }));
+    *changeOrigin({ id, change }, { call, put }) {
+      yield put(createAction('originChange')({ id, change }));
     },
-    *listUpdate({ callback }, { select, call, put }) {
+    *listUpdate({ list, fattenList, isFatten, callback }, { call, put }) {
       yield put(createAction('updateState')({ loadingFlag: true }));
-      let listState = yield select(state => state.list);
-      let tasks = [refreshChapter(listState.list), refreshChapter(listState.fattenList)];
-      const resArr = yield call(Promise.all, tasks);
+      const resArr = yield call(Promise.all, [refreshChapter(list), refreshChapter(fattenList)]);
       let updateBook = 0;
       resArr[0].filter((x, index) => {
         if (x !== undefined) {
-          let updateNum = listState.list[index].updateNum + x.num;
-          listState.list[index].latestChapter = x.title;
-          listState.list[index].isUpdate = updateNum > 0;
-          listState.list[index].updateNum = updateNum;
+          let updateNum = list[index].updateNum + x.num;
+          list[index].latestChapter = x.title;
+          list[index].isUpdate = updateNum > 0;
+          list[index].updateNum = updateNum;
           if (x.num !== -1) {
             updateBook++
           } else {
@@ -83,63 +84,57 @@ export default {
       });
       resArr[1].filter((x, index) => {
         if (x !== undefined) {
-          let updateNum = listState.fattenList[index].updateNum + x.num;
-          listState.fattenList[index].latestChapter = x.title;
-          listState.fattenList[index].isUpdate = updateNum > 0;
-          listState.fattenList[index].updateNum = updateNum;
-          !listState.isFatten && updateNum > 30 && (listState.isFatten = true);
+          let updateNum = fattenList[index].updateNum + x.num;
+          fattenList[index].latestChapter = x.title;
+          fattenList[index].isUpdate = updateNum > 0;
+          fattenList[index].updateNum = updateNum;
+          !isFatten && updateNum > 30 && (isFatten = true);
         }
       });
       callback && callback(`${updateBook}本书有更新`);
       yield put(createAction('updateState')({
-        list: listState.list,
+        list,
         loadingFlag: false,
-        isFatten: listState.isFatten,
-        fattenList: listState.fattenList,
-        operationNum: listState.operationNum + 1,
+        isFatten,
+        fattenList,
       }));
+      yield put(createAction('operationSet')(1));
     },
-    *listAdd({ book }, { select, call, put }) {
+    *listAdd({ book, list }, { select, call, put }) {
       yield put(createAction('updateState')({ btnLoading: true }));
-      let listState = yield select(state => state.list);
       const latestBook = yield call(refreshSingleChapter, book);
-      listState.list.unshift(latestBook);
+      list.unshift(latestBook);
       yield put(createAction('updateState')({
-        list: listState.list,
-        operationNum: listState.operationNum + 1,
+        list,
         btnLoading: false,
         isContain: true
       }));
+      yield put(createAction('operationSet')(1));
     },
     *setContain({ flag }, { call, put }) {
-      yield put(createAction('updateState')({
-        isContain: flag
-      }));
+      yield put(createAction('containSet')(flag));
     },
-    *listDelete({ bookId }, { select, call, put }) { //fix
-      let listState = yield select(state => state.list);
-      listState.list.splice(bookId, 1);
+    *listDelete({ bookId, list }, { select, call, put }) { //fix
+      list.splice(bookId, 1);
       yield put(createAction('updateState')({
-        list: listState.list,
-        operationNum: listState.operationNum + 1
+        list,
       }));
+      yield put(createAction('operationSet')(1));
     },
-    *bookRead({ bookId }, { select, call, put }) {
-      let listState = yield select(state => state.list);
-      listState.list[bookId].isUpdate = false; //阅读开始 清空检测到的更新。
-      listState.list[bookId].updateNum = 0;
-      listState.list[bookId].latestRead = new Date().getTime();
-      insertionSort(listState.list);
+    *bookRead({ bookId, list }, { call, put }) {
+      list[bookId].isUpdate = false; //阅读开始 清空检测到的更新。
+      list[bookId].updateNum = 0;
+      list[bookId].latestRead = new Date().getTime();
+      insertionSort(list);
       yield put(createAction('updateState')({
-        list: listState.list,
-        operationNum: listState.operationNum + 1
+        list,
       }));
+      yield put(createAction('operationSet')(1));
     },
-    *fattenBook({ bookId }, { select, call, put }) {
-      let listState = yield select(state => state.list);
-      let book = listState.list.splice(bookId, 1);
-      if (listState.fattenList.length === 0) {
-        listState.list.push({
+    *fattenBook({ bookId, list, fattenList }, { select, call, put }) {
+      let book = list.splice(bookId, 1);
+      if (fattenList.length === 0) {
+        list.push({
           bookName: '养肥区',
           author: 'admin',
           img: '-1',
@@ -155,12 +150,12 @@ export default {
           }
         });
       }
-      listState.fattenList.unshift(...book);
+      fattenList.unshift(...book);
       yield put(createAction('updateState')({
-        list: [...listState.list],
-        fattenList: [...listState.fattenList],
-        operationNum: listState.operationNum + 1,
+        list: [...list],
+        fattenList: [...fattenList],
       }));
+      yield put(createAction('operationSet')(1));
     },
     *moveBook({ bookId }, { select, call, put }) {
       let listState = yield select(state => state.list);
@@ -173,8 +168,8 @@ export default {
       yield put(createAction('updateState')({
         list: [...listState.list],
         fattenList: [...listState.fattenList],
-        operationNum: listState.operationNum + 1
       }));
+      yield put(createAction('operationSet')(1));
     },
   },
   subscriptions: {
