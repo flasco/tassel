@@ -64,9 +64,7 @@ class OriginScreen extends React.PureComponent {
     this.setState({ loading: false })
   }
 
-  _keyExtractor = (item, index) => index;
-
-  _renderRow = (item) => {
+  renderRow = (item) => {
     let rowData = item.item;
     const { SMode } = this.props;
     return (
@@ -108,10 +106,10 @@ class OriginScreen extends React.PureComponent {
         <FlatList
           style={{ flex: 1 }}
           data={this.dataList}
-          renderItem={this._renderRow}
+          renderItem={this.renderRow}
           ItemSeparatorComponent={() => <View style={SMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
           getItemLayout={(data, index) => ({ length: 70, offset: 71 * index, index })}//行高38，分割线1，所以offset=39
-          keyExtractor={this._keyExtractor} />
+          keyExtractor={(item, index) => `${index}`} />
       </View>
     );
   }
