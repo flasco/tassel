@@ -58,7 +58,7 @@ export default {
       yield put(createAction('updateState')({
         init: true,
         list: resArr[0],
-        fattenList: resArr[1]
+        fattenList: resArr[1],
       }));
     },
     *operationClear(action, { call, put }) {
@@ -75,24 +75,26 @@ export default {
       const resArr = yield call(Promise.all, [refreshChapter(list), refreshChapter(fattenList)]);
       let updateBook = 0;
       resArr[0].filter((x, index) => {
-        if (x !== undefined) {
-          let updateNum = list[index].updateNum + x.num;
-          list[index].latestChapter = x.title;
-          list[index].isUpdate = updateNum > 0;
-          list[index].updateNum = updateNum;
-          if (x.num !== -1) {
-            updateBook++
+        if (x !== undefined) { // undefined 意味着是最新的，无需更新
+          if (x.num !== -1) { // 不等于 -1 意味着抓取书籍成功
+            let updateNum = list[index].updateNum + x.num;
+            list[index].latestChapter = x.title;
+            list[index].isUpdate = updateNum > 0;
+            list[index].updateNum = updateNum;
+            updateBook++;
           } else {
-            callback && callback(`有一本书籍抓取失败了。。`);
+            callback && callback(`有书抓取失败了。。`);
           }
         }
       });
       resArr[1].filter((x, index) => {
-        if (x !== undefined) {
-          let updateNum = fattenList[index].updateNum + x.num;
-          fattenList[index].latestChapter = x.title;
-          fattenList[index].isUpdate = updateNum > 0;
-          fattenList[index].updateNum = updateNum;
+        if (x !== undefined) { // undefined 意味着是最新的，无需更新
+          if (x.num !== -1) { // 不等于 -1 意味着抓取书籍成功
+            let updateNum = fattenList[index].updateNum + x.num;
+            fattenList[index].latestChapter = x.title;
+            fattenList[index].isUpdate = updateNum > 0;
+            fattenList[index].updateNum = updateNum;
+          }
           !isFatten && updateNum > 30 && (isFatten = true);
         }
       });
