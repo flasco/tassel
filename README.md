@@ -2,7 +2,7 @@
 
 > If you think it's helpful, please star or fork~ it can bring me more interest to consummate it. :)
 
-This is a novel reader app powered by react-native 0.52.2.
+This is a novel reader app powered by react-native 0.54.2.
 
 it have shelf, fattenList, read page, record and so on.
 

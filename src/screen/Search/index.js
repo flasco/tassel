@@ -1,8 +1,7 @@
-import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, AlertIOS, InteractionManager } from 'react-native';
 import React, { Component } from 'react';
+import { Text, View, FlatList, TouchableHighlight } from 'react-native';
 
-
-import { SearchBar, Button } from 'react-native-elements';
+import { SearchBar } from 'react-native-elements';
 import styles from './index.style';
 
 import { search } from '../../services/book';
@@ -98,15 +97,15 @@ class SearchScreen extends React.PureComponent {
               }
             }}
             placeholder='输入关键字' />
-          <Button style={{ flex: 1, width: 20, justifyContent: 'center', marginLeft: 12, alignItems: 'center' }}
-            title='取消'
-            containerViewStyle={{ backgroundColor: '#000' }}
-            buttonStyle={{ backgroundColor: 'transparent' }}
+          <TouchableHighlight
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+            underlayColor='transparent'
+            activeOpacity={0.7}
             onPress={() => {
               this.props.navigation.goBack();
-            }}
-          />
-
+            }}>
+            <Text style={{ color: '#fff', fontSize: 16 }}>取消</Text>
+          </TouchableHighlight>
         </View>
         <Text style={styles.hint}>{this.state.hint}</Text>
         <FlatList
@@ -115,7 +114,7 @@ class SearchScreen extends React.PureComponent {
           }}
           data={this.state.dataSource}
           renderItem={this.renderRow}
-          ItemSeparatorComponent={()=><View style={styles.solid} />}
+          ItemSeparatorComponent={() => <View style={styles.solid} />}
           getItemLayout={(data, index) => ({ length: 52, offset: 53 * index, index })}//行高38，分割线1，所以offset=39
           keyExtractor={(item, index) => index} />
       </View>

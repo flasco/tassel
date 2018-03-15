@@ -55,10 +55,10 @@ export default {
   textsize: {
     textAlign: 'justify',
     flex: 1,
-    marginTop: 8,
-    marginLeft: 22,
+    marginTop: 12,
+    marginLeft: 20,
     fontSize: 23,
     fontStyle: 'normal',
-    lineHeight: 37
+    lineHeight: 40
   },
 }

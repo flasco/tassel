@@ -76,7 +76,6 @@ class ReadScreen extends React.PureComponent {
     this.cacheLoad = this.cacheLoad.bind(this);
 
     this.initConf();
-
   }
 
   componentWillUnmount() {
@@ -85,7 +84,7 @@ class ReadScreen extends React.PureComponent {
     };
   }
 
-  async initConf() {
+  async initConf(needRefresh = false) {
     bookRecordFlag = `${this.currentBook.bookName}_${this.currentBook.plantformId}_record`;
     chapterLstFlag = `${this.currentBook.bookName}_${this.currentBook.plantformId}_list`;
     bookMapFlag = `${this.currentBook.bookName}_${this.currentBook.plantformId}_map`;
@@ -95,8 +94,8 @@ class ReadScreen extends React.PureComponent {
     this.chapterMap = storageResArr[2] || new Map();
     this.bookRecord = storageResArr[0] || { recordChapterNum: 0, recordPage: 1 };
 
-    if (this.chapterLst.length === 0) {
-      this.refs.toast.show('章节内容缺失，走心抓取中...');
+    if (this.chapterLst.length === 0 || needRefresh) {
+      this.refs.toast.show('章节内容走心抓取中...');
       this.chapterLst = await list(this.currentBook.source[this.currentBook.plantformId]);
       if (this.chapterLst.length === 0) {
         this.refs.toast.show('抓取失败...');
@@ -119,8 +118,8 @@ class ReadScreen extends React.PureComponent {
     }
   }
 
-  reload = () => {
-    this.initConf().then(() => {
+  reload = (needRefresh) => {
+    this.initConf(needRefresh).then(() => {
       this.props.navigation.navigate('ChaL', {
         url: this.currentBook.url,
         name: this.currentBook.bookName,
@@ -152,7 +151,7 @@ class ReadScreen extends React.PureComponent {
     return (
       <View style={[styles.container, SMode ? (styles.SunnyMode_container) : (styles.MoonMode_container)]}>
         <Text style={[styles.title, SMode ? (styles.SunnyMode_Title) : (styles.MoonMode_Title)]}>{title}</Text>
-        <Text style={[styles.textsize, SMode ? (styles.SunnyMode_text) : (styles.MoonMode_text)]} numberOfLines={21}>{data}</Text>
+        <Text style={[styles.textsize, SMode ? (styles.SunnyMode_text) : (styles.MoonMode_text)]} numberOfLines={22}>{data}</Text>
         <View style={styles.bottView}>
           <Text style={[styles.bottom1, !SMode && (styles.MoonMode_Bottom)]}>{new Date().toTimeString().substring(0, 5)}</Text>
           <Text style={[styles.bottom2, !SMode && (styles.MoonMode_Bottom)]} >{`${+pageID + 1}/${totalPage}`} </Text>
