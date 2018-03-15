@@ -73,11 +73,11 @@ export default {
     *listUpdate({ list, fattenList, isFatten, callback }, { call, put }) {
       yield put(createAction('updateState')({ loadingFlag: true }));
       const resArr = yield call(Promise.all, [refreshChapter(list), refreshChapter(fattenList)]);
-      let updateBook = 0;
+      let updateBook = 0, updateNum = 0;
       resArr[0].filter((x, index) => {
         if (x !== undefined) { // undefined 意味着是最新的，无需更新
           if (x.num !== -1) { // 不等于 -1 意味着抓取书籍成功
-            let updateNum = list[index].updateNum + x.num;
+            updateNum = list[index].updateNum + x.num;
             list[index].latestChapter = x.title;
             list[index].isUpdate = updateNum > 0;
             list[index].updateNum = updateNum;
@@ -90,7 +90,7 @@ export default {
       resArr[1].filter((x, index) => {
         if (x !== undefined) { // undefined 意味着是最新的，无需更新
           if (x.num !== -1) { // 不等于 -1 意味着抓取书籍成功
-            let updateNum = fattenList[index].updateNum + x.num;
+            updateNum = fattenList[index].updateNum + x.num;
             fattenList[index].latestChapter = x.title;
             fattenList[index].isUpdate = updateNum > 0;
             fattenList[index].updateNum = updateNum;
