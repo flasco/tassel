@@ -1,7 +1,7 @@
 import stringWidth from './stringWidth';
 
 export default function getContextArr(testT, width) {
-  let lineCount = 17; //十七行
+  let lineCount = 16; //十六行
   lineWidth = Math.floor((width - 40) * 2 / 23); //24是字体大小，后来属性配置可以修改一下
   let lines = parseContent(testT, lineWidth);
   let testa = new Array();

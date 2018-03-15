@@ -76,7 +76,6 @@ class ReadScreen extends React.PureComponent {
     this.cacheLoad = this.cacheLoad.bind(this);
 
     this.initConf();
-
   }
 
   componentWillUnmount() {
@@ -152,7 +151,7 @@ class ReadScreen extends React.PureComponent {
     return (
       <View style={[styles.container, SMode ? (styles.SunnyMode_container) : (styles.MoonMode_container)]}>
         <Text style={[styles.title, SMode ? (styles.SunnyMode_Title) : (styles.MoonMode_Title)]}>{title}</Text>
-        <Text style={[styles.textsize, SMode ? (styles.SunnyMode_text) : (styles.MoonMode_text)]} numberOfLines={21}>{data}</Text>
+        <Text style={[styles.textsize, SMode ? (styles.SunnyMode_text) : (styles.MoonMode_text)]} numberOfLines={22}>{data}</Text>
         <View style={styles.bottView}>
           <Text style={[styles.bottom1, !SMode && (styles.MoonMode_Bottom)]}>{new Date().toTimeString().substring(0, 5)}</Text>
           <Text style={[styles.bottom2, !SMode && (styles.MoonMode_Bottom)]} >{`${+pageID + 1}/${totalPage}`} </Text>
