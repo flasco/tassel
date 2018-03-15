@@ -40,7 +40,12 @@ export default {
     },
     originChange(state, { payload }) {
       let list = state.list;
-      list[payload.id].plantformId = payload.change;
+      if (list[payload.id].bookName === payload.bookName) {
+        list[payload.id].plantformId = payload.change;
+        list[payload.id].latestChapter = payload.latestChapter;  // 修复换源之后无法刷新最新章节的bug
+      } else {
+        alert('不在书架中，换源失败。');
+      }
       return { list, ...state }
     },
     containSet(state, { payload }) {
@@ -62,8 +67,8 @@ export default {
     *operationAdd(action, { call, put }) {
       yield put(createAction('operationSet')(1));
     },
-    *changeOrigin({ id, change }, { call, put }) {
-      yield put(createAction('originChange')({ id, change }));
+    *changeOrigin({ id, change, latestChapter, bookName }, { call, put }) {
+      yield put(createAction('originChange')({ id, change, latestChapter, bookName }));
     },
     *listUpdate({ list, fattenList, isFatten, callback }, { call, put }) {
       yield put(createAction('updateState')({ loadingFlag: true }));

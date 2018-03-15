@@ -73,8 +73,10 @@ class OriginScreen extends React.PureComponent {
         activeOpacity={0.7}
         onPress={() => {
           this.props.dispatch(createAct('list/changeOrigin')({
-            id: 0, //因为那时候已经因为排序而来到了第一名。
-            change: rowData.site
+            id: 0, // 因为那时候已经因为排序而来到了第一名。
+            change: rowData.site,
+            latestChapter: rowData.latestChapter,
+            bookName: this.props.navigation.state.params.book.bookName
           }))
           this.props.navigation.state.params.reLoad();
           this.props.navigation.goBack();
