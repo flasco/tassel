@@ -2,6 +2,8 @@
 
 > If you think it's helpful, please star or fork~ it can bring me more interest to consummate it. :)
 
+## 1. introduction
+
 This is a novel reader app powered by react-native 0.54.2.
 
 it have shelf, fattenList, read page, record and so on.
@@ -21,5 +23,28 @@ it use:
 
 it still be consummated, but compare with my previous projects, I think it can be tried~
 
-I hope it can help you to complete something what you want~ :)
+## 2. how to run
+
+### 2.1 dependence require
+node version 7.6+
+### 2.2 run
+```js
+// install dependence
+yarn install
+// run project
+react-native run-ios
+// this prj not pass test in Android
+```
+## 3. Change Log
+
+2018-3-15
+- [feature] update React-Native to `0.54.2`.
+- [feature] adjust read page styles.
+- [bugfix] consummate logic.
+
+
+-----
+
+
+
 
