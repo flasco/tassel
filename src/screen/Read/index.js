@@ -180,8 +180,7 @@ class ReadScreen extends React.PureComponent {
     this.bookRecord.recordChapterNum = index;
     Storage.set(bookRecordFlag, this.bookRecord, 2); //保存书籍的阅读信息
     let nurl = this.chapterLst[index].key;
-
-    if (this.chapterMap[nurl] === undefined) {
+    if (this.chapterMap[nurl] === undefined || typeof this.chapterMap[nurl] === 'string') {
       const data = await content(nurl);
       if (data !== -1 || failedFlag) {
         this.chapterMap[nurl] = data;
