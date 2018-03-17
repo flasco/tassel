@@ -182,7 +182,7 @@ class ReadScreen extends React.PureComponent {
     let nurl = this.chapterLst[index].key;
     if (this.chapterMap[nurl] === undefined || typeof this.chapterMap[nurl] === 'string') {
       const data = await content(nurl);
-      if (data !== -1 || failedFlag) {
+      if (data !== -1) {
         this.chapterMap[nurl] = data;
         Storage.set(bookMapFlag, this.chapterMap)
       } else {
