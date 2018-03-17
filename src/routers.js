@@ -4,6 +4,7 @@ import {
   NavigationActions,
 } from 'react-navigation';
 import {
+  initializeListeners,
   createReduxBoundAddListener,
   createReactNavigationReduxMiddleware,
 } from 'react-navigation-redux-helpers';
@@ -50,6 +51,11 @@ export const routerMiddleware = createReactNavigationReduxMiddleware(
 const addListener = createReduxBoundAddListener('root')
 
 class Router extends PureComponent {
+
+  componentDidMount() {
+    initializeListeners('root', this.props.router)
+  }
+  
   render() {
     const { dispatch, router } = this.props
     const navigation = addNavigationHelpers({
