@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, Image } from 'react-native';
+import { Text, View, Image } from 'react-native';
 import { HeaderBackButton } from 'react-navigation';
 import { Button } from 'react-native-elements';
 import { connect } from 'react-redux';
