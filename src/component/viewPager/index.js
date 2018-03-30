@@ -145,13 +145,17 @@ class ViewPager extends PureComponent {
             if (this.brightVal < 0.0) {
               this.brightVal = 0.0;
             }
-            Brightness.set(this.brightVal);
+            requestAnimationFrame(()=>{
+              Brightness.set(this.brightVal);
+            });
           } else if (this.brightVal !== 1.0 && moveY < 0.0) { //上滑
             this.brightVal += 0.01;
             if (this.brightVal > 1.0) {
               this.brightVal = 1.0;
             }
-            Brightness.set(this.brightVal);
+            requestAnimationFrame(()=>{
+              Brightness.set(this.brightVal);
+            });
           }
           this.shouldJmp && (this.shouldJmp = false);
         }
