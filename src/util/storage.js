@@ -38,14 +38,22 @@ function get(key, defaultValue = null) {
  * @param {number} type 存储的级别定义
  */
 function set(key, value, type = 0) {
-  type > -1 && type < 3 && keyMap[type].add(key);  //type = 0 默认是cache
-  return AsyncStorage.setItem(key, JSON.stringify(value));
+  if (type > -1 && type < 3) {//type = 0 默认是cache
+    keyMap[type].add(key);
+    AsyncStorage.setItem(key, JSON.stringify(value));
+  }
 }
-
+/**
+ * 
+ * @param {string} key 
+ */
 function remove(key) {
   return AsyncStorage.removeItem(key);
 }
-
+/**
+ * 
+ * @param {string} keys 
+ */
 function multiGet(keys) {
   return AsyncStorage.multiGet([...keys]).then(stores => {
     const data = {};
