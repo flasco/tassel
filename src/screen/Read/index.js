@@ -93,13 +93,16 @@ class ReadScreen extends React.PureComponent {
     this.chapterLst = storageResArr[1] || [];
     this.chapterMap = storageResArr[2] || new Map();
     this.bookRecord = storageResArr[0] || { recordChapterNum: 0, recordPage: 1 };
-
     if (this.chapterLst.length === 0 || needRefresh) {
       this.refs.toast.show('章节内容走心抓取中...');
       this.chapterLst = await list(this.currentBook.source[this.currentBook.plantformId]);
       if (this.chapterLst.length === 0) {
-        this.refs.toast.show('抓取失败...');
-        return;
+        this.setState({
+          currentItem: { title: '章节抓取失败', content: '章节抓取失败...', prev: 'error', next: 'error' },
+          loadFlag: false,
+          goFlag: 0,
+        });
+        return ;
       } else {
         Storage.set(chapterLstFlag, this.chapterLst, 1);
       }
@@ -177,16 +180,14 @@ class ReadScreen extends React.PureComponent {
     this.bookRecord.recordChapterNum = index;
     Storage.set(bookRecordFlag, this.bookRecord, 2); //保存书籍的阅读信息
     let nurl = this.chapterLst[index].key;
-
-    if (this.chapterMap[nurl] === undefined) {
+    if (this.chapterMap[nurl] === undefined || typeof this.chapterMap[nurl] === 'string') {
       const data = await content(nurl);
       if (data !== -1) {
         this.chapterMap[nurl] = data;
         Storage.set(bookMapFlag, this.chapterMap)
       } else {
-        let epp = { title: '网络连接超时啦啦啦啦啦', content: '网络连接超时.', prev: 'error', next: 'error' };
         this.setState({
-          currentItem: epp,
+          currentItem: { title: '网络连接超时啦啦啦啦啦', content: '网络连接超时.', prev: 'error', next: 'error' },
           loadFlag: false,
           goFlag: direct,
         });

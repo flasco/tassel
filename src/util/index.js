@@ -22,3 +22,15 @@ export function insertionSort(arr) {
   }
   return arr;
 }
+
+/**
+ * Fisher–Yates 洗牌算法, 将数组随机排列
+ * @param {*} arr 
+ */
+export function shuffle(arr) { 
+  let i = arr.length;
+  while (i) {
+    let j = Math.floor(Math.random() * i--); // 获取一个随机的小于i的数，用floor进行取整
+    [arr[j], arr[i]] = [arr[i], arr[j]]; // 两个数进行交换
+  }
+}

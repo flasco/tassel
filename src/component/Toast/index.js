@@ -48,6 +48,7 @@ export default class Toast extends Component {
       {
         toValue: this.props.opacity,
         duration: this.props.fadeInDuration,
+        useNativeDriver: true,//使用原生驱动，更加流畅
       }
     ).start(() => {
       this.isShow = true;
@@ -68,6 +69,7 @@ export default class Toast extends Component {
         {
           toValue: 0.0,
           duration: this.props.fadeOutDuration,
+          useNativeDriver: true,//使用原生驱动，更加流畅
         }
       ).start(() => {
         this.setState({

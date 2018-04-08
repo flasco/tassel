@@ -66,16 +66,16 @@ class SearchScreen extends React.PureComponent {
     let rowData = item.item;
     const { navigate } = this.props.navigation;
     return (
-      <TouchableOpacity
+      <TouchableHighlight
+        underlayColor='transparent'
+        activeOpacity={0.7}
         onPress={() => { this.pressFunc(rowData); }}>
-        <View style={{
-          height: 52
-        }}>
+        <View style={{ height: 52 }}>
           <Text style={styles.rowStyle}>
             {`${rowData.bookName} - ${rowData.author}`}
           </Text>
         </View>
-      </TouchableOpacity>
+      </TouchableHighlight>
     );
   }
 
@@ -116,7 +116,7 @@ class SearchScreen extends React.PureComponent {
           renderItem={this.renderRow}
           ItemSeparatorComponent={() => <View style={styles.solid} />}
           getItemLayout={(data, index) => ({ length: 52, offset: 53 * index, index })}//行高38，分割线1，所以offset=39
-          keyExtractor={(item, index) => index} />
+          keyExtractor={(item, index) => `${index}`} />
       </View>
     );
   }

@@ -24,22 +24,22 @@ export default {
   },
   secondView: {
     container: {
-      flexDirection: 'row', marginTop: 8, marginBottom: 8, justifyContent: 'space-around'
+      flexDirection: 'row', marginVertical: 8, justifyContent: 'space-between', paddingHorizontal:10
     },
     firstButton: {
-      text: { color: '#dd0007', },
-      disText: { color: '#ddd' },
+      text: { color: '#dd0007', fontSize:15 },
+      disText: { color: '#ddd', fontSize:15, },
       buttonStyle: {
-        backgroundColor: 'transparent', borderRadius: 4, borderColor: '#dd0007', borderWidth: 1, width: 160, height: 40
+        backgroundColor: 'transparent', borderRadius: 4, borderColor: '#dd0007', borderWidth: 1, width: 140, height: 40
       },
       disabledStyle: {
-        backgroundColor: '#808080', borderRadius: 4, borderColor: '#808080', borderWidth: 1, width: 160, height: 40
+        backgroundColor: '#808080', borderRadius: 4, borderColor: '#808080', borderWidth: 1, width: 140, height: 40
       }
     },
     secondButton: {
-      text: { color: '#ddd' },
+      text: { color: '#ddd', fontSize:15 },
       buttonStyle: {
-        backgroundColor: '#dd0007', borderRadius: 4, width: 160, height: 40
+        backgroundColor: '#dd0007', borderRadius: 4, width: 140, height: 40
       }
     }
   },
