@@ -4,7 +4,7 @@
 
 ## 1. introduction
 
-This is a novel reader app powered by react-native 0.54.2.
+This is a novel reader app powered by react-native 0.54.4.
 
 it have shelf, fattenList, read page, record and so on.
 
@@ -37,12 +37,30 @@ react-native run-ios
 ```
 ## 3. Change Log
 
+2018-4-8
+- [feature] update react-native to `0.54.4`
+- [feature] consummate logic.
+- [feature] Optimization read page logic.
+-----
+
+2018-3-30
+- [feature] Improve brightness adjustment.
+-----
+
+2018-3-17
+- [feature] update react-navigation to `1.5.8`
+- [feature] update react-navigation setting.
+- [feature] remove useless code.
+- [bugfix] fix stylesheet bug.
+- [bugfix] fix bug when list fetch err, application can't return.
+- [bugfix] fix bug when search, application in white screen.
+- [bugfix] fix logic bug which lead to application loss response.
+-----
+
 2018-3-15
 - [feature] update React-Native to `0.54.2`.
 - [feature] adjust read page styles.
 - [bugfix] consummate logic.
-
-
 -----
 
 
