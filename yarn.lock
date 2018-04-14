@@ -4367,9 +4367,9 @@ react-native-elements@^0.19.1:
     opencollective "^1.0.3"
     prop-types "^15.5.8"
 
-react-native-largelist@^1.2.12:
-  version "1.2.12"
-  resolved "http://registry.npm.taobao.org/react-native-largelist/download/react-native-largelist-1.2.12.tgz#05a94cdf47ca0c63b102348a1b6c4ae566ce2ecc"
+react-native-largelist@1.2.1:
+  version "1.2.1"
+  resolved "http://registry.npm.taobao.org/react-native-largelist/download/react-native-largelist-1.2.1.tgz#5e51a593ef1e662ac2034a9d44d68a15840a63ed"
   dependencies:
     prop-types "^15.6.0"
 
