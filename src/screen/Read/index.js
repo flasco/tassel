@@ -60,19 +60,6 @@ class ReadScreen extends React.PureComponent {
       isVisible: false, //判断导航栏是否应该隐藏
       goFlag: 0, //判断是前往上一章（-1）还是下一章（1）
     };
-
-    this.initConf = this.initConf.bind(this);
-    this.showAlertSelected = this.showAlertSelected.bind(this);
-    this.download_Chapter = this.download_Chapter.bind(this);
-    this.renderPage = this.renderPage.bind(this);
-    this.getNet = this.getNet.bind(this);
-    this.getNextPage = this.getNextPage.bind(this);
-    this.getPrevPage = this.getPrevPage.bind(this);
-    this.clickBoard = this.clickBoard.bind(this);
-    this.getChapterUrl = this.getChapterUrl.bind(this);
-    this.getCurrentPage = this.getCurrentPage.bind(this);
-    this.cacheLoad = this.cacheLoad.bind(this);
-
     this.initConf();
   }
 
@@ -82,7 +69,7 @@ class ReadScreen extends React.PureComponent {
     };
   }
 
-  async initConf(needRefresh = false) {
+  initConf = async (needRefresh = false) => {
     bookRecordFlag = `${this.currentBook.bookName}_${this.currentBook.plantformId}_record`;
     chapterLstFlag = `${this.currentBook.bookName}_${this.currentBook.plantformId}_list`;
     bookMapFlag = `${this.currentBook.bookName}_${this.currentBook.plantformId}_map`;
@@ -109,7 +96,7 @@ class ReadScreen extends React.PureComponent {
     this.bookRecord.recordPage = 1;    //修复进入章节后从目录进入新章节页数记录不正确的bug
   }
 
-  async download_Chapter(size) {
+  download_Chapter = async (size) => {
     const i = this.bookRecord.recordChapterNum, j = this.chapterLst.length;
 
     const End = i + size < j ? i + size : j;
@@ -131,7 +118,7 @@ class ReadScreen extends React.PureComponent {
     })
   }
 
-  showAlertSelected() {
+  showAlertSelected = () => {
     ActionSheetIOS.showActionSheetWithOptions({
       options: [
         '缓存50章',
@@ -145,7 +132,7 @@ class ReadScreen extends React.PureComponent {
     });
   }
 
-  renderPage(data, pageID) {
+  renderPage = (data, pageID) => {
     const { SMode } = this.props;
     let title = this.state.currentItem.title;
     title = title.length > 25 ? title.substr(0, 25) + '...' : title;
@@ -161,7 +148,7 @@ class ReadScreen extends React.PureComponent {
     );
   }
 
-  async cacheLoad(nurl) {
+  cacheLoad = async (nurl) => {
     if (this.chapterMap[nurl] === undefined) {
       const data = await content(nurl);
       if (data !== -1) {
@@ -173,7 +160,7 @@ class ReadScreen extends React.PureComponent {
     }
   }
 
-  async getNet(index, direct) {
+  getNet = async (index, direct) => {
     index = (index <= this.chapterLst.length - 1 && index > -1) ? index : 0; //修复index的越界问题
     this.bookRecord.recordChapterNum = index;
     Storage.set(bookRecordFlag, this.bookRecord, 2); //保存书籍的阅读信息
@@ -201,7 +188,7 @@ class ReadScreen extends React.PureComponent {
     index < this.chapterLst.length - 1 && this.cacheLoad(this.chapterLst[index + 1].key); //如果当前章节小于倒数第二章就开始预加载
   }
 
-  getNextPage() {
+  getNextPage = () => {
     if (this.bookRecord.recordChapterNum < this.chapterLst.length - 1) {//防止翻页越界
       this.setState({ loadFlag: true }, () => {
         this.getNet(++this.bookRecord.recordChapterNum, 1);//因为是倒序的
@@ -212,7 +199,7 @@ class ReadScreen extends React.PureComponent {
     }
     return 0;
   }
-  getPrevPage() {
+  getPrevPage = () => {
     if (this.bookRecord.recordChapterNum > 0) {//防止翻页越界
       this.setState({ loadFlag: true }, () => {
         this.getNet(--this.bookRecord.recordChapterNum, -1);
@@ -222,7 +209,7 @@ class ReadScreen extends React.PureComponent {
     }
   }
 
-  clickBoard() {
+  clickBoard = () => {
     let flag = this.state.isVisible;
     LayoutAnimation.configureNext({
       duration: 200, //持续时间
@@ -245,7 +232,7 @@ class ReadScreen extends React.PureComponent {
     this.props.dispatch(createAct('app/sunnyModeSwitch')());
   }
 
-  getChapterUrl(index) {
+  getChapterUrl = (index) => {
     this.setState({
       loadFlag: true,
       isVisible: false
@@ -254,7 +241,7 @@ class ReadScreen extends React.PureComponent {
     });
   }
 
-  getCurrentPage(page) {
+  getCurrentPage = (page) => {
     page = page === 0 ? 1 : page;
     this.bookRecord.recordPage = page;
     Storage.set(bookRecordFlag, this.bookRecord, 2);
