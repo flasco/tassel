@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Text, View, TouchableHighlight, AppState,
   SwipeableFlatList, StatusBar, AsyncStorage, Image,
+  Alert
 } from 'react-native';
 import { Icon, Badge } from 'react-native-elements';
 import SideMenu from 'react-native-side-menu';
@@ -23,7 +24,7 @@ class BookListScreen extends React.PureComponent {
     return {
       title: '古意流苏',
       headerBackTitle: ' ',
-      headerStyle: { backgroundColor: '#000' },
+      headerStyle: { backgroundColor: '#000', borderBottomWidth: 0 },
       headerRight: (
         <Icon
           name='ios-add'
@@ -190,7 +191,15 @@ class BookListScreen extends React.PureComponent {
         </TouchableHighlight>
         <TouchableHighlight
           underlayColor={'transparent'}
-          onPress={() => this.deleteBook(rowId)}>
+          onPress={() => {
+            Alert.alert('Warning', '真的要删除掉本书吗？', [{
+              text: 'Cancel'
+            }, {
+              text: 'Delete', onPress: () => {
+                this.deleteBook(rowId)
+              }
+            }]);
+          }}>
           <View style={{ width: 50, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
             <Icon
               name='ios-trash-outline'

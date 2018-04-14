@@ -55,18 +55,15 @@ class CatalogScreen extends React.PureComponent {
   itemRender = (section, index) => {
     let item = this.data[index];
     return (
-      <View>
-        <View style={this.props.SMode ? styles.sunnyMode.solid : styles.nightMode.solid} />
-        <TouchableHighlight style={{ height: 38 }}
-          underlayColor={'transparent'}
-          activeOpacity={0.7}
-          onPress={() => {
-            this.props.navigation.state.params.callback(index);
-            this.props.navigation.goBack();
-          }}>
-          <Text style={[this.props.SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle, this.currentChapterNum === index ? styles.red : false]}>{item.title}</Text>
-        </TouchableHighlight>
-      </View>
+      <TouchableHighlight style={{ height: 38 }}
+        underlayColor={'transparent'}
+        activeOpacity={0.7}
+        onPress={() => {
+          this.props.navigation.state.params.callback(index);
+          this.props.navigation.goBack();
+        }}>
+        <Text style={[this.props.SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle, this.currentChapterNum === index ? styles.red : false]}>{item.title}</Text>
+      </TouchableHighlight>
     );
   }
 
@@ -88,6 +85,7 @@ class CatalogScreen extends React.PureComponent {
           heightForCell={() => 39}
           initialOffsetY={(this.currentChapterNum - 5) * 39}
           renderCell={this.itemRender}
+          renderItemSeparator={() => <View style={this.props.SMode ? styles.sunnyMode.solid : styles.nightMode.solid} />}
           renderHeader={this._header}
           getItemLayout={(data, index) => ({ length: 39, offset: 39 * index, index })} />
       </View>
