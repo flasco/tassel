@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Text, View, Dimensions,
-  StatusBar, ActionSheetIOS, LayoutAnimation, AppState
+  StatusBar, ActionSheetIOS, LayoutAnimation, AppState, InteractionManager
 } from 'react-native';
 
 import async from 'async';
@@ -19,6 +19,7 @@ import styles from './index.style';
 
 let allTask = 0, finishTask = 0;
 let bookMapFlag, bookRecordFlag, chapterLstFlag;
+let operationSum = 0;
 
 const { width } = Dimensions.get('window');
 
@@ -43,7 +44,8 @@ class ReadScreen extends React.PureComponent {
   }
 
   onAppStateChange = (e) => {
-    if (e === 'inactive') {
+    if (e === 'inactive' && operationSum > 0) {
+      operationSum = 0;
       this.recordSave();
     }
   }
@@ -86,15 +88,16 @@ class ReadScreen extends React.PureComponent {
       }
     }
     this.getNet(this.bookRecord.recordChapterNum, 0);
-    this.bookRecord.recordPage = 1;    //修复进入章节后从目录进入新章节页数记录不正确的bug
   }
 
   recordSave = () => {
-    Storage.multiSet([
-      [bookMapFlag, JSON.stringify(this.chapterMap)],
-      [chapterLstFlag, JSON.stringify(this.chapterLst)],
-      [bookRecordFlag, JSON.stringify(this.bookRecord)]
-    ], [0, 1, 2]);
+    InteractionManager.runAfterInteractions(() => {
+      Storage.multiSet([
+        [bookMapFlag, JSON.stringify(this.chapterMap)],
+        [chapterLstFlag, JSON.stringify(this.chapterLst)],
+        [bookRecordFlag, JSON.stringify(this.bookRecord)]
+      ], [0, 1, 2]);
+    });
   }
 
   download_Chapter = async (size) => {
@@ -240,6 +243,7 @@ class ReadScreen extends React.PureComponent {
 
   getCurrentPage = (page) => {
     page = page === 0 ? 1 : page;
+    this.bookRecord.recordPage !== page && operationSum++;
     this.bookRecord.recordPage = page;
   }
 
