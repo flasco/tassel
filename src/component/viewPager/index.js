@@ -35,7 +35,7 @@ class ViewPager extends PureComponent {
       return Animated.timing(animate,
         {
           toValue: toValue,
-          duration: 60,
+          duration: 100,
           easing: Easing.linear,
           useNativeDriver: true,//使用原生驱动，更加流畅
         });

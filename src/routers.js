@@ -48,7 +48,7 @@ export const routerMiddleware = createReactNavigationReduxMiddleware(
   'root',
   state => state.router
 )
-const addListener = createReduxBoundAddListener('root')
+const addListener = createReduxBoundAddListener('root');
 
 class Router extends PureComponent {
 
