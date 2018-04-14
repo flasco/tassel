@@ -41,7 +41,6 @@ async function fetchList(nurl) {
     data !== -1 && (tht.chapterMap[nurl] = data);
   }
   finishTask++;
-
   return;
 }
 
@@ -53,7 +52,6 @@ class ReadScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     tht = this;
-    totalPage = 0;//总的页数
     this.currentBook = props.navigation.state.params.book;
 
     this.state = {
@@ -102,7 +100,7 @@ class ReadScreen extends React.PureComponent {
           loadFlag: false,
           goFlag: 0,
         });
-        return ;
+        return;
       } else {
         Storage.set(chapterLstFlag, this.chapterLst, 1);
       }
@@ -157,7 +155,7 @@ class ReadScreen extends React.PureComponent {
         <Text style={[styles.textsize, SMode ? (styles.SunnyMode_text) : (styles.MoonMode_text)]} numberOfLines={22}>{data}</Text>
         <View style={styles.bottView}>
           <Text style={[styles.bottom1, !SMode && (styles.MoonMode_Bottom)]}>{new Date().toTimeString().substring(0, 5)}</Text>
-          <Text style={[styles.bottom2, !SMode && (styles.MoonMode_Bottom)]} >{`${+pageID + 1}/${totalPage}`} </Text>
+          <Text style={[styles.bottom2, !SMode && (styles.MoonMode_Bottom)]} >{`${+pageID + 1}/${this.pageCount}`} </Text>
         </View>
       </View>
     );
@@ -265,6 +263,8 @@ class ReadScreen extends React.PureComponent {
   render() {
     const ds = new ViewPager.DataSource({ pageHasChanged: (p1, p2) => p1 !== p2 });
     const { SMode, navigation } = this.props;
+    let { pages, pageCount } = getContextArr(this.state.currentItem.content, width);
+    this.pageCount = pageCount;
     return (
       <View style={[styles.container, SMode ? (styles.SunnyMode_container) : (styles.MoonMode_container)]}>
         <StatusBar
@@ -280,7 +280,7 @@ class ReadScreen extends React.PureComponent {
         {this.state.loadFlag ? (
           <Text style={[styles.centr, !SMode && (styles.MoonMode_text)]}>
             Loading...</Text>) : (<ViewPager
-              dataSource={ds.cloneWithPages(getContextArr(this.state.currentItem.content, width))}
+              dataSource={ds.cloneWithPages(pages)}
               renderPage={this.renderPage}
               getNextPage={this.getNextPage}
               getPrevPage={this.getPrevPage}
