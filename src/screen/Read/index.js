@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Text, View, Dimensions,
-  StatusBar, ActionSheetIOS, LayoutAnimation
+  StatusBar, ActionSheetIOS, LayoutAnimation, AppState
 } from 'react-native';
 
 import async from 'async';
@@ -13,46 +13,25 @@ import getContextArr from '../../util/getContextArr';
 import Navigat from '../../component/Navigat';
 import { content, list } from '../../services/book';
 
-import { delay, createAct, Storage } from '../../util'
+import { delay, createAct, Storage } from '../../util';
 
 import styles from './index.style';
 
-/**
- * 下载模块
- - code by Czq
- */
-let q = async.queue(async (url, callback) => {
-  await fetchList(url);
-  callback();
-}, 5);
-
-q.drain = function () {
-  tht.refs.toast.show(`Task finished at ${finishTask}/${allTask}`);
-  finishTask = 0;
-  Storage.set(bookMapFlag, tht.chapterMap)
-};
-
-async function fetchList(nurl) {
-  let n = 100 * (finishTask / allTask) >> 0; //取整
-  if (n % 15 === 0) tht.refs.toast.show(`Task process:${n}%`);
-  if (tht.chapterMap[nurl] === undefined) {
-    const data = await content(nurl);
-    await delay(1000);  //设置抓取延时
-    data !== -1 && (tht.chapterMap[nurl] = data);
-  }
-  finishTask++;
-  return;
-}
-
 let allTask = 0, finishTask = 0;
-let tht, bookMapFlag, bookRecordFlag, chapterLstFlag;
+let bookMapFlag, bookRecordFlag, chapterLstFlag;
+
 const { width } = Dimensions.get('window');
 
 class ReadScreen extends React.PureComponent {
   constructor(props) {
     super(props);
-    tht = this;
     this.currentBook = props.navigation.state.params.book;
+    AppState.addEventListener('change', this.onAppStateChange);
+    this.q = async.queue(this.fetchQueue, 5);
+    this.q.drain = () => {
+      this.toast.show(`Task finished at ${finishTask}/${allTask}`);
+      finishTask = 0;
+    };
 
     this.state = {
       loadFlag: true, //判断是出于加载状态还是显示状态
@@ -63,10 +42,26 @@ class ReadScreen extends React.PureComponent {
     this.initConf();
   }
 
+  onAppStateChange = (e) => {
+    if (e === 'inactive') {
+      this.recordSave();
+    }
+  }
+
   componentWillUnmount() {
-    this.setState = (state, callback) => {
-      return;
-    };
+    AppState.removeEventListener('change', this.onAppStateChange);
+  }
+
+  fetchQueue = async (url, callback) => {
+    let n = 100 * (finishTask / allTask) >> 0; //取整
+    if (n % 15 === 0) this.toast.show(`Task process:${n}%`);
+    if (this.chapterMap[url] === undefined) {
+      const data = await content(url);
+      await delay(1000);  //设置抓取延时
+      data !== -1 && (this.chapterMap[url] = data);
+    }
+    finishTask++;
+    callback();
   }
 
   initConf = async (needRefresh = false) => {
@@ -79,7 +74,7 @@ class ReadScreen extends React.PureComponent {
     this.chapterMap = storageResArr[2] || new Map();
     this.bookRecord = storageResArr[0] || { recordChapterNum: 0, recordPage: 1 };
     if (this.chapterLst.length === 0 || needRefresh) {
-      this.refs.toast.show('章节内容走心抓取中...');
+      this.toast.show('章节内容走心抓取中...');
       this.chapterLst = await list(this.currentBook.source[this.currentBook.plantformId]);
       if (this.chapterLst.length === 0) {
         this.setState({
@@ -88,21 +83,26 @@ class ReadScreen extends React.PureComponent {
           goFlag: 0,
         });
         return;
-      } else {
-        Storage.set(chapterLstFlag, this.chapterLst, 1);
       }
     }
     this.getNet(this.bookRecord.recordChapterNum, 0);
     this.bookRecord.recordPage = 1;    //修复进入章节后从目录进入新章节页数记录不正确的bug
   }
 
+  recordSave = () => {
+    Storage.multiSet([
+      [bookMapFlag, JSON.stringify(this.chapterMap)],
+      [chapterLstFlag, JSON.stringify(this.chapterLst)],
+      [bookRecordFlag, JSON.stringify(this.bookRecord)]
+    ], [0, 1, 2]);
+  }
+
   download_Chapter = async (size) => {
     const i = this.bookRecord.recordChapterNum, j = this.chapterLst.length;
-
     const End = i + size < j ? i + size : j;
     allTask = End - i;
     for (let n = i; n < End; n++) {
-      q.push(this.chapterLst[n].key);
+      this.q.push(this.chapterLst[n].key);
     }
   }
 
@@ -153,9 +153,8 @@ class ReadScreen extends React.PureComponent {
       const data = await content(nurl);
       if (data !== -1) {
         this.chapterMap[nurl] = data;
-        Storage.set(bookMapFlag, this.chapterMap)
       } else {
-        this.refs.toast.show('fetch err');
+        this.toast.show('fetch err');
       }
     }
   }
@@ -163,13 +162,11 @@ class ReadScreen extends React.PureComponent {
   getNet = async (index, direct) => {
     index = (index <= this.chapterLst.length - 1 && index > -1) ? index : 0; //修复index的越界问题
     this.bookRecord.recordChapterNum = index;
-    Storage.set(bookRecordFlag, this.bookRecord, 2); //保存书籍的阅读信息
     let nurl = this.chapterLst[index].key;
     if (this.chapterMap[nurl] === undefined || typeof this.chapterMap[nurl] === 'string') {
       const data = await content(nurl);
       if (data !== -1) {
         this.chapterMap[nurl] = data;
-        Storage.set(bookMapFlag, this.chapterMap)
       } else {
         this.setState({
           currentItem: { title: '网络连接超时啦啦啦啦啦', content: '网络连接超时.', prev: 'error', next: 'error' },
@@ -194,7 +191,7 @@ class ReadScreen extends React.PureComponent {
         this.getNet(++this.bookRecord.recordChapterNum, 1);//因为是倒序的
       });
     } else {
-      this.refs.toast.show('已经是最后一章。');
+      this.toast.show('已经是最后一章。');
       return -1;
     }
     return 0;
@@ -205,7 +202,7 @@ class ReadScreen extends React.PureComponent {
         this.getNet(--this.bookRecord.recordChapterNum, -1);
       });
     } else {
-      this.refs.toast.show('已经是第一章。');
+      this.toast.show('已经是第一章。');
     }
   }
 
@@ -244,7 +241,6 @@ class ReadScreen extends React.PureComponent {
   getCurrentPage = (page) => {
     page = page === 0 ? 1 : page;
     this.bookRecord.recordPage = page;
-    Storage.set(bookRecordFlag, this.bookRecord, 2);
   }
 
   render() {
@@ -262,6 +258,7 @@ class ReadScreen extends React.PureComponent {
           <Navigat
             navigation={navigation}
             currentBook={this.currentBook}
+            recordSave={this.recordSave}
             reLoad={this.reload}
             choose={1} />}
         {this.state.loadFlag ? (
@@ -276,7 +273,7 @@ class ReadScreen extends React.PureComponent {
               initialPage={this.bookRecord.recordPage - 1}
               locked={this.state.isVisible}
               Gpag={this.state.goFlag} />)}
-        <Toast ref="toast" />
+        <Toast ref={(q) => this.toast = q} />
         {this.state.isVisible && <Navigat
           urlx={this.currentBook.url}
           currentChapter={this.bookRecord.recordChapterNum}

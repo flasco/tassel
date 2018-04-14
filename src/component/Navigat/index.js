@@ -52,6 +52,7 @@ export default class Navigat extends React.PureComponent {
             title='返回'
             tintColor={'#ddd'}
             onPress={() => {
+              this.props.recordSave();
               this.props.navigation.goBack();
             }} />
           <Text style={{ padding: 12, color: '#ddd', fontSize: 17, bottom: 1, right: 12, position: 'absolute', }}

@@ -41,21 +41,9 @@ class BookListScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     tht = this;
-
     this.addBook = this.addBook.bind(this);
     this.deleteBook = this.deleteBook.bind(this);
-
-    AppState.addEventListener('change', async (e) => {
-      if (e === 'inactive' && this.props.operationNum > 0) {
-        this.props.dispatch(createAct('list/operationClear')());
-        Storage.mapSave();
-        await AsyncStorage.multiSet([
-          ['appState', JSON.stringify(this.props.app)],
-          ['booklist', JSON.stringify(this.props.list)],
-          ['fattenList', JSON.stringify(this.props.fattenList)]
-        ]);
-      }
-    });
+    AppState.addEventListener('change', this.onAppStateChange);
   }
 
   componentDidMount() {
@@ -66,9 +54,19 @@ class BookListScreen extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    this.setState = (state, callback) => {
-      return;
-    };
+    AppState.removeEventListener('change', this.onAppStateChange);
+  }
+
+  onAppStateChange = async (e) => {
+    if (e === 'inactive' && this.props.operationNum > 0) {
+      this.props.dispatch(createAct('list/operationClear')());
+      Storage.mapSave();
+      await AsyncStorage.multiSet([
+        ['appState', JSON.stringify(this.props.app)],
+        ['booklist', JSON.stringify(this.props.list)],
+        ['fattenList', JSON.stringify(this.props.fattenList)]
+      ]);
+    }
   }
 
   deleteBook(deleteId) {
