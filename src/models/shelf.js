@@ -74,7 +74,6 @@ export default {
       yield put(createAction('updateState')({ loadingFlag: true }));
       const resArr = yield call(Promise.all, [refreshChapter(list), refreshChapter(fattenList)]);
       let updateBook = 0, updateNum = 0;
-      console.log(resArr)
       resArr[0].filter((x, index) => {
         if (x !== '-1') { // -1 意味着是最新的，无需更新
           if (x.num !== 0) { 

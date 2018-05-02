@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Text, View, Dimensions,
-  StatusBar, ActionSheetIOS, LayoutAnimation, AppState, InteractionManager
+   ActionSheetIOS, AppState, InteractionManager, TouchableWithoutFeedback
 } from 'react-native';
 
 import async from 'async';
@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import Toast from '../../component/Toast';
 import ViewPager from '../../component/viewPager';
 import getContextArr from '../../util/getContextArr';
-import Navigat from '../../component/Navigat';
+import Navigat from '../../component/Navigat/index.1';
 import { content, list } from '../../services/book';
 
 import { delay, createAct, Storage } from '../../util';
@@ -116,7 +116,10 @@ class ReadScreen extends React.PureComponent {
         name: this.currentBook.bookName,
         bookChapterLst: this.chapterLst,
         chap: this.bookRecord.recordChapterNum,
-        callback: (url) => this.getChapterUrl(url)
+        callback: (url) => {
+          this.nav.clickShow(false);
+          this.getChapterUrl(url);
+        }
       });
     })
   }
@@ -131,7 +134,7 @@ class ReadScreen extends React.PureComponent {
       cancelButtonIndex: 2,
     }, (buttonIndex) => {
       let operateArr = [50, 150];
-      this.download_Chapter(operateArr[buttonIndex]);
+      buttonIndex !== 2 && this.download_Chapter(operateArr[buttonIndex]);
     });
   }
 
@@ -210,22 +213,7 @@ class ReadScreen extends React.PureComponent {
   }
 
   clickBoard = () => {
-    let flag = this.state.isVisible;
-    LayoutAnimation.configureNext({
-      duration: 200, //持续时间
-      create: { // 视图创建
-        type: LayoutAnimation.Types.linear,
-        property: LayoutAnimation.Properties.opacity,// opacity
-      },
-      update: { // 视图更新
-        type: LayoutAnimation.Types.linear,
-      },
-      delete: { // 视图消失
-        type: LayoutAnimation.Types.linear,
-        property: LayoutAnimation.Properties.opacity,// opacity
-      }
-    });
-    this.setState({ isVisible: !flag });
+    this.nav.clickShow();
   }
 
   SModeChange = () => {
@@ -254,40 +242,35 @@ class ReadScreen extends React.PureComponent {
     this.pageCount = pageCount;
     return (
       <View style={[styles.container, SMode ? (styles.SunnyMode_container) : (styles.MoonMode_container)]}>
-        <StatusBar
-          barStyle="light-content"
-          hidden={!this.state.isVisible}
-          animation={true} />
-        {this.state.isVisible &&
-          <Navigat
-            navigation={navigation}
-            currentBook={this.currentBook}
-            recordSave={this.recordSave}
-            reLoad={this.reload}
-            choose={1} />}
-        {this.state.loadFlag ? (
-          <Text style={[styles.centr, !SMode && (styles.MoonMode_text)]}>
-            Loading...</Text>) : (<ViewPager
-              dataSource={ds.cloneWithPages(pages)}
-              renderPage={this.renderPage}
-              getNextPage={this.getNextPage}
-              getPrevPage={this.getPrevPage}
-              getCurrentPage={this.getCurrentPage}
-              clickBoard={this.clickBoard}
-              initialPage={this.bookRecord.recordPage - 1}
-              locked={this.state.isVisible}
-              Gpag={this.state.goFlag} />)}
-        <Toast ref={(q) => this.toast = q} />
-        {this.state.isVisible && <Navigat
-          urlx={this.currentBook.url}
-          currentChapter={this.bookRecord.recordChapterNum}
-          bname={this.currentBook.bookName}
+        <Navigat
+          ref={r => this.nav = r}
+          navigation={navigation}
+          currentBook={this.currentBook}
+          recordSave={this.recordSave}
           bookChapterLst={this.chapterLst}
           getChapterUrl={this.getChapterUrl}
-          navigation={navigation}
+          currentRecord={this.bookRecord}
           showAlertSelected={this.showAlertSelected}
           SModeChange={this.SModeChange}
-          choose={2} />}
+          reLoad={this.reload} />
+        {this.state.loadFlag ? (
+          <TouchableWithoutFeedback onPress={() => { this.nav.clickShow(); }}>
+            <View>
+              <Text style={[styles.centr, !SMode && (styles.MoonMode_text)]}>
+                Loading...</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        ) : (<ViewPager
+          dataSource={ds.cloneWithPages(pages)}
+          renderPage={this.renderPage}
+          getNextPage={this.getNextPage}
+          getPrevPage={this.getPrevPage}
+          getCurrentPage={this.getCurrentPage}
+          clickBoard={this.clickBoard}
+          initialPage={this.bookRecord.recordPage - 1}
+          locked={this.state.isVisible}
+          Gpag={this.state.goFlag} />)}
+        <Toast ref={(q) => this.toast = q} />
       </View>
     );
   }
