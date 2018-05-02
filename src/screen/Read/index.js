@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import Toast from '../../component/Toast';
 import ViewPager from '../../component/viewPager';
 import getContextArr from '../../util/getContextArr';
-import Navigat from '../../component/Navigat/index.1';
+import Navigat from '../../component/Navigat';
 import { content, list } from '../../services/book';
 
 import { delay, createAct, Storage } from '../../util';

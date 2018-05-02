@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Text, View, TouchableOpacity, StatusBar,
-  TouchableWithoutFeedback, Animated, Dimensions
+  TouchableWithoutFeedback, Animated, Dimensions, Easing
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Foundation';
 import { HeaderBackButton } from 'react-navigation';
@@ -39,6 +39,7 @@ export default class Navigat extends React.PureComponent {
       {
         toValue: status ? 0 : 1,
         duration: 120,
+        easing: Easing.out(Easing.poly(4)),
       }).start((event) => {
         if (event.finished) {
           this.isAnimate = false;
