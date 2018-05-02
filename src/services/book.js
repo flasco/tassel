@@ -36,6 +36,15 @@ export async function latest(url) {
   }
 }
 
+export async function latestLst(list) {
+  try {
+    const { data } = await axios.post(`${Ip}/analysis`, list, { timeout: 5000 });
+    return data;
+  } catch (err) {
+    return '抓取失败';
+  }
+}
+
 /**
  * 输入url 返回书籍列表
  * @param {String} url 
@@ -56,8 +65,6 @@ export async function list(url) {
   } catch (error) {
     return [];
   }
-
-
 }
 
 export async function rnk(page) {

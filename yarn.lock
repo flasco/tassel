@@ -807,13 +807,6 @@ babel-helpers@^6.24.1:
     babel-runtime "^6.22.0"
     babel-template "^6.24.1"
 
-babel-jest@22.0.4:
-  version "22.0.4"
-  resolved "http://registry.npm.taobao.org/babel-jest/download/babel-jest-22.0.4.tgz#533c46de37d7c9d7612f408c76314be9277e0c26"
-  dependencies:
-    babel-plugin-istanbul "^4.1.5"
-    babel-preset-jest "^22.0.3"
-
 babel-jest@^22.4.3:
   version "22.4.3"
   resolved "http://registry.npm.taobao.org/babel-jest/download/babel-jest-22.4.3.tgz#4b7a0b6041691bbd422ab49b3b73654a49a6627a"
@@ -1167,7 +1160,7 @@ babel-preset-fbjs@^2.1.2, babel-preset-fbjs@^2.1.4:
     babel-plugin-transform-react-display-name "^6.8.0"
     babel-plugin-transform-react-jsx "^6.8.0"
 
-babel-preset-jest@^22.0.3, babel-preset-jest@^22.4.3:
+babel-preset-jest@^22.4.3:
   version "22.4.3"
   resolved "http://registry.npm.taobao.org/babel-preset-jest/download/babel-preset-jest-22.4.3.tgz#e92eef9813b7026ab4ca675799f37419b5a44156"
   dependencies:
@@ -2938,7 +2931,7 @@ jest-changed-files@^22.4.3:
   dependencies:
     throat "^4.0.0"
 
-jest-cli@^22.0.4:
+jest-cli@^22.4.3:
   version "22.4.3"
   resolved "http://registry.npm.taobao.org/jest-cli/download/jest-cli-22.4.3.tgz#bf16c4a5fb7edc3fa5b9bb7819e34139e88a72c7"
   dependencies:
@@ -3208,11 +3201,12 @@ jest-worker@^22.2.2, jest-worker@^22.4.3:
   dependencies:
     merge-stream "^1.0.1"
 
-jest@22.0.4:
-  version "22.0.4"
-  resolved "http://registry.npm.taobao.org/jest/download/jest-22.0.4.tgz#d3cf560ece6b825b115dce80b9826ceb40f87961"
+jest@^22.4.3:
+  version "22.4.3"
+  resolved "http://registry.npm.taobao.org/jest/download/jest-22.4.3.tgz#2261f4b117dc46d9a4a1a673d2150958dee92f16"
   dependencies:
-    jest-cli "^22.0.4"
+    import-local "^1.0.0"
+    jest-cli "^22.4.3"
 
 js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"
