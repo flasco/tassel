@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Text, View, Dimensions,
-   ActionSheetIOS, AppState, InteractionManager, TouchableWithoutFeedback
+  ActionSheetIOS, AppState, InteractionManager, TouchableWithoutFeedback
 } from 'react-native';
 
 import async from 'async';
@@ -37,7 +37,6 @@ class ReadScreen extends React.PureComponent {
     this.state = {
       loadFlag: true, //判断是出于加载状态还是显示状态
       currentItem: '', //作为章节内容的主要获取来源。
-      isVisible: false, //判断导航栏是否应该隐藏
       goFlag: 0, //判断是前往上一章（-1）还是下一章（1）
     };
     this.initConf();
@@ -202,6 +201,7 @@ class ReadScreen extends React.PureComponent {
     }
     return 0;
   }
+  
   getPrevPage = () => {
     if (this.bookRecord.recordChapterNum > 0) {//防止翻页越界
       this.setState({ loadFlag: true }, () => {
@@ -223,7 +223,6 @@ class ReadScreen extends React.PureComponent {
   getChapterUrl = (index) => {
     this.setState({
       loadFlag: true,
-      isVisible: false
     }, () => {
       this.getNet(index, 1);
     });
@@ -235,11 +234,36 @@ class ReadScreen extends React.PureComponent {
     this.bookRecord.recordPage = page;
   }
 
-  render() {
-    const ds = new ViewPager.DataSource({ pageHasChanged: (p1, p2) => p1 !== p2 });
-    const { SMode, navigation } = this.props;
-    let { pages, pageCount } = getContextArr(this.state.currentItem.content, width);
+  ds = new ViewPager.DataSource({ pageHasChanged: (p1, p2) => p1 !== p2 });
+
+  getContent = (text) => {
+    let { pages, pageCount } = getContextArr(text, width);
     this.pageCount = pageCount;
+    return pages;
+  }
+
+  drawLoadingView = (SMode) => (
+    <TouchableWithoutFeedback onPress={() => { this.nav.clickShow(); }}>
+      <View>
+        <Text style={[styles.centr, !SMode && (styles.MoonMode_text)]}>Loading...</Text>
+      </View>
+    </TouchableWithoutFeedback>
+  )
+
+  drawViewPage = (content) => (
+    <ViewPager
+      dataSource={this.ds.cloneWithPages(this.getContent(content))}
+      renderPage={this.renderPage}
+      getNextPage={this.getNextPage}
+      getPrevPage={this.getPrevPage}
+      getCurrentPage={this.getCurrentPage}
+      clickBoard={this.clickBoard}
+      initialPage={this.bookRecord.recordPage - 1}
+      Gpag={this.state.goFlag} />
+  )
+
+  render() {
+    const { SMode, navigation } = this.props;
     return (
       <View style={[styles.container, SMode ? (styles.SunnyMode_container) : (styles.MoonMode_container)]}>
         <Navigat
@@ -253,23 +277,11 @@ class ReadScreen extends React.PureComponent {
           showAlertSelected={this.showAlertSelected}
           SModeChange={this.SModeChange}
           reLoad={this.reload} />
-        {this.state.loadFlag ? (
-          <TouchableWithoutFeedback onPress={() => { this.nav.clickShow(); }}>
-            <View>
-              <Text style={[styles.centr, !SMode && (styles.MoonMode_text)]}>
-                Loading...</Text>
-            </View>
-          </TouchableWithoutFeedback>
-        ) : (<ViewPager
-          dataSource={ds.cloneWithPages(pages)}
-          renderPage={this.renderPage}
-          getNextPage={this.getNextPage}
-          getPrevPage={this.getPrevPage}
-          getCurrentPage={this.getCurrentPage}
-          clickBoard={this.clickBoard}
-          initialPage={this.bookRecord.recordPage - 1}
-          locked={this.state.isVisible}
-          Gpag={this.state.goFlag} />)}
+        {
+          this.state.loadFlag ?
+            this.drawLoadingView(SMode) :
+            this.drawViewPage(this.state.currentItem.content)
+        }
         <Toast ref={(q) => this.toast = q} />
       </View>
     );
