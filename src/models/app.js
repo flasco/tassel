@@ -9,7 +9,11 @@ export default {
   },
   reducers: {
     updateState(state, { payload }) {
-      return { ...state, ...payload }
+      return {
+        ...state,
+        sunnyMode: payload.sunnyMode,
+        readNum: payload.readNum,
+      }
     },
     readNumAdd(state, { payload }) {
       return {

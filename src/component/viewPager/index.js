@@ -30,12 +30,11 @@ class ViewPager extends PureComponent {
     super(props);
     this.fling = false;
     this.shield = 0;//修复呼出菜单之后下一次滑页出现bug
-    this.locked = false; // 锁屏的，当菜单呼出之时就锁住屏幕
     this.animation = (animate, toValue, gs) => {
       return Animated.timing(animate,
         {
           toValue: toValue,
-          duration: 60,
+          duration: 100,
           easing: Easing.linear,
           useNativeDriver: true,//使用原生驱动，更加流畅
         });
@@ -81,30 +80,15 @@ class ViewPager extends PureComponent {
         return;
       }
 
-      if (this.props.locked) return false;
-
       this.props.hasTouch && this.props.hasTouch(false);
 
       if (clickX > RightBoundary && moveX == 0 || flag === 1) {
         this.toprev = 0;
-        let animateFlag = moveX !== 0;
-        if (this.selfLock) {
-          this.selfLock = false;
-          animateFlag = false;
-          this.shield = 0;
-        }
-
-        this.movePage(1, gestureState, animateFlag);//moveX !== 0 这里是判断是否启用动画效果
+        this.movePage(1, gestureState, moveX !== 0);//moveX !== 0 这里是判断是否启用动画效果
         return;
       } else if (clickX < LeftBoundary && moveX == 0 || flag === -1) {
         this.toprev = 1;
-        let animateFlag = moveX !== 0;
-        if (this.selfLock) {
-          this.selfLock = false;
-          animateFlag = false;
-          this.shield = 0;
-        }
-        this.movePage(-1, gestureState, animateFlag);
+        this.movePage(-1, gestureState, moveX !== 0);
         return;
       }
       this.movePage(step, gestureState);
@@ -117,7 +101,7 @@ class ViewPager extends PureComponent {
       // Claim responder if it's a horizontal pan
       onMoveShouldSetPanResponder: (e, gestureState) => {
         if (Math.abs(gestureState.dx) > Math.abs(gestureState.dy)) {
-          if (this.props.locked !== true && !this.fling) {
+          if (!this.fling) {
             this.props.hasTouch && this.props.hasTouch(true);
             return true;
           }
@@ -130,11 +114,6 @@ class ViewPager extends PureComponent {
 
       // Dragging, move the view with the touch
       onPanResponderMove: (e, gestureState) => {
-        if (this.props.locked) return false;
-        if (this.shield > 0 && this.shield % 2 === 0) {
-          this.selfLock || (this.selfLock = true);
-          return;
-        }
         let finger = gestureState.numberActiveTouches;
         let moveY = gestureState.dy;
 

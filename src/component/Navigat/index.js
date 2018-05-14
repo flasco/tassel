@@ -1,68 +1,111 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, InteractionManager } from 'react-native';
-
+import {
+  Text, View, TouchableOpacity, StatusBar,
+  TouchableWithoutFeedback, Animated, Dimensions, Easing
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Foundation';
 import { HeaderBackButton } from 'react-navigation';
 import styles from './index.style';
 
-/**
- * 这个是自定义的StackNavigator导航栏
- * 用在了NovelRead.js中
- - code by Czq
- */
+const { height, width } = Dimensions.get('window');
+
 export default class Navigat extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.DoCache = this.DoCache.bind(this);
-    this.JmptoChapterList = this.JmptoChapterList.bind(this);
-
-    that = this;
+  state = {
+    show: new Animated.Value(1),
+    barShow: false
   }
-
-  DoCache() {
+  DoCache = () => {
     this.props.showAlertSelected();
   }
 
-  JmptoChapterList() {
-    this.props.navigation
-      .navigate('ChaL', {
-        url: this.props.urlx,
-        name: this.props.bname,
-        bookChapterLst: this.props.bookChapterLst,
-        chap: this.props.currentChapter,
-        callback: (url) => this.props.getChapterUrl(url)
+  JmptoChapterList = () => {
+    this.props.navigation.navigate('ChaL', {
+      url: this.props.currentBook.url,
+      name: this.props.currentBook.bookName,
+      bookChapterLst: this.props.bookChapterLst,
+      chap: this.props.currentRecord.recordChapterNum,
+      callback: (url) => {
+        this.clickShow(false);
+        this.props.getChapterUrl(url);
+      }
+    });
+  }
+  isAnimate = false;
+
+  clickShow = (status = true) => {
+    if (this.isAnimate) return;
+    this.isAnimate = true;
+    Animated.timing(this.state.show,
+      {
+        toValue: status ? 0 : 1,
+        duration: 120,
+        easing: Easing.out(Easing.poly(4)),
+      }).start((event) => {
+        if (event.finished) {
+          this.isAnimate = false;
+        }
       });
+    this.setState({
+      barShow: status
+    });
   }
 
-  JmptoChooseSource() {
-    this.props.navigation
-      .navigate('Origin', {
-        book: this.props.currentBook,
-        reLoad: (needRefresh) => this.props.reLoad(needRefresh),
-        callback: (url) => this.props.getChapterUrl(url)
-      });
+  JmptoChooseSource = () => {
+    this.props.navigation.navigate('Origin', {
+      book: this.props.currentBook,
+      reLoad: (needRefresh) => this.props.reLoad(needRefresh),
+      callback: (url) => this.props.getChapterUrl(url)
+    });
   }
 
   render() {
-    if (this.props.choose === 1) {
-      return (
-        <View style={styles.Navig}>
-          <HeaderBackButton
-            title='返回'
-            tintColor={'#ddd'}
-            onPress={() => {
-              this.props.navigation.goBack();
-            }} />
-          <Text style={{ padding: 12, color: '#ddd', fontSize: 17, bottom: 1, right: 12, position: 'absolute', }}
-            onPress={() => {
-              this.JmptoChooseSource();
-            }}>换源</Text>
-        </View>
-      );
-    } else if (this.props.choose === 2) {
-      return (
-        <View style={styles.Fotter}>
+    return (
+      <Animated.View
+        style={{
+          backgroundColor: 'transparent', position: 'absolute', height, width,
+          zIndex: this.state.show.interpolate({
+            inputRange: [0, 1],
+            outputRange: [64, -1]
+          }),
+          opacity: this.state.show.interpolate({
+            inputRange: [0, 1],
+            outputRange: [1, 0]
+          }),
+        }}>
+        <StatusBar
+          barStyle="light-content"
+          hidden={!this.state.barShow}
+          animation={true} />
+        <Animated.View style={{
+          height: this.state.show.interpolate({
+            inputRange: [0, 1],
+            outputRange: [64, 0]
+          }), backgroundColor: '#000', paddingTop: 20
+        }}>
+          <View style={{ flexDirection: 'row', }}>
+            <HeaderBackButton
+              title='返回'
+              tintColor={'#ddd'}
+              onPress={() => {
+                this.props.recordSave();
+                this.props.navigation.goBack();
+              }} />
+            <Text style={styles.originText}
+              onPress={() => {
+                this.JmptoChooseSource();
+              }}>换源</Text>
+          </View>
+        </Animated.View>
+        <TouchableWithoutFeedback
+          onPress={() => { this.clickShow(false); }}>
+          <View style={{ flex: 1 }} />
+        </TouchableWithoutFeedback>
+        <Animated.View style={[styles.Fotter, {
+          height: this.state.show.interpolate({
+            inputRange: [0, 1],
+            outputRange: [50, 0]
+          }),
+        }]}>
           <TouchableOpacity style={{ flex: 1 }} onPress={() => { this.props.SModeChange(); }}>
             <Icon
               name="burst"
@@ -95,8 +138,8 @@ export default class Navigat extends React.PureComponent {
               style={styles.fontCenter} />
             <Text style={styles.FotterItems}>设置</Text>
           </TouchableOpacity>
-        </View>
-      );
-    }
+        </Animated.View>
+      </Animated.View>
+    )
   }
 }

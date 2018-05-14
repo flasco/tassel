@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Text, View, TouchableHighlight, AppState,
   SwipeableFlatList, StatusBar, AsyncStorage, Image,
+  Alert
 } from 'react-native';
 import { Icon, Badge } from 'react-native-elements';
 import SideMenu from 'react-native-side-menu';
@@ -23,7 +24,7 @@ class BookListScreen extends React.PureComponent {
     return {
       title: '古意流苏',
       headerBackTitle: ' ',
-      headerStyle: { backgroundColor: '#000' },
+      headerStyle: { backgroundColor: '#000', borderBottomWidth: 0 },
       headerRight: (
         <Icon
           name='ios-add'
@@ -40,21 +41,9 @@ class BookListScreen extends React.PureComponent {
   constructor(props) {
     super(props);
     tht = this;
-
     this.addBook = this.addBook.bind(this);
     this.deleteBook = this.deleteBook.bind(this);
-
-    AppState.addEventListener('change', async (e) => {
-      if (e === 'inactive' && this.props.operationNum > 0) {
-        this.props.dispatch(createAct('list/operationClear')());
-        Storage.mapSave();
-        await AsyncStorage.multiSet([
-          ['appState', JSON.stringify(this.props.app)],
-          ['booklist', JSON.stringify(this.props.list)],
-          ['fattenList', JSON.stringify(this.props.fattenList)]
-        ]);
-      }
-    });
+    AppState.addEventListener('change', this.onAppStateChange);
   }
 
   componentDidMount() {
@@ -65,9 +54,19 @@ class BookListScreen extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    this.setState = (state, callback) => {
-      return;
-    };
+    AppState.removeEventListener('change', this.onAppStateChange);
+  }
+
+  onAppStateChange = async (e) => {
+    if (e === 'inactive' && this.props.operationNum > 0) {
+      this.props.dispatch(createAct('list/operationClear')());
+      Storage.mapSave();
+      await AsyncStorage.multiSet([
+        ['appState', JSON.stringify(this.props.app)],
+        ['booklist', JSON.stringify(this.props.list)],
+        ['fattenList', JSON.stringify(this.props.fattenList)]
+      ]);
+    }
   }
 
   deleteBook(deleteId) {
@@ -190,7 +189,15 @@ class BookListScreen extends React.PureComponent {
         </TouchableHighlight>
         <TouchableHighlight
           underlayColor={'transparent'}
-          onPress={() => this.deleteBook(rowId)}>
+          onPress={() => {
+            Alert.alert('Warning', '真的要删除掉本书吗？', [{
+              text: 'Cancel'
+            }, {
+              text: 'Delete', onPress: () => {
+                this.deleteBook(rowId)
+              }
+            }]);
+          }}>
           <View style={{ width: 50, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
             <Icon
               name='ios-trash-outline'

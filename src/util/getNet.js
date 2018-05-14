@@ -1,20 +1,45 @@
 
-import { list, latest } from '../services/book';
+import { list, latest, latestLst } from '../services/book';
 import { Storage } from './index'
 
 export async function refreshChapter(booklist) {
   let tasks = [];
+  let marklist = [];
   for (let i = 0, j = booklist.length; i < j; i++) {
     if (booklist[i].img === '-1') continue;
-    let bookChapterLst = `${booklist[i].bookName}_${booklist[i].plantformId}_list`;
-    let latech = booklist[i].latestChapter;
-    tasks.push(get(booklist[i].source[booklist[i].plantformId], bookChapterLst, latech))
+    marklist.push(`${booklist[i].bookName}_${booklist[i].plantformId}_list`);
+    tasks.push({
+      title: booklist[i].latestChapter,
+      url: booklist[i].source[booklist[i].plantformId]
+    });
   }
-  let resArray = await Promise.all(tasks); // 使用promise.all 并行执行网络请求，减少等待时间。
-  resArray.filter((x, index) => {
-    x !== undefined && (booklist[index].latestChapter = x.title);
+  let resArray = await latestLst(tasks); // 使用promise.all 并行执行网络请求，减少等待时间。
+  let res = [];
+  typeof resArray !== 'string' && resArray.filter((x, index) => {
+    if (x !== '-1') {
+      let n = [];
+      for (let i = 0, j = x.list.length; i < j; i++) {
+        n.push({
+          key: x.list[i].url,
+          title: (x.list[i].title.length > 25 ? x.list[i].title.substr(0, 18) + '...' : x.list[i].title)
+        });
+      }
+      let num = 0, length = x.list.length;
+      for (let i = x.list.length - 1; i >= 0; i--) {
+        if (x.list[i].title === booklist[index].latestChapter) {
+          num = length - i - 1;
+          break;
+        }
+      }
+      booklist[index].latestChapter = x.title;
+      res.push({
+        title: x.title,
+        num
+      });
+      Storage.set(marklist[index], n, 1);
+    } else res.push('-1');
   })
-  return resArray;
+  return res;
 }
 
 export async function refreshSingleChapter(book) {

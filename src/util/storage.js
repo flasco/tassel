@@ -43,6 +43,13 @@ function set(key, value, type = 0) {
     AsyncStorage.setItem(key, JSON.stringify(value));
   }
 }
+
+function multiSet(array, types) {
+  for(let i = 0,j = array.length;i<j;i++){
+    keyMap[types[i]].add(array[i][0]);
+  }
+  AsyncStorage.multiSet(array);
+}
 /**
  * 
  * @param {string} key 
@@ -75,5 +82,6 @@ export default {
   remove,
   multiGet,
   multiRemove,
+  multiSet,
   mapSave
 }

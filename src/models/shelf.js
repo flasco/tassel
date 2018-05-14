@@ -75,21 +75,19 @@ export default {
       const resArr = yield call(Promise.all, [refreshChapter(list), refreshChapter(fattenList)]);
       let updateBook = 0, updateNum = 0;
       resArr[0].filter((x, index) => {
-        if (x !== undefined) { // undefined 意味着是最新的，无需更新
-          if (x.num !== -1) { // 不等于 -1 意味着抓取书籍成功
+        if (x !== '-1') { // -1 意味着是最新的，无需更新
+          if (x.num !== 0) { 
             updateNum = list[index].updateNum + x.num;
             list[index].latestChapter = x.title;
             list[index].isUpdate = updateNum > 0;
             list[index].updateNum = updateNum;
             updateBook++;
-          } else {
-            callback && callback(`有书抓取失败了。。`);
           }
         }
       });
       resArr[1].filter((x, index) => {
-        if (x !== undefined) { // undefined 意味着是最新的，无需更新
-          if (x.num !== -1) { // 不等于 -1 意味着抓取书籍成功
+        if (x !== '-1') { // -1 意味着是最新的，无需更新
+          if (x.num !== 0) { 
             updateNum = fattenList[index].updateNum + x.num;
             fattenList[index].latestChapter = x.title;
             fattenList[index].isUpdate = updateNum > 0;
