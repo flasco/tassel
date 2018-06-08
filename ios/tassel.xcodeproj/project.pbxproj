@@ -38,6 +38,8 @@
 		57643A5D44B44398B3DF7ECE /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C1868E1B4F404CB9F3325A /* libRNVectorIcons.a */; };
 		61318D9E20039C2600670E0A /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		616C461D3F044F289A68CDE9 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD3B8627750943EBAF725053 /* Foundation.ttf */; };
+		61E187C020C7C3660077F1AF /* PushNative.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E187BF20C7C3660077F1AF /* PushNative.m */; };
+		61E187EA20C7C4460077F1AF /* TestController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E187E920C7C4460077F1AF /* TestController.m */; };
 		61EC088A1FFF7822007D2991 /* Brightness.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EC08891FFF7822007D2991 /* Brightness.m */; };
 		61EC089A1FFF791D007D2991 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 61EC08991FFF791D007D2991 /* Launch Screen.storyboard */; };
 		61EC089C1FFF79FE007D2991 /* IndexX.png in Resources */ = {isa = PBXBuildFile; fileRef = 61EC089B1FFF79FE007D2991 /* IndexX.png */; };
@@ -374,6 +376,10 @@
 		4D8A3CDA4FBE457FAE906893 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		53505132A7464ADD96C92682 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
+		61E187BE20C7C3660077F1AF /* PushNative.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PushNative.h; sourceTree = "<group>"; };
+		61E187BF20C7C3660077F1AF /* PushNative.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PushNative.m; sourceTree = "<group>"; };
+		61E187E820C7C4460077F1AF /* TestController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestController.h; sourceTree = "<group>"; };
+		61E187E920C7C4460077F1AF /* TestController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestController.m; sourceTree = "<group>"; };
 		61EC08881FFF7822007D2991 /* Brightness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Brightness.h; path = tassel/Brightness.h; sourceTree = "<group>"; };
 		61EC08891FFF7822007D2991 /* Brightness.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Brightness.m; path = tassel/Brightness.m; sourceTree = "<group>"; };
 		61EC08991FFF791D007D2991 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "tassel/Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -537,6 +543,10 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				61E187BE20C7C3660077F1AF /* PushNative.h */,
+				61E187BF20C7C3660077F1AF /* PushNative.m */,
+				61E187E820C7C4460077F1AF /* TestController.h */,
+				61E187E920C7C4460077F1AF /* TestController.m */,
 			);
 			name = tassel;
 			sourceTree = "<group>";
@@ -1239,7 +1249,9 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				61E187C020C7C3660077F1AF /* PushNative.m in Sources */,
 				61EC088A1FFF7822007D2991 /* Brightness.m in Sources */,
+				61E187EA20C7C4460077F1AF /* TestController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1348,6 +1360,7 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 				);
 				INFOPLIST_FILE = tassel/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1372,6 +1385,7 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 				);
 				INFOPLIST_FILE = tassel/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",

@@ -1,11 +1,13 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, Linking } from 'react-native';
+import { Text, View, TouchableOpacity, Linking, NativeModules } from 'react-native';
 import { connect } from 'react-redux';
 
 import { changeServer } from '../../services/book';
 import { createAct, NavigationActions, Storage } from '../../util';
 
 import styles from './index.style';
+
+const navv = NativeModules.PushNative;
 
 class Menu extends React.PureComponent {
   constructor(props) {
@@ -49,6 +51,9 @@ class Menu extends React.PureComponent {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => this.navigate('RnkL', { addBook: this.props.addBook })}>
           <Text style={styles.item} >RankList</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navv.RNOpenOneVC('测试msg')}>
+          <Text style={styles.item} >test</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.leanMore}>
           <Text style={styles.item} >Server line Change</Text>

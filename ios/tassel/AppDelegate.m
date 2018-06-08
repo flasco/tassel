@@ -8,6 +8,7 @@
  */
 
 #import "AppDelegate.h"
+#import "TestController.h"
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -30,7 +31,18 @@
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
-  self.window.rootViewController = rootViewController;
+//  self.window.rootViewController = rootViewController;
+  
+  // 初始化Nav
+  _nav = [[UINavigationController alloc]initWithRootViewController:rootViewController];
+  
+  TestController *one = [[TestController alloc]init];
+  
+  _nav.navigationBarHidden = YES;
+  
+  [self.nav pushViewController:one animated:YES];
+  
+  self.window.rootViewController = _nav;
   [self.window makeKeyAndVisible];
   
   [SplashScreen show];
