@@ -45,14 +45,18 @@ function parseContent(str, width, cleanEmptyLine = true) {
     }
     let sWidth = stringWidth(s);
     if (currentLineWidth + sWidth > width) {
-      lines.push(currentLine);
+      if (currentLine.trim() !== '') {
+        lines.push(currentLine);
+      }
       currentLine = '';
       currentLineWidth = 0;
     }
     currentLine += s;
     currentLineWidth += sWidth;
   }
-  lines.push(currentLine);
+  if (currentLine.trim() !== '') {
+    lines.push(currentLine);
+  }
   return lines;
 }
 
