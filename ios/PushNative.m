@@ -13,6 +13,7 @@
 #import "TestController.h"
 // 导入AppDelegate，获取UINavigationController
 #import "AppDelegate.h"
+#import "plistHelper.h"
 
 @implementation PushNative
 
@@ -22,6 +23,17 @@ RCT_EXPORT_MODULE(PushNative)
 RCT_EXPORT_METHOD(RNOpenOneVC:(NSString *)msg){
   NSLog(@"RN传入原生界面的数据为:%@",msg);
   //主要这里必须使用主线程发送,不然有可能失效
+  dispatch_async(dispatch_get_main_queue(), ^{
+    TestController *one = [[TestController alloc]init];
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    [app.nav pushViewController:one animated:YES];
+  });
+}
+RCT_EXPORT_METHOD(exitPlist){
+  //主要这里必须使用主线程发送,不然有可能失效
+  [plistHelper setPlist:@"0"];
   dispatch_async(dispatch_get_main_queue(), ^{
     TestController *one = [[TestController alloc]init];
     

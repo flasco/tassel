@@ -43,6 +43,10 @@
 		61EC088A1FFF7822007D2991 /* Brightness.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EC08891FFF7822007D2991 /* Brightness.m */; };
 		61EC089A1FFF791D007D2991 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 61EC08991FFF791D007D2991 /* Launch Screen.storyboard */; };
 		61EC089C1FFF79FE007D2991 /* IndexX.png in Resources */ = {isa = PBXBuildFile; fileRef = 61EC089B1FFF79FE007D2991 /* IndexX.png */; };
+		61EE275820D10F66007A717D /* HTTPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EE273020D10F66007A717D /* HTTPHelper.m */; };
+		61EE275B20D10FD2007A717D /* loginBG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 61EE275A20D10FD2007A717D /* loginBG.jpg */; };
+		61EE275E20D122FD007A717D /* plistHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EE275D20D122FD007A717D /* plistHelper.m */; };
+		61EE276120D1263E007A717D /* SignController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EE276020D1263E007A717D /* SignController.m */; };
 		674DDA90591C48AD90558498 /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 40020B46BD6B4955AD7640EE /* libSplashScreen.a */; };
 		6F4478B3ACCE4BE69F55CE27 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 198F19C23692452A87A83E54 /* EvilIcons.ttf */; };
 		6F5263342201419B9C8FA175 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A0E4A7D78A7C42CE88460E6D /* Entypo.ttf */; };
@@ -384,6 +388,13 @@
 		61EC08891FFF7822007D2991 /* Brightness.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Brightness.m; path = tassel/Brightness.m; sourceTree = "<group>"; };
 		61EC08991FFF791D007D2991 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "tassel/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		61EC089B1FFF79FE007D2991 /* IndexX.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IndexX.png; path = tassel/IndexX.png; sourceTree = "<group>"; };
+		61EE273020D10F66007A717D /* HTTPHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPHelper.m; sourceTree = "<group>"; };
+		61EE275920D10FAC007A717D /* HTTPHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPHelper.h; sourceTree = "<group>"; };
+		61EE275A20D10FD2007A717D /* loginBG.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = loginBG.jpg; sourceTree = "<group>"; };
+		61EE275C20D122FD007A717D /* plistHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = plistHelper.h; sourceTree = "<group>"; };
+		61EE275D20D122FD007A717D /* plistHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = plistHelper.m; sourceTree = "<group>"; };
+		61EE275F20D1263E007A717D /* SignController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignController.h; sourceTree = "<group>"; };
+		61EE276020D1263E007A717D /* SignController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SignController.m; sourceTree = "<group>"; };
 		655F8D5469A34B4F9E4F014B /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -533,6 +544,9 @@
 		13B07FAE1A68108700A75B9A /* tassel */ = {
 			isa = PBXGroup;
 			children = (
+				61EE275A20D10FD2007A717D /* loginBG.jpg */,
+				61EE275920D10FAC007A717D /* HTTPHelper.h */,
+				61EE273020D10F66007A717D /* HTTPHelper.m */,
 				61EC089B1FFF79FE007D2991 /* IndexX.png */,
 				61EC08991FFF791D007D2991 /* Launch Screen.storyboard */,
 				61EC08881FFF7822007D2991 /* Brightness.h */,
@@ -547,6 +561,10 @@
 				61E187BF20C7C3660077F1AF /* PushNative.m */,
 				61E187E820C7C4460077F1AF /* TestController.h */,
 				61E187E920C7C4460077F1AF /* TestController.m */,
+				61EE275C20D122FD007A717D /* plistHelper.h */,
+				61EE275D20D122FD007A717D /* plistHelper.m */,
+				61EE275F20D1263E007A717D /* SignController.h */,
+				61EE276020D1263E007A717D /* SignController.m */,
 			);
 			name = tassel;
 			sourceTree = "<group>";
@@ -1182,6 +1200,7 @@
 				D1DB995144DC43B78D343F87 /* MaterialIcons.ttf in Resources */,
 				276473C837EB4E3FBA8F369D /* Octicons.ttf in Resources */,
 				E1D76007CAD14EA99B658EEB /* SimpleLineIcons.ttf in Resources */,
+				61EE275B20D10FD2007A717D /* loginBG.jpg in Resources */,
 				CDE8D9E77998456DADF5C10A /* Zocial.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1247,9 +1266,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				61EE276120D1263E007A717D /* SignController.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				61E187C020C7C3660077F1AF /* PushNative.m in Sources */,
+				61EE275820D10F66007A717D /* HTTPHelper.m in Sources */,
+				61EE275E20D122FD007A717D /* plistHelper.m in Sources */,
 				61EC088A1FFF7822007D2991 /* Brightness.m in Sources */,
 				61E187EA20C7C4460077F1AF /* TestController.m in Sources */,
 			);

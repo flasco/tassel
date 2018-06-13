@@ -9,6 +9,7 @@
 
 #import "AppDelegate.h"
 #import "TestController.h"
+#import "plistHelper.h"
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -36,11 +37,13 @@
   // 初始化Nav
   _nav = [[UINavigationController alloc]initWithRootViewController:rootViewController];
   
-  TestController *one = [[TestController alloc]init];
-  
+  NSString* res = [plistHelper getPlist];
+  NSLog(@"res - %@", res);
   _nav.navigationBarHidden = YES;
-  
-  [self.nav pushViewController:one animated:YES];
+  if([res isEqualToString:@"0"]){
+    TestController *one = [[TestController alloc]init];
+    [self.nav pushViewController:one animated:YES];
+  }
   
   self.window.rootViewController = _nav;
   [self.window makeKeyAndVisible];
@@ -48,5 +51,7 @@
   [SplashScreen show];
   return YES;
 }
+
+
 
 @end

@@ -1,11 +1,11 @@
 //
-//  TestController.m
+//  SignController.m
 //  tassel
 //
-//  Created by Czq on 2018/6/6.
+//  Created by Czq on 2018/6/13.
 //  Copyright © 2018年 Facebook. All rights reserved.
 //
-#import "TestController.h"
+
 #import "SignController.h"
 #import "HTTPHelper.h"
 #import "AppDelegate.h"
@@ -13,21 +13,18 @@
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
-
-
-@interface TestController ()
+@interface SignController ()
 {
   UITextField *zhanghu;
   UITextField *mima;
 }
 @end
 
-@implementation TestController
+@implementation SignController
+
 - (void)viewDidLoad {
-  [super viewDidLoad];
-  
-  self.navigationItem.title = @"我是原生页面哟~";
-  
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
   self.view.backgroundColor = [UIColor whiteColor];
   
   UILabel *label = [UILabel new];
@@ -56,26 +53,18 @@
   button.frame = CGRectMake(SCREEN_WIDTH / 2 - 75, 250, 150, 36);
   button.layer.cornerRadius = 4.0f;
   button.backgroundColor = [UIColor colorWithRed:0 green:(180 / 255.0f) blue:(229 / 255.0f) alpha:1];
-  [button setTitle:@"登录" forState:(UIControlStateNormal)];
+  [button setTitle:@"注册" forState:(UIControlStateNormal)];
   [button addTarget:self action:@selector(click) forControlEvents:(UIControlEventTouchUpInside)];
-  
-  UIButton *button2 = [UIButton buttonWithType:(UIButtonTypeCustom)];
-  [button2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-  button2.frame = CGRectMake(SCREEN_WIDTH / 2 - 75, 300, 150, 36);
-  button2.layer.cornerRadius = 4.0f;
-  button2.backgroundColor = [UIColor colorWithRed:0 green:(180 / 255.0f) blue:(229 / 255.0f) alpha:1];
-  [button2 setTitle:@"注册" forState:(UIControlStateNormal)];
-  [button2 addTarget:self action:@selector(clickJmp) forControlEvents:(UIControlEventTouchUpInside)];
   
   UIImageView  *imageView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
   [imageView setImage:[UIImage imageNamed:@"loginBG.jpg"]];
   [self.view addSubview:imageView];
   [self.view addSubview:button];
-  [self.view addSubview:button2];
   [self.view addSubview:zhanghu];
   [self.view addSubview:mima];
   [self.view addSubview:label];
 }
+
 
 -(void)setTextFieldLeftPadding:(UITextField *)textField forWidth:(CGFloat)leftWidth
 {
@@ -84,11 +73,6 @@
   UIView *leftview = [[UIView alloc] initWithFrame:frame];
   textField.leftViewMode = UITextFieldViewModeAlways;
   textField.leftView = leftview;
-}
-
--(void)clickJmp{
-  SignController *sign = [SignController new];
-  [self.navigationController pushViewController:sign animated:YES];
 }
 
 -(void) alertx:(NSString*) msg{
@@ -109,7 +93,7 @@
   [zhanghu resignFirstResponder];
   [mima resignFirstResponder];
   NSDictionary *params = @{@"userName":zhanghu.text,@"password":mima.text  };
-  [HTTPHelper postRequestByServiceUrl:@"http://localhost:3000" andApi:@"/login" andParams:params andCallBack:^(id obj) {
+  [HTTPHelper postRequestByServiceUrl:@"http://localhost:3000" andApi:@"/sign" andParams:params andCallBack:^(id obj) {
     NSString *status = [NSString stringWithFormat:@"%@", [obj objectForKey:@"success"]];
     NSString *msg = [obj objectForKey:@"msg"];
     if([status isEqualToString:@"0"]){
@@ -126,5 +110,19 @@
   
 }
 
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
 
 @end

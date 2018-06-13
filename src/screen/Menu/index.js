@@ -52,14 +52,14 @@ class Menu extends React.PureComponent {
         <TouchableOpacity onPress={() => this.navigate('RnkL', { addBook: this.props.addBook })}>
           <Text style={styles.item} >RankList</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navv.RNOpenOneVC('测试msg')}>
-          <Text style={styles.item} >test</Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={this.leanMore}>
           <Text style={styles.item} >Server line Change</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.CleanData}>
           <Text style={styles.item} >CleanAllData</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navv.exitPlist()}>
+          <Text style={styles.item} >Exit</Text>
         </TouchableOpacity>
         <Text style={styles.copyRight} onPress={() => {
           Linking.openURL('https://github.com/flasco');
