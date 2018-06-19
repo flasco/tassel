@@ -44,6 +44,7 @@
   mima = [UITextField new];
   [mima setFrame:CGRectMake(SCREEN_WIDTH / 2 - 120, 184, 240, 36)];
   [mima setPlaceholder:@"请输入密码"];
+  [mima setSecureTextEntry:YES];
   
   mima.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.6];
   [self setTextFieldLeftPadding:mima forWidth:5.0f];
