@@ -201,7 +201,7 @@ class ReadScreen extends React.PureComponent {
     }
     return 0;
   }
-  
+
   getPrevPage = () => {
     if (this.bookRecord.recordChapterNum > 0) {//防止翻页越界
       this.setState({ loadFlag: true }, () => {
@@ -244,7 +244,7 @@ class ReadScreen extends React.PureComponent {
 
   drawLoadingView = (SMode) => (
     <TouchableWithoutFeedback onPress={() => { this.nav.clickShow(); }}>
-      <View>
+      <View style={{ flex: 1, }}>
         <Text style={[styles.centr, !SMode && (styles.MoonMode_text)]}>Loading...</Text>
       </View>
     </TouchableWithoutFeedback>

@@ -82,7 +82,7 @@ class BookListScreen extends React.PureComponent {
 
   onRefresh = () => {
     if (this.props.isInit) {
-      this.props.dispatch(createAct('list/listUpdate')({
+      this.props.list != null && this.props.list.length > 0 && this.props.dispatch(createAct('list/listUpdate')({
         list: this.props.list,
         fattenList: this.props.fattenList,
         isFatten: this.props.isFatten,
@@ -91,7 +91,7 @@ class BookListScreen extends React.PureComponent {
     } else {
       setTimeout(() => {
         this.props.isInit ?
-          this.props.dispatch(createAct('list/listUpdate')({
+        this.props.list != null && this.props.list.length > 0 && this.props.dispatch(createAct('list/listUpdate')({
             list: this.props.list,
             fattenList: this.props.fattenList,
             isFatten: this.props.isFatten,

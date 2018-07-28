@@ -5,6 +5,7 @@ import { Storage } from './index'
 export async function refreshChapter(booklist) {
   let tasks = [];
   let marklist = [];
+  if(booklist == null || booklist.length === 0) return ;
   for (let i = 0, j = booklist.length; i < j; i++) {
     if (booklist[i].img === '-1') continue;
     marklist.push(`${booklist[i].bookName}_${booklist[i].plantformId}_list`);
