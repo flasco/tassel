@@ -24,6 +24,7 @@ let operationSum = 0;
 const { width } = Dimensions.get('window');
 
 class ReadScreen extends React.PureComponent {
+  failedCnt = 0;
   constructor(props) {
     super(props);
     this.currentBook = props.navigation.state.params.book;
@@ -33,7 +34,6 @@ class ReadScreen extends React.PureComponent {
       this.toast.show(`Task finished at ${finishTask}/${allTask}`);
       finishTask = 0;
     };
-    failedCnt = 0;
     this.state = {
       loadFlag: true, //判断是出于加载状态还是显示状态
       currentItem: '', //作为章节内容的主要获取来源。
