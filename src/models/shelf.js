@@ -57,8 +57,8 @@ export default {
       const resArr = yield call(Storage.multiGet, ['booklist', 'fattenList']);
       yield put(createAction('updateState')({
         init: true,
-        list: resArr[0],
-        fattenList: resArr[1],
+        list: resArr[0] == null ? [] : resArr[0],
+        fattenList: resArr[1] == null ? [] : resArr[1],
       }));
     },
     *operationClear(action, { call, put }) {
@@ -74,9 +74,9 @@ export default {
       yield put(createAction('updateState')({ loadingFlag: true }));
       const resArr = yield call(Promise.all, [refreshChapter(list), refreshChapter(fattenList)]);
       let updateBook = 0, updateNum = 0;
-      resArr[0].filter((x, index) => {
+      resArr[0] != null && resArr[0].filter((x, index) => {
         if (x !== '-1') { // -1 意味着是最新的，无需更新
-          if (x.num !== 0) { 
+          if (x.num !== 0) {
             updateNum = list[index].updateNum + x.num;
             list[index].latestChapter = x.title;
             list[index].isUpdate = updateNum > 0;
@@ -85,9 +85,9 @@ export default {
           }
         }
       });
-      resArr[1].filter((x, index) => {
+      resArr[1] != null && resArr[1].filter((x, index) => {
         if (x !== '-1') { // -1 意味着是最新的，无需更新
-          if (x.num !== 0) { 
+          if (x.num !== 0) {
             updateNum = fattenList[index].updateNum + x.num;
             fattenList[index].latestChapter = x.title;
             fattenList[index].isUpdate = updateNum > 0;

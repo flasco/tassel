@@ -24,6 +24,7 @@ let operationSum = 0;
 const { width } = Dimensions.get('window');
 
 class ReadScreen extends React.PureComponent {
+  failedCnt = 0;
   constructor(props) {
     super(props);
     this.currentBook = props.navigation.state.params.book;
@@ -33,7 +34,6 @@ class ReadScreen extends React.PureComponent {
       this.toast.show(`Task finished at ${finishTask}/${allTask}`);
       finishTask = 0;
     };
-
     this.state = {
       loadFlag: true, //判断是出于加载状态还是显示状态
       currentItem: '', //作为章节内容的主要获取来源。
@@ -154,12 +154,19 @@ class ReadScreen extends React.PureComponent {
   }
 
   cacheLoad = async (nurl) => {
-    if (this.chapterMap[nurl] === undefined) {
+    if (this.chapterMap[nurl] == null) {
       const data = await content(nurl);
       if (data !== -1) {
         this.chapterMap[nurl] = data;
+        this.failedCnt = 0;
       } else {
-        this.toast.show('fetch err');
+        if (this.failedCnt < 3) {
+          this.failedCnt = this.failedCnt + 1;
+          this.cacheLoad(nurl);
+        } else {
+          this.toast.show(`fetch err, tried cnt:${this.failedCnt}`);
+          this.failedCnt = 0;
+        }
       }
     }
   }
@@ -201,7 +208,7 @@ class ReadScreen extends React.PureComponent {
     }
     return 0;
   }
-  
+
   getPrevPage = () => {
     if (this.bookRecord.recordChapterNum > 0) {//防止翻页越界
       this.setState({ loadFlag: true }, () => {
@@ -244,7 +251,7 @@ class ReadScreen extends React.PureComponent {
 
   drawLoadingView = (SMode) => (
     <TouchableWithoutFeedback onPress={() => { this.nav.clickShow(); }}>
-      <View>
+      <View style={{ flex: 1, }}>
         <Text style={[styles.centr, !SMode && (styles.MoonMode_text)]}>Loading...</Text>
       </View>
     </TouchableWithoutFeedback>
