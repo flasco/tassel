@@ -45,16 +45,16 @@ class Menu extends React.PureComponent {
           <Text style={styles.itemY} >{`当前已阅读字数:  ${(this.props.readNum / 10000).toFixed(2)} W`}</Text>
         </View>
         <TouchableOpacity onPress={() => this.navigate('Sear', { addBook: this.props.addBook })}>
-          <Text style={styles.item} >Search</Text>
+          <Text style={styles.item} >搜索</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => this.navigate('RnkL', { addBook: this.props.addBook })}>
-          <Text style={styles.item} >RankList</Text>
+          <Text style={styles.item} >排行</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.leanMore}>
-          <Text style={styles.item} >Server line Change</Text>
+          <Text style={styles.item} >切换服务器</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.CleanData}>
-          <Text style={styles.item} >CleanAllData</Text>
+          <Text style={styles.item} >清理所有缓存</Text>
         </TouchableOpacity>
         <Text style={styles.copyRight} onPress={() => {
           Linking.openURL('https://github.com/flasco');
