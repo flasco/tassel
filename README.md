@@ -4,7 +4,7 @@
 
 ## 1. introduction
 
-This is a novel reader app powered by react-native `0.54.4`.
+This is a novel reader app powered by react-native `0.57.4`.
 
 it have shelf, fattenList, read page, record and so on.
 
@@ -36,6 +36,11 @@ react-native run-ios
 // this prj not pass test in Android
 ```
 ## 3. Change Log
+2018-10-27
+- [maintain] update react-native to `0.57.4`
+- [maintain] update dependencies.
+- [bugfix] fix readSum NaN bug.
+-----
 
 2018-4-8
 - [feature] update react-native to `0.54.4`
