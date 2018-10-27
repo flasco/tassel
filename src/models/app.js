@@ -34,7 +34,9 @@ export default {
   effects: {
     *appInit(action, { call, put }) {
       const appState = yield call(Storage.get, 'appState');
-      yield put(createAction('updateState')({ ...appState }))
+      if (appState != null) {
+        yield put(createAction('updateState')({ ...appState }))
+      }
     },
     *menuSwitch(action, { call, put }) {
       yield put(createAction('modeSwitch')())

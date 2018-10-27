@@ -200,7 +200,7 @@ class BookListScreen extends React.PureComponent {
           }}>
           <View style={{ width: 50, flexDirection: 'column', alignItems: 'center', flex: 1, justifyContent: 'center' }}>
             <Icon
-              name='ios-trash-outline'
+              name='ios-trash'
               type='ionicon'
               color='red'
               size={24} />
