@@ -4,7 +4,7 @@
 
 ## 1. introduction
 
-This is a novel reader app powered by react-native `0.57.4`.
+This is a novel reader app powered by react-native `0.57.7`.
 
 it have shelf, fattenList, read page, record and so on.
 
