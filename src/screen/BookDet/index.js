@@ -91,7 +91,7 @@ class BookDetScreen extends React.PureComponent {
             <Image
               style={styles.firstView.left.imgSize}
               source={{ uri: this.book.img }}
-              defaultSource={require('../../assert/noImg.jpg')} />
+              defaultSource={require('../../assets/noImg.jpg')} />
             <View style={styles.firstView.right.container}>
               <Text style={styles.firstView.right.tit}>{this.book.bookName}</Text>
               <Text style={styles.firstView.right.subDes}>{this.book.author}</Text>

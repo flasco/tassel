@@ -130,7 +130,7 @@ class BookListScreen extends React.PureComponent {
           activeOpacity={0.7}
           onPress={() => navigate('FattenBlock')}>
           <View style={{ flexDirection: 'row' }}>
-            <Image source={require('../../assert/noImg.jpg')} style={styles.coverStyle} />
+            <Image source={require('../../assets/noImg.jpg')} style={styles.coverStyle} />
             <View style={{ paddingLeft: 15 }}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={SMode ? styles.sunnyMode.titleStyle : styles.nightMode.titleStyle}>{rowData.bookName}</Text>
