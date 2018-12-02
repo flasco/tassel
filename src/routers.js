@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import { Animated, Easing } from 'react-native';
 import {
   StackNavigator, addNavigationHelpers,
-  NavigationActions,
 } from 'react-navigation';
 import {
   initializeListeners,
