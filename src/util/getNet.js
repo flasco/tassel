@@ -6,25 +6,27 @@ export async function refreshChapter(booklist) {
   let tasks = [];
   let marklist = [];
   if(booklist == null || booklist.length === 0) return ;
-  for (let i = 0, j = booklist.length; i < j; i++) {
-    if (booklist[i].img === '-1') continue;
-    marklist.push(`${booklist[i].bookName}_${booklist[i].plantformId}_list`);
-    tasks.push({
-      title: booklist[i].latestChapter,
-      url: booklist[i].source[booklist[i].plantformId]
-    });
-  }
+  booklist.forEach(item => {
+    if (item.img !== '-1') {
+      marklist.push(`${item.bookName}_${item.plantformId}_list`);
+      tasks.push({
+        title: item.latestChapter,
+        url: item.source[item.plantformId]
+      });
+    }
+  });
+
   let resArray = await latestLst(tasks); // 使用promise.all 并行执行网络请求，减少等待时间。
   let res = [];
   typeof resArray !== 'string' && resArray.filter((x, index) => {
     if (x !== '-1') {
-      let n = [];
-      for (let i = 0, j = x.list.length; i < j; i++) {
-        n.push({
-          key: x.list[i].url,
-          title: (x.list[i].title.length > 25 ? x.list[i].title.substr(0, 18) + '...' : x.list[i].title)
-        });
-      }
+      let n = x.list.map(item => {
+        return {
+          key: item.url,
+          title: item.title.length > 25 ? item.title.substr(0, 18) + '...' : item.title
+        }
+      });
+
       let num = 0, length = x.list.length;
       for (let i = x.list.length - 1; i >= 0; i--) {
         if (x.list[i].title === booklist[index].latestChapter) {

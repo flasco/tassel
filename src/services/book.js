@@ -51,16 +51,15 @@ export async function latestLst(list) {
  */
 export async function list(url) {
   try {
-    url.indexOf('m.xs') !== -1 && (url = url + 'all.html')
+    // 修复indexOf时而失效的bug
+    /m.xs/g.test(url) && (url = url + 'all.html')
     let { data } = await axios.get(`${Ip}/analysis?action=1&url=${url}`, { timeout: 5000 });
-    let n = [], i = 0;
-    while (i < data.length) {
-      n.push({
-        key: data[i].url,
-        title: (data[i].title.length > 25 ? data[i].title.substr(0, 18) + '...' : data[i].title)
-      });
-      i++;
-    }
+    const n = data.map(item => {
+      return {
+        key: item.url,
+        title: (item.title.length > 25 ? item.title.substr(0, 18) + '...' : item.title)
+      }
+    });
     return n;
   } catch (error) {
     return [];

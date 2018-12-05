@@ -9,9 +9,8 @@ export const createAction = type => payload => ({ type, payload })
 export const createAct = type => payload => ({ type, ...payload })
 
 export function insertionSort(arr) {
-  var len = arr.length;
-  var preIndex, current;
-  for (var i = 1; i < len; i++) {
+  let preIndex, current;
+  for (let i = 1, len = arr.length; i < len; i++) {
     preIndex = i - 1;
     current = arr[i];
     while (preIndex >= 0 && arr[preIndex].latestRead < current.latestRead) {
