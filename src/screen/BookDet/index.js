@@ -55,7 +55,7 @@ class BookDetScreen extends React.PureComponent {
         // 如果后台没有搜索到本书会返回一段字符串。
         alert('本书没有记录！如果迫切需要加入本书，请及时反馈给开发人员~');
       } else {
-        this.book.source[1] && this.book.source[1].indexOf('m.xs') === -1 && ( this.book.source[1] = this.book.source[1].replace(/www/,'m'));
+        this.book.source[1] && /m.xs/g.test(this.book.source[1]) && ( this.book.source[1] = this.book.source[1].replace(/www/,'m'));
         this.setState({ isLoading: false });
         this.props.dispatch(createAct('list/setContain')({ flag: this.isContains(this.book) }));
       }
