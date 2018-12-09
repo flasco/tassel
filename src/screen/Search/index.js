@@ -3,6 +3,7 @@ import { Text, View, FlatList, TouchableHighlight } from 'react-native';
 
 import { SearchBar } from 'react-native-elements';
 import styles from './index.style';
+import { judgeIphoneX } from '../../util';
 
 import { search } from '../../services/book';
 
@@ -17,18 +18,21 @@ class SearchScreen extends React.PureComponent {
     this.state = {
       text: '',
       dataSource: '',
-      hint: '输入后点击 done 即可搜索书籍。',
+      hint: '输入后点击 done 即可搜索书籍。'
     };
   }
 
   componentDidMount() {
     let bookNam = this.props.navigation.state.params.bookNam || '';
     if (bookNam !== '') {
-      this.setState({
-        text: bookNam,
-      }, () => {
-        this.SearchBook(bookNam);
-      });
+      this.setState(
+        {
+          text: bookNam
+        },
+        () => {
+          this.SearchBook(bookNam);
+        }
+      );
     }
   }
 
@@ -67,9 +71,12 @@ class SearchScreen extends React.PureComponent {
     const { navigate } = this.props.navigation;
     return (
       <TouchableHighlight
-        underlayColor='transparent'
+        underlayColor="transparent"
         activeOpacity={0.7}
-        onPress={() => { this.pressFunc(rowData); }}>
+        onPress={() => {
+          this.pressFunc(rowData);
+        }}
+      >
         <View style={{ height: 52 }}>
           <Text style={styles.rowStyle}>
             {`${rowData.bookName} - ${rowData.author}`}
@@ -82,10 +89,10 @@ class SearchScreen extends React.PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ height: 16, backgroundColor: '#000' }} />
+        <View style={{ height: judgeIphoneX ? 40 : 16, backgroundColor: '#000' }} />
         <View style={[{ flexDirection: 'row', backgroundColor: '#000' }]}>
           <SearchBar
-            onChangeText={(text) => this.setState({ text })}
+            onChangeText={text => this.setState({ text })}
             containerStyle={{ backgroundColor: '#000', flex: 7 }}
             inputStyle={{ backgroundColor: '#ddd' }}
             returnKeyType={'search'}
@@ -96,14 +103,16 @@ class SearchScreen extends React.PureComponent {
                 this.SearchBook(this.state.text);
               }
             }}
-            placeholder='输入关键字' />
+            placeholder="输入关键字"
+          />
           <TouchableHighlight
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-            underlayColor='transparent'
+            underlayColor="transparent"
             activeOpacity={0.7}
             onPress={() => {
               this.props.navigation.goBack();
-            }}>
+            }}
+          >
             <Text style={{ color: '#fff', fontSize: 16 }}>取消</Text>
           </TouchableHighlight>
         </View>
@@ -115,12 +124,16 @@ class SearchScreen extends React.PureComponent {
           data={this.state.dataSource}
           renderItem={this.renderRow}
           ItemSeparatorComponent={() => <View style={styles.solid} />}
-          getItemLayout={(data, index) => ({ length: 52, offset: 53 * index, index })}//行高38，分割线1，所以offset=39
-          keyExtractor={(item, index) => `${index}`} />
+          getItemLayout={(data, index) => ({
+            length: 52,
+            offset: 53 * index,
+            index
+          })} //行高38，分割线1，所以offset=39
+          keyExtractor={(item, index) => `${index}`}
+        />
       </View>
     );
   }
 }
-
 
 export default SearchScreen;

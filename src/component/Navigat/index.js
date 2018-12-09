@@ -5,9 +5,14 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Foundation';
 import { HeaderBackButton } from 'react-navigation';
+import { judgeIphoneX } from '../../util';
+
 import styles from './index.style';
 
 const { height, width } = Dimensions.get('window');
+
+const BAR_OUTPUT = [ judgeIphoneX ? 88 : 64, 0];
+const BOTTOM_OUTPUT = [ judgeIphoneX ? 90 : 50, 0];
 
 export default class Navigat extends React.PureComponent {
   state = {
@@ -65,7 +70,7 @@ export default class Navigat extends React.PureComponent {
           backgroundColor: 'transparent', position: 'absolute', height, width,
           zIndex: this.state.show.interpolate({
             inputRange: [0, 1],
-            outputRange: [64, -1]
+            outputRange: BAR_OUTPUT
           }),
           opacity: this.state.show.interpolate({
             inputRange: [0, 1],
@@ -79,10 +84,10 @@ export default class Navigat extends React.PureComponent {
         <Animated.View style={{
           height: this.state.show.interpolate({
             inputRange: [0, 1],
-            outputRange: [64, 0]
+            outputRange: BAR_OUTPUT
           }), backgroundColor: '#000', paddingTop: 20
         }}>
-          <View style={{ flexDirection: 'row', }}>
+          <View style={{ flexDirection: 'row',position:'absolute', bottom: 0, right: 0, left: 0 }}>
             <HeaderBackButton
               title='返回'
               tintColor={'#ddd'}
@@ -103,8 +108,9 @@ export default class Navigat extends React.PureComponent {
         <Animated.View style={[styles.Fotter, {
           height: this.state.show.interpolate({
             inputRange: [0, 1],
-            outputRange: [50, 0]
+            outputRange: BOTTOM_OUTPUT
           }),
+          paddingBottom: judgeIphoneX ? 20 : 0,
         }]}>
           <TouchableOpacity style={{ flex: 1 }} onPress={() => { this.props.SModeChange(); }}>
             <Icon

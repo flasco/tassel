@@ -1,6 +1,8 @@
+import { judgeIphoneX } from '../../util';
+
 export default {
   centr: {
-    marginTop: 35,
+    marginTop: 75,
     textAlign: 'center',
     fontSize: 18,
   },
@@ -35,7 +37,7 @@ export default {
     flex: 1,
   },
   title: {
-    marginTop: 8,
+    marginTop: judgeIphoneX ? 48 : 8,
     paddingLeft: 20,
   },
   bottom1: {
