@@ -39,9 +39,7 @@
 		40AC2560E6194E30AABD79D3 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DDDDBFC2999C4188B55C3375 /* FontAwesome5_Brands.ttf */; };
 		4C9065827FD04E77A320A7E2 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D8D17EAD14634D1D832A7F86 /* MaterialCommunityIcons.ttf */; };
 		50853A3C3A62483EAB3C5045 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 919ACCBCB1CB4ACC89F802B9 /* Entypo.ttf */; };
-		619E39462184447900724972 /* IndexX.png in Resources */ = {isa = PBXBuildFile; fileRef = 619E39442184447900724972 /* IndexX.png */; };
 		619E39472184447900724972 /* Brightness.m in Sources */ = {isa = PBXBuildFile; fileRef = 619E39452184447900724972 /* Brightness.m */; };
-		619E3A3921844DB300724972 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 619E3A0F21844DB300724972 /* Launch Screen.storyboard */; };
 		63FC34A72CD54F699C492782 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8253D6B7EFC1410D9DCCAEA7 /* Zocial.ttf */; };
 		6F074210905244A6B1F97B9A /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 05E0954A0DCE4C3985E16587 /* AntDesign.ttf */; };
 		72BD862880DE4DC592F75546 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5999C548412247008BD9E0E0 /* libRNVectorIcons.a */; };
@@ -386,9 +384,7 @@
 		5FCB8AFBA8AF490C97FAC5CD /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		60D41FFFD441445AAE871505 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		619E39432184447900724972 /* Brightness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Brightness.h; path = tassel/Brightness.h; sourceTree = "<group>"; };
-		619E39442184447900724972 /* IndexX.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IndexX.png; path = tassel/IndexX.png; sourceTree = "<group>"; };
 		619E39452184447900724972 /* Brightness.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Brightness.m; path = tassel/Brightness.m; sourceTree = "<group>"; };
-		619E3A0F21844DB300724972 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "tassel/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		6F2EE638E15A40EBB2DFC17E /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7B14417AEA1D42518078D95E /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
@@ -538,10 +534,8 @@
 		13B07FAE1A68108700A75B9A /* tassel */ = {
 			isa = PBXGroup;
 			children = (
-				619E3A0F21844DB300724972 /* Launch Screen.storyboard */,
 				619E39432184447900724972 /* Brightness.h */,
 				619E39452184447900724972 /* Brightness.m */,
-				619E39442184447900724972 /* IndexX.png */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -1189,11 +1183,9 @@
 				AEAA20428EA6469F82EAB109 /* Foundation.ttf in Resources */,
 				20E032451E4846A6B83C275B /* Ionicons.ttf in Resources */,
 				4C9065827FD04E77A320A7E2 /* MaterialCommunityIcons.ttf in Resources */,
-				619E39462184447900724972 /* IndexX.png in Resources */,
 				206BC705C88D4A089D2BBEA7 /* MaterialIcons.ttf in Resources */,
 				7CB247FFC6024CA0B72A6063 /* Octicons.ttf in Resources */,
 				F20AB735162D467490441B41 /* SimpleLineIcons.ttf in Resources */,
-				619E3A3921844DB300724972 /* Launch Screen.storyboard in Resources */,
 				63FC34A72CD54F699C492782 /* Zocial.ttf in Resources */,
 				6F074210905244A6B1F97B9A /* AntDesign.ttf in Resources */,
 				40AC2560E6194E30AABD79D3 /* FontAwesome5_Brands.ttf in Resources */,
