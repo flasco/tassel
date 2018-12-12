@@ -13,7 +13,7 @@ import getContextArr from '../../util/getContextArr';
 import Navigat from '../../component/Navigat';
 import { content, list } from '../../services/book';
 
-import { delay, createAct, Storage } from '../../util';
+import { delay, createAct, Storage, judgeIphoneX } from '../../util';
 
 import styles from './index.style';
 
@@ -21,7 +21,10 @@ let allTask = 0, finishTask = 0;
 let bookMapFlag, bookRecordFlag, chapterLstFlag;
 let operationSum = 0;
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
+
+// 差的40 是 marginTop 加了40
+const textContainerHeight = height - (judgeIphoneX ? 88 : 48);
 
 class ReadScreen extends React.PureComponent {
   failedCnt = 0;
@@ -244,7 +247,9 @@ class ReadScreen extends React.PureComponent {
   ds = new ViewPager.DataSource({ pageHasChanged: (p1, p2) => p1 !== p2 });
 
   getContent = (text) => {
-    let { pages, pageCount } = getContextArr(text, width);
+    // Math.floor 向下取整, 40是行高，-2是因为从0开始计数
+    const line = Math.floor(textContainerHeight / 40) - 1;
+    let { pages, pageCount } = getContextArr(text, width, line);
     this.pageCount = pageCount;
     return pages;
   }

@@ -39,16 +39,19 @@ export default {
   title: {
     marginTop: judgeIphoneX ? 48 : 8,
     paddingLeft: 20,
+    lineHeight: 14,
   },
   bottom1: {
     flex: 1,
     textAlign: 'left',
     marginLeft: 25,
+    lineHeight: 14
   },
   bottom2: {
     flex: 1,
     textAlign: 'right',
     marginRight: 25,
+    lineHeight: 14
   },
   bottView: {
     flexDirection: 'row',

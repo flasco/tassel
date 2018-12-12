@@ -10,21 +10,36 @@ export const createAction = type => payload => ({ type, payload })
 
 export const createAct = type => payload => ({ type, ...payload })
 
+// iPhoneX Xs
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
+// iPhoneXR XsMax
+const XR_WIDTH = 414;
+const XR_HEIGHT = 896;
+
 const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get('window');
 
-export function isIphoneX(){
-  if (Platform.OS === 'web') return false;
+//判断是否为iphoneX或Xs
+function isIphoneX() {
   return (
-      Platform.OS === 'ios' &&
-      ((D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) ||
-          (D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT))
-  );
+      Platform.OS === 'ios' && 
+      ((D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) || 
+      (D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT))
+  )
 }
 
-export const judgeIphoneX = isIphoneX();
+//判断是否为iphoneXR或XsMAX
+function isIphoneXR() {
+  return (
+      Platform.OS === 'ios' && 
+      ((D_HEIGHT === XR_HEIGHT && D_WIDTH === XR_WIDTH) || 
+      (D_HEIGHT === XR_WIDTH && D_WIDTH === XR_HEIGHT))
+  )
+}
+
+
+export const judgeIphoneX = isIphoneX() || isIphoneXR();
 
 export function insertionSort(arr) {
   let preIndex, current;
