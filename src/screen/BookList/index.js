@@ -77,7 +77,7 @@ class BookListScreen extends React.PureComponent {
   }
 
   callback = (msg) => {
-    this.refs.toast.show(msg);
+    Toast.show(msg);
   }
 
   onRefresh = () => {
@@ -235,7 +235,6 @@ class BookListScreen extends React.PureComponent {
               renderQuickActions={this.renderActions}
               renderItem={this.renderRow}
               keyExtractor={(item, index) => `${item.bookName}-${item.author}`} />
-            <Toast ref="toast" />
           </View>
         </SideMenu>
       </View>

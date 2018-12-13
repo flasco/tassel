@@ -112,37 +112,33 @@ export default class Navigat extends React.PureComponent {
           }),
           paddingBottom: judgeIphoneX ? 20 : 0,
         }]}>
-          <TouchableOpacity style={{ flex: 1 }} onPress={() => { this.props.SModeChange(); }}>
+          <TouchableOpacity style={styles.footerItems.container} onPress={() => { this.props.SModeChange(); }}>
             <Icon
               name="burst"
               size={20}
-              color={'#aaa'}
-              style={styles.fontCenter} />
-            <Text style={styles.FotterItems}>切换</Text>
+              color={'#aaa'} />
+            <Text style={styles.footerItems.text}>切换</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flex: 1 }} onPress={this.JmptoChapterList}>
+          <TouchableOpacity style={styles.footerItems.container} onPress={this.JmptoChapterList}>
             <Icon
               name="list"
               size={20}
-              color={'#aaa'}
-              style={styles.fontCenter} />
-            <Text style={styles.FotterItems}>目录</Text>
+              color={'#aaa'} />
+            <Text style={styles.footerItems.text}>目录</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flex: 1 }} onPress={() => { this.DoCache() }}>
+          <TouchableOpacity style={styles.footerItems.container} onPress={() => { this.DoCache() }}>
             <Icon
               name="download"
               size={20}
-              color={'#aaa'}
-              style={styles.fontCenter} />
-            <Text style={styles.FotterItems}>缓存</Text>
+              color={'#aaa'} />
+            <Text style={styles.footerItems.text}>缓存</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flex: 1 }} onPress={() => { alert('coming soon...') }}>
+          <TouchableOpacity style={styles.footerItems.container} onPress={() => { alert('coming soon...') }}>
             <Icon
               name="widget"
               size={20}
-              color={'#aaa'}
-              style={styles.fontCenter} />
-            <Text style={styles.FotterItems}>设置</Text>
+              color={'#aaa'} />
+            <Text style={styles.footerItems.text}>设置</Text>
           </TouchableOpacity>
         </Animated.View>
       </Animated.View>

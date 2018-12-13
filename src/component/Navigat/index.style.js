@@ -8,7 +8,7 @@ export default {
     fontSize: 17,
     bottom: 1,
     right: 12,
-    position: 'absolute',
+    position: 'absolute'
   },
   Fotter: {
     alignItems: 'center',
@@ -20,10 +20,20 @@ export default {
     left: 0,
     flexDirection: 'row'
   },
+  footerItems: {
+    container: {
+      flex: 1,
+      flexDirection: 'column',
+      height: '100%',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    text: {
+      color: '#aaa',
+      fontSize: 12
+    }
+  },
   fontCenter: {
-    textAlign: 'center',
-  },
-  FotterItems: {
-    color: "#aaa", textAlign: 'center', fontSize: 12,
-  },
-}
+    textAlign: 'center'
+  }
+};

@@ -34,7 +34,7 @@ class ReadScreen extends React.PureComponent {
     AppState.addEventListener('change', this.onAppStateChange);
     this.q = async.queue(this.fetchQueue, 5);
     this.q.drain = () => {
-      this.toast.show(`Task finished at ${finishTask}/${allTask}`);
+      Toast.show(`Task finished at ${finishTask}/${allTask}`);
       finishTask = 0;
     };
     this.state = {
@@ -58,7 +58,7 @@ class ReadScreen extends React.PureComponent {
 
   fetchQueue = async (url, callback) => {
     let n = 100 * (finishTask / allTask) >> 0; //取整
-    if (n % 15 === 0) this.toast.show(`Task process:${n}%`);
+    if (n % 15 === 0) Toast.show(`Task process:${n}%`);
     if (this.chapterMap[url] === undefined) {
       const data = await content(url);
       await delay(1000);  //设置抓取延时
@@ -78,7 +78,7 @@ class ReadScreen extends React.PureComponent {
     this.chapterMap = storageResArr[2] || new Map();
     this.bookRecord = storageResArr[0] || { recordChapterNum: 0, recordPage: 1 };
     if (this.chapterLst.length === 0 || needRefresh) {
-      this.toast.show('章节内容走心抓取中...');
+      Toast.show('章节内容走心抓取中...');
       this.chapterLst = await list(this.currentBook.source[this.currentBook.plantformId]);
       if (this.chapterLst.length === 0) {
         this.setState({
@@ -167,7 +167,7 @@ class ReadScreen extends React.PureComponent {
           this.failedCnt = this.failedCnt + 1;
           this.cacheLoad(nurl);
         } else {
-          this.toast.show(`fetch err, tried cnt:${this.failedCnt}`);
+          Toast.show(`fetch err, tried cnt:${this.failedCnt}`);
           this.failedCnt = 0;
         }
       }
@@ -206,7 +206,7 @@ class ReadScreen extends React.PureComponent {
         this.getNet(++this.bookRecord.recordChapterNum, 1);//因为是倒序的
       });
     } else {
-      this.toast.show('已经是最后一章。');
+      Toast.show('已经是最后一章。');
       return -1;
     }
     return 0;
@@ -218,7 +218,7 @@ class ReadScreen extends React.PureComponent {
         this.getNet(--this.bookRecord.recordChapterNum, -1);
       });
     } else {
-      this.toast.show('已经是第一章。');
+      Toast.show('已经是第一章。');
     }
   }
 
@@ -294,7 +294,6 @@ class ReadScreen extends React.PureComponent {
             this.drawLoadingView(SMode) :
             this.drawViewPage(this.state.currentItem.content)
         }
-        <Toast ref={(q) => this.toast = q} />
       </View>
     );
   }
