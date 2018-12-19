@@ -73,7 +73,7 @@ function getRealStrLength(str) {
   let charCode;
   for (let i = 0, len = str.length; i < len; i++) {
     charCode = str.charCodeAt(i);
-    if (charCode >= 0 && charCode <= 128) realLength += 1;
+    if (charCode >= 0x0000 && charCode <= 0x00ff) realLength += 1;
     else realLength += 2;
   }
   return realLength;
