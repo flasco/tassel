@@ -12,10 +12,10 @@ import {
 import async from 'async';
 import { connect } from 'react-redux';
 
-import Toast from '../../component/Toast';
-import ViewPager from '../../component/viewPager';
+import Toast from '../../components/Toast';
+import ViewPager from '../../components/viewPager';
 import getContextArr from '../../util/getContextArr';
-import Navigat from '../../component/Navigat';
+import Navigat from '../../components/Navigat';
 import { content, list } from '../../api/book';
 
 import {

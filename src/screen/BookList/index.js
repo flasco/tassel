@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { createAct, Storage, spliceLine } from '../../util';
 
 import Menu from '../Menu';
-import Toast from '../../component/Toast';
+import Toast from '../../components/Toast';
 
 import styles from './index.style';
 
