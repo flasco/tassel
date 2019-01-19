@@ -1,4 +1,4 @@
-import { latestLst, list } from '../src/services/book';
+import { latestLst, list } from '../src/api/book';
 
 test.skip('test', async () => {
   let res = await list('https://www.xs.la/87_87069/');
