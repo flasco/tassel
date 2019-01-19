@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Text, View, Image } from 'react-native';
 import { HeaderBackButton } from 'react-navigation';
 import { Button } from 'react-native-elements';
@@ -16,9 +16,10 @@ class BookDetScreen extends React.PureComponent {
       title: `书籍详情`,
       headerLeft: (
         <HeaderBackButton
-          title='返回'
+          title="返回"
           tintColor={'#ddd'}
-          onPress={() => navigation.goBack()} />
+          onPress={() => navigation.goBack()}
+        />
       ),
       headerStyle: {
         backgroundColor: '#000'
@@ -35,8 +36,8 @@ class BookDetScreen extends React.PureComponent {
     this.book = props.navigation.state.params.book;
 
     this.state = {
-      isLoading: this.book === undefined,
-    }
+      isLoading: this.book === undefined
+    };
 
     this.initx();
   }
@@ -46,34 +47,42 @@ class BookDetScreen extends React.PureComponent {
       let name = this.props.navigation.state.params.bookNam,
         author = this.props.navigation.state.params.bookAut;
       const data = await search(name, author);
-      if (data === -1) {
-        alert('抓取失败');
-        return;
-      }
+      if (data === -1) return;
+
       this.book = data[0];
       if (typeof this.book === 'string') {
         // 如果后台没有搜索到本书会返回一段字符串。
         alert('本书没有记录！如果迫切需要加入本书，请及时反馈给开发人员~');
       } else {
-        this.book.source[1] && /xs.la/g.test(this.book.source[1]) && ( this.book.source[1] = this.book.source[1].replace(/www/,'m'));
+        this.book.source[1] &&
+          /xs.la/g.test(this.book.source[1]) &&
+          (this.book.source[1] = this.book.source[1].replace(/www/, 'm'));
         this.setState({ isLoading: false });
-        this.props.dispatch(createAct('list/setContain')({ flag: this.isContains(this.book) }));
+        this.props.dispatch(
+          createAct('list/setContain')({ flag: this.isContains(this.book) })
+        );
       }
     } else {
-      this.props.dispatch(createAct('list/setContain')({ flag: this.isContains(this.book) }));
+      this.props.dispatch(
+        createAct('list/setContain')({ flag: this.isContains(this.book) })
+      );
     }
-  }
+  };
 
-  isContains = (book) => {
+  isContains = book => {
     if (!book) return false;
-    return this.props.list.some(x => x.author === book.author && x.bookName === book.bookName) ||
-      this.props.fattenList.some(x => x.author === book.author && x.bookName === book.bookName)
-  }
+    return (
+      this.props.list.some(
+        x => x.author === book.author && x.bookName === book.bookName
+      ) ||
+      this.props.fattenList.some(
+        x => x.author === book.author && x.bookName === book.bookName
+      )
+    );
+  };
 
   componentWillUnmount() {
-    this.setState = (state, callback) => {
-      return;
-    };
+    this.setState = () => {};
   }
 
   render() {
@@ -81,46 +90,61 @@ class BookDetScreen extends React.PureComponent {
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-          <Text style={{ textAlign: 'center', marginTop: 12, }}>Loading...</Text>
+          <Text style={{ textAlign: 'center', marginTop: 12 }}>Loading...</Text>
         </View>
       );
     } else {
+      const { img, bookName, author, plantformId, desc } = this.book;
+      const { contains, btnLoading } = this.props;
       return (
         <View style={styles.container}>
           <View style={styles.firstView.container}>
             <Image
               style={styles.firstView.left.imgSize}
-              source={{ uri: this.book.img }}
-              defaultSource={require('../../assets/noImg.jpg')} />
+              source={{ uri: img }}
+              defaultSource={require('../../assets/noImg.jpg')}
+            />
             <View style={styles.firstView.right.container}>
-              <Text style={styles.firstView.right.tit}>{this.book.bookName}</Text>
-              <Text style={styles.firstView.right.subDes}>{this.book.author}</Text>
-              <Text style={styles.firstView.right.subDes}>{webSite[this.book.plantformId]}</Text>
+              <Text style={styles.firstView.right.tit}>{bookName}</Text>
+              <Text style={styles.firstView.right.subDes}>{author}</Text>
+              <Text style={styles.firstView.right.subDes}>
+                {webSite[plantformId]}
+              </Text>
             </View>
           </View>
           <View style={styles.secondView.container}>
-            <Button title={this.props.contains ? '已存在' : '追书'}
-              disabled={this.props.btnLoading || this.props.contains}
+            <Button
+              title={contains ? '已存在' : '追书'}
+              disabled={btnLoading || contains}
               disabledStyle={styles.secondView.firstButton.disabledStyle}
               onPress={() => {
                 this.props.navigation.state.params.addBook(this.book);
               }}
-              loading={this.props.btnLoading}
-              textStyle={this.props.contains || this.props.btnLoading ? styles.secondView.firstButton.disText : styles.secondView.firstButton.text}
-              buttonStyle={styles.secondView.firstButton.buttonStyle} />
-            <Button title='开始阅读'
+              loading={btnLoading}
+              textStyle={
+                contains || btnLoading
+                  ? styles.secondView.firstButton.disText
+                  : styles.secondView.firstButton.text
+              }
+              buttonStyle={styles.secondView.firstButton.buttonStyle}
+            />
+            <Button
+              title="开始阅读"
               onPress={() => {
                 navigate('Read', {
                   book: this.book
                 });
               }}
               textStyle={styles.secondView.secondButton.text}
-              buttonStyle={styles.secondView.secondButton.buttonStyle} />
+              buttonStyle={styles.secondView.secondButton.buttonStyle}
+            />
           </View>
           <View style={styles.solid} />
-          <Text style={styles.Desc}>{this.book.desc}</Text>
+          <Text style={styles.Desc}>{desc}</Text>
           <View style={styles.solid} />
-          <Text style={[styles.Desc, { textAlign: 'center' }]}>To be continued...</Text>
+          <Text style={[styles.Desc, { textAlign: 'center' }]}>
+            To be continued...
+          </Text>
         </View>
       );
     }
@@ -132,8 +156,8 @@ function select(state) {
     list: state.list.list,
     fattenList: state.list.fattenList,
     btnLoading: state.list.btnLoading,
-    contains: state.list.isContain,
-  }
+    contains: state.list.isContain
+  };
 }
 
 export default connect(select)(BookDetScreen);

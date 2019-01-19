@@ -13,7 +13,7 @@ import getContextArr from '../../util/getContextArr';
 import Navigat from '../../component/Navigat';
 import { content, list } from '../../services/book';
 
-import { delay, createAct, Storage, judgeIphoneX } from '../../util';
+import { delay, createAct, Storage, judgeIphoneX, spliceLine } from '../../util';
 
 import styles from './index.style';
 
@@ -60,7 +60,7 @@ class ReadScreen extends React.PureComponent {
     let n = 100 * (finishTask / allTask) >> 0; //取整
     if (n % 15 === 0) Toast.show(`Task process:${n}%`);
     if (this.chapterMap[url] === undefined) {
-      const data = await content(url);
+      const data = await content(url, false);
       await delay(1000);  //设置抓取延时
       data !== -1 && (this.chapterMap[url] = data);
     }
@@ -142,8 +142,7 @@ class ReadScreen extends React.PureComponent {
 
   renderPage = (data, pageID) => {
     const { SMode } = this.props;
-    let title = this.state.currentItem.title;
-    title = title.length > 25 ? title.substr(0, 25) + '...' : title;
+    const title = spliceLine(this.state.currentItem.title, 25);
     return (
       <View style={[styles.container, SMode ? (styles.SunnyMode_container) : (styles.MoonMode_container)]}>
         <Text style={[styles.title, SMode ? (styles.SunnyMode_Title) : (styles.MoonMode_Title)]}>{title}</Text>
@@ -158,7 +157,7 @@ class ReadScreen extends React.PureComponent {
 
   cacheLoad = async (nurl) => {
     if (this.chapterMap[nurl] == null) {
-      const data = await content(nurl);
+      const data = await content(nurl, false);
       if (data !== -1) {
         this.chapterMap[nurl] = data;
         this.failedCnt = 0;
@@ -179,7 +178,7 @@ class ReadScreen extends React.PureComponent {
     this.bookRecord.recordChapterNum = index;
     let nurl = this.chapterLst[index].key;
     if (this.chapterMap[nurl] === undefined || typeof this.chapterMap[nurl] === 'string') {
-      const data = await content(nurl);
+      const data = await content(nurl, false);
       if (data !== -1) {
         this.chapterMap[nurl] = data;
       } else {
@@ -262,7 +261,7 @@ class ReadScreen extends React.PureComponent {
     </TouchableWithoutFeedback>
   )
 
-  drawViewPage = (content) => (
+  drawViewPage = content => (
     <ViewPager
       dataSource={this.ds.cloneWithPages(this.getContent(content))}
       renderPage={this.renderPage}

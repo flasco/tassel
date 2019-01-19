@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { latest } from '../../services/book';
 import { webSite } from '../../config';
-import { createAct } from '../../util';
+import { createAct, spliceLine } from '../../util';
 
 import styles from './index.style';
 
@@ -90,7 +90,7 @@ class OriginScreen extends React.PureComponent {
             {rowData.isSelect && <Badge value={`当前选择`} containerStyle={SMode ? styles.sunnyMode.badgeStyle : styles.nightMode.badgeStyle} textStyle={{ fontSize: 11 }} />}
           </View>
           <Text style={styles.sunnyMode.subTitleStyle}>
-            {`${rowData.latestChapter.length > 23 ? (rowData.latestChapter.substr(0, 23) + '...') : rowData.latestChapter}`}
+            {`${spliceLine(rowData.latestChapter, 23)}`}
           </Text>
         </View>
       </TouchableHighlight >

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Text, View, TouchableHighlight, AppState,
   SwipeableFlatList, StatusBar, AsyncStorage, Image,
@@ -10,7 +10,7 @@ import SplashScreen from 'react-native-splash-screen';
 import SwipeableQuickActions from 'SwipeableQuickActions';
 import { connect } from 'react-redux';
 
-import { createAct, Storage } from '../../util';
+import { createAct, Storage, spliceLine } from '../../util';
 
 import Menu from '../Menu';
 import Toast from '../../component/Toast';
@@ -160,7 +160,7 @@ class BookListScreen extends React.PureComponent {
               <Text style={SMode ? styles.sunnyMode.titleStyle : styles.nightMode.titleStyle}>{rowData.bookName}</Text>
               {rowData.isUpdate && <Badge value={`更新`} containerStyle={styles.badgeStyle} textStyle={{ fontSize: 11 }} />}
             </View>
-            <Text style={SMode ? styles.sunnyMode.subTitleStyle : styles.nightMode.subTitleStyle}>{rowData.updateNum > 10 ? `距上次点击已更新${rowData.updateNum}章` : `${rowData.latestChapter.length > 15 ? (rowData.latestChapter.substr(0, 15) + '...') : rowData.latestChapter}`}</Text>
+            <Text style={SMode ? styles.sunnyMode.subTitleStyle : styles.nightMode.subTitleStyle}>{rowData.updateNum > 10 ? `距上次点击已更新${rowData.updateNum}章` : `${spliceLine(rowData.latestChapter, 15)}`}</Text>
           </View>
         </View>
       </TouchableHighlight>

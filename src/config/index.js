@@ -4,7 +4,7 @@ export const webSite  = {
     '3':'biqu.cm',
 }
 
-export const serverIp = [
-  'https://flasco.leanapp.cn',
-  'https://flascospare.leanapp.cn',
-]
+export const serverIps = [
+  'https://tasselstorage1.cn-e1.leanapp.cn',
+  'https://tasselstorage2.cn-e1.leanapp.cn',
+];

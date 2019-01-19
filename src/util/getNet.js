@@ -1,6 +1,6 @@
 
 import { list, latest, latestLst } from '../services/book';
-import { Storage } from './index'
+import { Storage, spliceLine } from './index'
 
 export async function refreshChapter(booklist) {
   let tasks = [];
@@ -16,14 +16,14 @@ export async function refreshChapter(booklist) {
     }
   });
 
-  let resArray = await latestLst(tasks); // 使用promise.all 并行执行网络请求，减少等待时间。
+  let resArray = await latestLst(tasks);
   let res = [];
-  typeof resArray !== 'string' && resArray.filter((x, index) => {
+  typeof resArray !== -1 && resArray.filter((x, index) => {
     if (x !== '-1') {
       let n = x.list.map(item => {
         return {
           key: item.url,
-          title: item.title.length > 25 ? item.title.substr(0, 18) + '...' : item.title
+          title: spliceLine(item.title, 18)
         }
       });
 

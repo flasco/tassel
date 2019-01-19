@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, TouchableHighlight, Button, InteractionManager 
 import { LargeList } from "react-native-largelist";
 import { HeaderBackButton } from 'react-navigation';
 
-import { list } from '../../services/book';
 import { connect } from 'react-redux';
 
 import styles from './index.style';
