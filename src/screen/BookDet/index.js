@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { createAct } from '../../util';
 
-import { search } from '../../services/book';
+import { search } from '../../api/book';
 import { webSite } from '../../config';
 import styles from './index.style';
 

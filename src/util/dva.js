@@ -1,10 +1,10 @@
-import React from 'react'
-import { create } from 'dva-core'
-import { Provider, connect } from 'react-redux'
+import React from 'react';
+import { create } from 'dva-core';
+import { Provider, connect } from 'react-redux';
 
-export { connect }
+export { connect };
 
-export default function (options) {
+export default function(options) {
   const app = create(options);
   // HMR workaround
   if (!global.registered) options.models.forEach(model => app.model(model));

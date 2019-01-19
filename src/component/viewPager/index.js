@@ -29,19 +29,19 @@ class ViewPager extends PureComponent {
   constructor(props) {
     super(props);
     this.fling = false;
-    this.shield = 0;//修复呼出菜单之后下一次滑页出现bug
+    this.shield = 0; //修复呼出菜单之后下一次滑页出现bug
     this.animation = (animate, toValue, gs) => {
-      return Animated.timing(animate,
-        {
-          toValue: toValue,
-          duration: 100,
-          easing: Easing.linear,
-          useNativeDriver: true,//使用原生驱动，更加流畅
-        });
+      return Animated.timing(animate, {
+        toValue: toValue,
+        duration: 100,
+        easing: Easing.linear,
+        useNativeDriver: true //使用原生驱动，更加流畅
+      });
     };
-    Platform.OS === 'ios' && Brightness.get(x => {
-      this.brightVal = +x;//转型
-    })
+    Platform.OS === 'ios' &&
+      Brightness.get(x => {
+        this.brightVal = +x; //转型
+      });
     this.shouldJmp = true;
     this.toprev = 0;
     this.state = {
@@ -53,18 +53,24 @@ class ViewPager extends PureComponent {
 
   UNSAFE_componentWillMount() {
     this.childIndex = 0;
-    this.maxPage = this.props.dataSource.getPageCount();  // 最大页数，总页数
+    this.maxPage = this.props.dataSource.getPageCount(); // 最大页数，总页数
     let release = (e, gestureState) => {
       if (!this.shouldJmp) {
         this.shouldJmp = true;
         return;
-      };
+      }
       let relativeGestureDistance = gestureState.dx / deviceWidth,
         vx = gestureState.vx;
       let step = 0;
-      if (relativeGestureDistance < -0.5 || (relativeGestureDistance < 0 && vx <= -1e-6)) {
+      if (
+        relativeGestureDistance < -0.5 ||
+        (relativeGestureDistance < 0 && vx <= -1e-6)
+      ) {
         step = 1;
-      } else if (relativeGestureDistance > 0.5 || (relativeGestureDistance > 0 && vx >= 1e-6)) {
+      } else if (
+        relativeGestureDistance > 0.5 ||
+        (relativeGestureDistance > 0 && vx >= 1e-6)
+      ) {
         step = -1;
       }
       /**
@@ -73,7 +79,12 @@ class ViewPager extends PureComponent {
        */
       const clickX = gestureState.x0;
       const moveX = gestureState.dx;
-      const flag = gestureState.moveX === 0 ? 0 : (gestureState.moveX > gestureState.x0 ? -1 : 1);
+      const flag =
+        gestureState.moveX === 0
+          ? 0
+          : gestureState.moveX > gestureState.x0
+          ? -1
+          : 1;
       if (clickX > LeftBoundary && clickX < RightBoundary && moveX == 0) {
         this.props.clickBoard();
         this.shield++;
@@ -82,11 +93,11 @@ class ViewPager extends PureComponent {
 
       this.props.hasTouch && this.props.hasTouch(false);
 
-      if (clickX > RightBoundary && moveX == 0 || flag === 1) {
+      if ((clickX > RightBoundary && moveX == 0) || flag === 1) {
         this.toprev = 0;
-        this.movePage(1, gestureState, moveX !== 0);//moveX !== 0 这里是判断是否启用动画效果
+        this.movePage(1, gestureState, moveX !== 0); //moveX !== 0 这里是判断是否启用动画效果
         return;
-      } else if (clickX < LeftBoundary && moveX == 0 || flag === -1) {
+      } else if ((clickX < LeftBoundary && moveX == 0) || flag === -1) {
         this.toprev = 1;
         this.movePage(-1, gestureState, moveX !== 0);
         return;
@@ -94,9 +105,7 @@ class ViewPager extends PureComponent {
       this.movePage(step, gestureState);
     };
 
-
     this._panResponder = PanResponder.create({
-
       onStartShouldSetPanResponderCapture: (e, gestureState) => true,
       // Claim responder if it's a horizontal pan
       onMoveShouldSetPanResponder: (e, gestureState) => {
@@ -122,7 +131,8 @@ class ViewPager extends PureComponent {
           let offsetX = -dx / this.state.viewWidth + this.childIndex;
           this.state.scrollValue.setValue(offsetX);
         } else if (finger === 2 && Platform.OS === 'ios') {
-          if (this.brightVal !== 0.0 && moveY > 0.0) {//下滑 
+          if (this.brightVal !== 0.0 && moveY > 0.0) {
+            //下滑
             this.brightVal -= 0.01;
             if (this.brightVal < 0.0) {
               this.brightVal = 0.0;
@@ -130,7 +140,8 @@ class ViewPager extends PureComponent {
             requestAnimationFrame(() => {
               Brightness.set(this.brightVal);
             });
-          } else if (this.brightVal !== 1.0 && moveY < 0.0) { //上滑
+          } else if (this.brightVal !== 1.0 && moveY < 0.0) {
+            //上滑
             this.brightVal += 0.01;
             if (this.brightVal > 1.0) {
               this.brightVal = 1.0;
@@ -141,7 +152,7 @@ class ViewPager extends PureComponent {
           }
           this.shouldJmp && (this.shouldJmp = false);
         }
-      },
+      }
     });
 
     let initialPage = Number(this.props.initialPage);
@@ -199,19 +210,18 @@ class ViewPager extends PureComponent {
       this.childIndex = nextChildIdx;
       this.state.scrollValue.setValue(nextChildIdx);
       this.setState({
-        currentPage: pageNumber,
+        currentPage: pageNumber
       });
     };
 
     if (animate) {
       this.fling = true;
-      this.animation(this.state.scrollValue, scrollStep, gs)
-        .start((event) => {
-          if (event.finished) {
-            postChange();
-          }
-          moved && this.props.onChangePage && this.props.onChangePage(pageNumber);
-        });
+      this.animation(this.state.scrollValue, scrollStep, gs).start(event => {
+        if (event.finished) {
+          postChange();
+        }
+        moved && this.props.onChangePage && this.props.onChangePage(pageNumber);
+      });
     } else {
       postChange();
       moved && this.props.onChangePage && this.props.onChangePage(pageNumber);
@@ -268,25 +278,28 @@ class ViewPager extends PureComponent {
     };
 
     let translateX = this.state.scrollValue.interpolate({
-      inputRange: [0, 1], outputRange: [0, -viewWidth]
+      inputRange: [0, 1],
+      outputRange: [0, -viewWidth]
     });
 
     return (
       <View
         style={{ flex: 1 }}
-        onLayout={(event) => {
+        onLayout={event => {
           let viewWidth = event.nativeEvent.layout.width;
           if (!viewWidth || this.state.viewWidth === viewWidth) {
             return;
           }
           this.setState({
             viewWidth,
-            currentPage: this.state.currentPage,
+            currentPage: this.state.currentPage
           });
         }}
       >
-        <Animated.View style={[sceneContainerStyle, { transform: [{ translateX }] }]}
-          {...this._panResponder.panHandlers}>
+        <Animated.View
+          style={[sceneContainerStyle, { transform: [{ translateX }] }]}
+          {...this._panResponder.panHandlers}
+        >
           {bodyComponents}
         </Animated.View>
       </View>

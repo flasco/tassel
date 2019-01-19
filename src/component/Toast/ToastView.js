@@ -52,8 +52,8 @@ class ToastView extends Component {
       message: nextProps.message !== undefined ? nextProps.message : '',
       time: nextProps.time && nextProps.time < 1500 ? SHORT : LONG
     });
-    clearTimeout(this.dismissHandler)
-    this.timingDismiss()
+    clearTimeout(this.dismissHandler);
+    this.timingDismiss();
   }
 
   componentDidMount() {
@@ -75,8 +75,8 @@ class ToastView extends Component {
 
   timingDismiss = () => {
     this.dismissHandler = setTimeout(() => {
-      this.dismiss()
-    }, this.state.time)
+      this.dismiss();
+    }, this.state.time);
   };
 
   dismiss = () => {
@@ -99,12 +99,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,.6)',
     borderRadius: 8,
     padding: 10,
-    maxWidth: width / 3 * 2,
+    maxWidth: (width / 3) * 2,
     alignSelf: 'flex-end'
   },
   defaultText: {
     color: '#FFF',
-    fontSize: 15,
+    fontSize: 15
   },
   container: {
     position: 'absolute',

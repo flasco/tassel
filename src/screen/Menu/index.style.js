@@ -4,20 +4,20 @@ export default {
     width: window.width,
     height: window.height,
     backgroundColor: '#222222',
-    padding: 10,
+    padding: 10
   },
   itemX: {
     height: 40,
     flexDirection: 'row',
-    alignItems:'center',
-    paddingLeft:10,
+    alignItems: 'center',
+    paddingLeft: 10,
     marginBottom: 7,
     backgroundColor: '#2c2c2c'
   },
-  itemY:{
+  itemY: {
     fontSize: 13,
     fontWeight: '300',
-    color: '#EBEBEB',
+    color: '#EBEBEB'
   },
   item: {
     fontSize: 15,
@@ -35,4 +35,4 @@ export default {
     textAlign: 'center',
     color: '#EBEBEB'
   }
-}
+};

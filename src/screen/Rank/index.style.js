@@ -42,4 +42,4 @@ export default {
     fontSize: 14,
     color: '#555555'
   }
-}
+};

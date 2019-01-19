@@ -1,5 +1,4 @@
 class ViewPagerDataSource {
-
   constructor(params) {
     this._getPageData = params.getPageData || defaultGetPageData;
     this._pageHasChanged = params.pageHasChanged;
@@ -8,10 +7,9 @@ class ViewPagerDataSource {
   }
 
   cloneWithPages(dataBlob, pageIdentities) {
-
     var newSource = new ViewPagerDataSource({
       getPageData: this._getPageData,
-      pageHasChanged: this._pageHasChanged,
+      pageHasChanged: this._pageHasChanged
     });
 
     newSource._dataBlob = dataBlob;
@@ -23,10 +21,7 @@ class ViewPagerDataSource {
     }
 
     newSource._cachedPageCount = newSource.pageIdentities.length;
-    newSource._calculateDirtyPages(
-      this._dataBlob,
-      this.pageIdentities
-    );
+    newSource._calculateDirtyPages(this._dataBlob, this.pageIdentities);
     return newSource;
   }
 
@@ -35,8 +30,8 @@ class ViewPagerDataSource {
   }
 
   /**
-     * Returns if the row is dirtied and needs to be rerendered
-     */
+   * Returns if the row is dirtied and needs to be rerendered
+   */
   pageShouldUpdate(pageIndex) {
     var needsUpdate = this._dirtyPages[pageIndex];
     //    warning(needsUpdate !== undefined,
@@ -45,8 +40,8 @@ class ViewPagerDataSource {
   }
 
   /**
-     * Gets the data required to render the page
-     */
+   * Gets the data required to render the page
+   */
   getPageData(pageIndex) {
     if (!this.getPageData) {
       return null;
@@ -58,8 +53,8 @@ class ViewPagerDataSource {
   }
 
   /**
-     * Private members and methods.
-     */
+   * Private members and methods.
+   */
 
   _calculateDirtyPages(prevDataBlob, prevPageIDs) {
     // construct a hashmap of the existing (old) id arrays
@@ -80,7 +75,6 @@ class ViewPagerDataSource {
       this._dirtyPages.push(!!dirty);
     }
   }
-
 }
 
 function defaultGetPageData(dataBlob, pageID) {

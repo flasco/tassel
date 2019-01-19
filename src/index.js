@@ -11,10 +11,10 @@ const app = dva({
   models: [appModel, shelfModel, routerModel],
   onAction: [routerMiddleware],
   onError(e) {
-    console.log('onError', e)
-  },
-})
+    console.log('onError', e);
+  }
+});
 
-const App = app.start(<Tassel />)
+const App = app.start(<Tassel />);
 
 export default App;

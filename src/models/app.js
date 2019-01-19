@@ -1,59 +1,59 @@
-import { createAction, Storage } from '../util'
+import { createAction, Storage } from '../util';
 
 export default {
   namespace: 'app',
   state: {
     menuFlag: false,
     sunnyMode: true,
-    readNum: 0,
+    readNum: 0
   },
   reducers: {
     updateState(state, { payload }) {
       return {
         ...state,
         sunnyMode: payload.sunnyMode,
-        readNum: payload.readNum,
-      }
+        readNum: payload.readNum
+      };
     },
     readNumAdd(state, { payload }) {
       return {
         ...state,
         readNum: state.readNum + payload
-      }
+      };
     },
     modeSwitch(state, { payload }) {
-      return { ...state, menuFlag: !state.menuFlag }
+      return { ...state, menuFlag: !state.menuFlag };
     },
     modeContrl(state, { payload }) {
-      return { ...state, menuFlag: payload }
+      return { ...state, menuFlag: payload };
     },
     sunnyModeSwh(state, { payload }) {
-      return { ...state, sunnyMode: !state.sunnyMode }
+      return { ...state, sunnyMode: !state.sunnyMode };
     }
   },
   effects: {
     *appInit(action, { call, put }) {
       const appState = yield call(Storage.get, 'appState');
       if (appState != null) {
-        yield put(createAction('updateState')({ ...appState }))
+        yield put(createAction('updateState')({ ...appState }));
       }
     },
     *menuSwitch(action, { call, put }) {
-      yield put(createAction('modeSwitch')())
+      yield put(createAction('modeSwitch')());
     },
     *sunnyModeSwitch(action, { call, put }) {
-      yield put(createAction('sunnyModeSwh')())
+      yield put(createAction('sunnyModeSwh')());
     },
     *menuCtl({ flag }, { call, put }) {
-      yield put(createAction('modeContrl')(flag))
+      yield put(createAction('modeContrl')(flag));
     },
     *readAdd({ num }, { call, put }) {
       yield put(createAction('readNumAdd')(num));
-    },
+    }
   },
   subscriptions: {
     setup({ dispatch }) {
       dispatch({ type: 'appInit' });
-    },
-  },
-}
+    }
+  }
+};

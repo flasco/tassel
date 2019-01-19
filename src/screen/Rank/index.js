@@ -11,7 +11,7 @@ import { HeaderBackButton } from 'react-navigation';
 
 import { spliceLine } from '../../util';
 
-import { rnk } from '../../services/book';
+import { rnk } from '../../api/book';
 
 import styles from './index.style';
 

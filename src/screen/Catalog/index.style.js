@@ -20,7 +20,8 @@ export default {
     },
     underlayColor: '#e1e1e1',
     container: {
-      backgroundColor: '#d9d9d9', flex: 1
+      backgroundColor: '#d9d9d9',
+      flex: 1
     }
   },
   nightMode: {
@@ -37,10 +38,11 @@ export default {
     },
     underlayColor: '#2d2d2d',
     container: {
-      backgroundColor: '#282828', flex: 1
+      backgroundColor: '#282828',
+      flex: 1
     }
   },
   red: {
     color: '#db0019'
-  },
-}
+  }
+};

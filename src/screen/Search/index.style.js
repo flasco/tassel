@@ -11,16 +11,16 @@ export default {
     marginBottom: 5,
     marginLeft: 7,
     marginRight: 7,
-    padding: 2,
+    padding: 2
   },
   hint: {
     color: 'gray',
     fontSize: 12,
     textAlign: 'center',
-    paddingTop: 6,
+    paddingTop: 6
   },
   text: {
-    flex: 1,
+    flex: 1
   },
   solid: {
     height: 1,
@@ -31,6 +31,6 @@ export default {
   rowStyle: {
     marginTop: 18,
     marginLeft: 20,
-    fontSize: 15,
-  },
-}
+    fontSize: 15
+  }
+};

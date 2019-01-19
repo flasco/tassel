@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { StyleSheet, AppRegistry, View } from 'react-native';
 
 viewRoot = null;
@@ -8,27 +8,27 @@ class RootView extends Component {
     super(props);
     viewRoot = this;
     this.state = {
-      toast: null,
-    }
+      toast: null
+    };
   }
 
   render() {
-    return (<View style={styles.rootView} pointerEvents="box-none">
-      {this.state.toast}
-    </View>)
+    return (
+      <View style={styles.rootView} pointerEvents="box-none">
+        {this.state.toast}
+      </View>
+    );
   }
 
-  static setView = (view) => {
-    viewRoot.setState({ toast: view })
+  static setView = view => {
+    viewRoot.setState({ toast: view });
   };
 }
-
 
 const originRegister = AppRegistry.registerComponent;
 
 AppRegistry.registerComponent = (appKey, component) => {
-
-  return originRegister(appKey, function () {
+  return originRegister(appKey, function() {
     const OriginAppComponent = component();
     return class extends Component {
       render() {
@@ -38,23 +38,23 @@ AppRegistry.registerComponent = (appKey, component) => {
             <RootView />
           </View>
         );
-      };
+      }
     };
   });
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
+    position: 'relative'
   },
   rootView: {
-    position: "absolute",
+    position: 'absolute',
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 });
-export default RootView
+export default RootView;

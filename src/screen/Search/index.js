@@ -5,7 +5,7 @@ import { SearchBar } from 'react-native-elements';
 import styles from './index.style';
 import { judgeIphoneX } from '../../util';
 
-import { search } from '../../services/book';
+import { search } from '../../api/book';
 
 class SearchScreen extends React.PureComponent {
   constructor(props) {
@@ -89,7 +89,9 @@ class SearchScreen extends React.PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ height: judgeIphoneX ? 40 : 16, backgroundColor: '#000' }} />
+        <View
+          style={{ height: judgeIphoneX ? 40 : 16, backgroundColor: '#000' }}
+        />
         <View style={[{ flexDirection: 'row', backgroundColor: '#000' }]}>
           <SearchBar
             onChangeText={text => this.setState({ text })}
