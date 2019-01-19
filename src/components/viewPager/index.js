@@ -22,39 +22,30 @@ const deviceWidth = Dimensions.get('window').width;
 const LeftBoundary = deviceWidth / 4;
 const RightBoundary = deviceWidth - LeftBoundary;
 
-const Brightness = Platform.OS === 'ios' && NativeModules.Brightness;
+const IS_IOS = Platform.OS === 'ios';
+
+const Brightness = IS_IOS && NativeModules.Brightness;
 
 class ViewPager extends PureComponent {
+  static defaultProps = {
+    Gpag: 0,
+    initialPage: 0,
+    dataSource: {},
+    clickBoard: () => {},
+    getNextPage: () => {},
+    getCurrentPage: () => {},
+    getPrevPage: () => {},
+    renderPage: () => {},
+  }
   static DataSource = ViewPagerDataSource;
   constructor(props) {
     super(props);
-    this.fling = false;
-    this.shield = 0; //修复呼出菜单之后下一次滑页出现bug
-    this.animation = (animate, toValue, gs) => {
-      return Animated.timing(animate, {
-        toValue: toValue,
-        duration: 100,
-        easing: Easing.linear,
-        useNativeDriver: true //使用原生驱动，更加流畅
-      });
-    };
     Platform.OS === 'ios' &&
       Brightness.get(x => {
         this.brightVal = +x; //转型
       });
-    this.shouldJmp = true;
-    this.toprev = 0;
-    this.state = {
-      currentPage: 0,
-      viewWidth: 0,
-      scrollValue: new Animated.Value(0)
-    };
-  }
 
-  UNSAFE_componentWillMount() {
-    this.childIndex = 0;
-    this.maxPage = this.props.dataSource.getPageCount(); // 最大页数，总页数
-    let release = (e, gestureState) => {
+    const release = (e, gestureState) => {
       if (!this.shouldJmp) {
         this.shouldJmp = true;
         return;
@@ -91,8 +82,6 @@ class ViewPager extends PureComponent {
         return;
       }
 
-      this.props.hasTouch && this.props.hasTouch(false);
-
       if ((clickX > RightBoundary && moveX == 0) || flag === 1) {
         this.toprev = 0;
         this.movePage(1, gestureState, moveX !== 0); //moveX !== 0 这里是判断是否启用动画效果
@@ -111,7 +100,6 @@ class ViewPager extends PureComponent {
       onMoveShouldSetPanResponder: (e, gestureState) => {
         if (Math.abs(gestureState.dx) > Math.abs(gestureState.dy)) {
           if (!this.fling) {
-            this.props.hasTouch && this.props.hasTouch(true);
             return true;
           }
         }
@@ -123,14 +111,14 @@ class ViewPager extends PureComponent {
 
       // Dragging, move the view with the touch
       onPanResponderMove: (e, gestureState) => {
-        let finger = gestureState.numberActiveTouches;
-        let moveY = gestureState.dy;
+        const finger = gestureState.numberActiveTouches;
+        const moveY = gestureState.dy;
 
         if (finger === 1) {
           let dx = gestureState.dx;
           let offsetX = -dx / this.state.viewWidth + this.childIndex;
           this.state.scrollValue.setValue(offsetX);
-        } else if (finger === 2 && Platform.OS === 'ios') {
+        } else if (finger === 2 && IS_IOS) {
           if (this.brightVal !== 0.0 && moveY > 0.0) {
             //下滑
             this.brightVal -= 0.01;
@@ -154,27 +142,42 @@ class ViewPager extends PureComponent {
         }
       }
     });
-
-    let initialPage = Number(this.props.initialPage);
-    if (initialPage > 0) {
-      this.goToPage(initialPage, false);
-    }
   }
 
+  shield = 0; // 修复呼出菜单之后下一次滑页出现bug
+  fling = false;
+  shouldJmp = true;
+  toprev = 0;
+
+  childIndex = 0;
+  maxPage = this.props.dataSource.getPageCount(); // 最大页数，总页数
+
+  state = {
+    currentPage: 0,
+    viewWidth: 0,
+    scrollValue: new Animated.Value(0)
+  };
+
+  animation = (animate, toValue, gs) => {
+    return Animated.timing(animate, {
+      toValue: toValue,
+      duration: 100,
+      easing: Easing.linear,
+      useNativeDriver: true //使用原生驱动，更加流畅
+    });
+  };
+
   componentDidMount() {
-    //私人修改
+    if (!this.isInit) {
+      this.isInit = true;
+      const { initialPage } = this.props;
+      initialPage && this.goToPage(initialPage, false);
+    }
     if (this.props.Gpag == 1) {
       this.goToPage(0, false);
     } else if (this.props.Gpag == -1) {
       this.goToPage(this.maxPage - 1, false);
     }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.dataSource) {
-      this.childIndex = 0;
-    }
-    return false;
   }
 
   goToPage(pageNumber, animate = true) {
@@ -187,7 +190,6 @@ class ViewPager extends PureComponent {
     let pageCount = this.maxPage;
     let pageNumber = this.state.currentPage + step;
 
-    //私人修改
     if (pageNumber >= pageCount && this.toprev == 0) {
       let tmpag = pageNumber;
       pageNumber = 0;
@@ -200,6 +202,7 @@ class ViewPager extends PureComponent {
       this.props.getPrevPage();
       return;
     }
+
     step !== 0 && this.props.getCurrentPage(pageNumber + 1);
     pageNumber = Math.min(Math.max(0, pageNumber), pageCount - 1);
     const moved = pageNumber !== this.state.currentPage;
@@ -209,22 +212,16 @@ class ViewPager extends PureComponent {
       this.fling = false;
       this.childIndex = nextChildIdx;
       this.state.scrollValue.setValue(nextChildIdx);
-      this.setState({
-        currentPage: pageNumber
-      });
+      this.setState({ currentPage: pageNumber });
     };
 
     if (animate) {
       this.fling = true;
       this.animation(this.state.scrollValue, scrollStep, gs).start(event => {
-        if (event.finished) {
-          postChange();
-        }
-        moved && this.props.onChangePage && this.props.onChangePage(pageNumber);
+        if (event.finished) postChange();
       });
     } else {
       postChange();
-      moved && this.props.onChangePage && this.props.onChangePage(pageNumber);
     }
   }
 
