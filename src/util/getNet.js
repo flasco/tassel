@@ -17,7 +17,7 @@ export async function refreshChapter(booklist) {
 
   let resArray = await latestLst(tasks);
   let res = [];
-  typeof resArray !== -1 &&
+  resArray !== -1 && Array.isArray(resArray) &&
     resArray.filter((x, index) => {
       if (x !== '-1') {
         let n = x.list.map(item => {

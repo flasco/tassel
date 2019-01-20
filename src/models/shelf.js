@@ -83,6 +83,7 @@ export default {
         refreshChapter(list),
         refreshChapter(fattenList)
       ]);
+
       let updateBook = 0,
         updateNum = 0;
       resArr[0] != null &&
