@@ -94,6 +94,10 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
+    packagingOptions {
+        pickFirst 'lib/x86_64/libjsc.so'
+        pickFirst 'lib/arm64-v8a/libjsc.so'
+    }
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
@@ -130,6 +134,12 @@ android {
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
             }
         }
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.webkit:android-jsc:r236355'
     }
 }
 
