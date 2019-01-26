@@ -53,8 +53,8 @@ export async function list(url) {
   return [];
 }
 
-export async function rnk(page) {
-  const data = await get(`${Ip}/v2/rnklist?p=${page}`);
+export async function rnk(page, gender = 0) {
+  const data = await get(`${Ip}/v2/rnklist?p=${page}&gender=${gender}`);
   return data;
 }
 

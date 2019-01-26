@@ -44,16 +44,15 @@ class BookDetScreen extends React.PureComponent {
 
   initx = async () => {
     if (this.state.isLoading) {
-      let name = this.props.navigation.state.params.bookNam,
+      const name = this.props.navigation.state.params.bookNam,
         author = this.props.navigation.state.params.bookAut;
       const data = await search(name, author);
-      if (data === -1) return;
 
-      this.book = data[0];
-      if (typeof this.book === 'string') {
+      if (data.length < 1 || data[0] == null) {
         // 如果后台没有搜索到本书会返回一段字符串。
         alert('本书没有记录！如果迫切需要加入本书，请及时反馈给开发人员~');
       } else {
+        this.book = data[0];
         this.book.source[1] &&
           /xs.la/g.test(this.book.source[1]) &&
           (this.book.source[1] = this.book.source[1].replace(/www/, 'm'));

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View, TouchableOpacity, Linking } from 'react-native';
+import Collapsible from 'react-native-collapsible';
 import { connect } from 'react-redux';
 
 import { changeServer } from '../../api/book';
@@ -8,27 +9,25 @@ import { createAct, NavigationActions, Storage } from '../../util';
 import styles from './index.style';
 
 class Menu extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.leanMore = this.leanMore.bind(this);
-    this.CleanData = this.CleanData.bind(this);
-  }
+  state = {
+    collapsed: true
+  };
 
   componentWillUnmount() {
     //重写组件的setState方法，直接返回空
     this.setState = () => {};
   }
 
-  leanMore() {
+  leanMore = () => {
     changeServer();
-  }
+  };
 
-  async CleanData() {
+  cleanData = () => {
     this.props.dispatch(createAct('list/operationAdd')());
     Storage.clear(0); // 清理缓存
     Storage.clear(1); // 清理章节目录
     alert('缓存已清理');
-  }
+  };
 
   navigate = (routeName, params) => {
     this.props.dispatch(
@@ -39,7 +38,13 @@ class Menu extends React.PureComponent {
     );
   };
 
+  _collapsed = () => {
+    const collapsed = !this.state.collapsed;
+    this.setState({ collapsed });
+  };
+
   render() {
+    const { collapsed } = this.state;
     return (
       <View style={styles.menu}>
         <View style={styles.itemX}>
@@ -52,15 +57,30 @@ class Menu extends React.PureComponent {
         >
           <Text style={styles.item}>搜索</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => this.navigate('RnkL', { addBook: this.props.addBook })}
-        >
+        <TouchableOpacity onPress={this._collapsed}>
           <Text style={styles.item}>排行</Text>
         </TouchableOpacity>
+        <Collapsible collapsed={collapsed}>
+          <TouchableOpacity
+            onPress={() =>
+              this.navigate('RnkL', { addBook: this.props.addBook, gender: 0 })
+            }
+          >
+            <Text style={styles.subItem}>起点男生</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              this.navigate('RnkL', { addBook: this.props.addBook, gender: 1 })
+            }
+          >
+            <Text style={styles.subItem}>起点女生</Text>
+          </TouchableOpacity>
+        </Collapsible>
+
         <TouchableOpacity onPress={this.leanMore}>
           <Text style={styles.item}>切换服务器</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={this.CleanData}>
+        <TouchableOpacity onPress={this.cleanData}>
           <Text style={styles.item}>清理所有缓存</Text>
         </TouchableOpacity>
         <Text

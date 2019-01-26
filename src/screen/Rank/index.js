@@ -6,6 +6,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import React from 'react';
+import get from 'lodash/get';
 
 import { HeaderBackButton } from 'react-navigation';
 
@@ -40,11 +41,9 @@ class RankScreen extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.getNet = this.getNet.bind(this);
-    this.JmpToBook = this.JmpToBook.bind(this);
-    this.onEndReached = this.onEndReached.bind(this);
-
     this.currentPage = 1;
+    this.gender = get(props, 'navigation.state.params.gender', 0);
+
     this.state = {
       dataSource: [],
       loadingFlag: true,
@@ -56,23 +55,20 @@ class RankScreen extends React.PureComponent {
 
   componentWillUnmount() {
     //重写组件的setState方法，直接返回空
-    this.setState = (state, callback) => {
-      return;
-    };
+    this.setState = () => {};
   }
 
-  async getNet(page = 1) {
-    const data = await rnk(page);
+  getNet = async (page = 1) => {
+    const data = await rnk(page, this.gender);
     if (data === -1) {
       this.setState({
         // dataSource: [],
-        fetchFlag: false,
-        FooterText: '加载失败'
+        fetchFlag: true,
+        FooterText: '加载失败, 上拉重试'
       });
       return;
     }
-    let source = this.state.dataSource;
-    source.push(...data);
+    const source = this.state.dataSource.concat(data);
     if (page === 1) {
       this.setState({
         dataSource: source,
@@ -87,7 +83,7 @@ class RankScreen extends React.PureComponent {
     }
   }
 
-  JmpToBook(nam, aut) {
+  JmpToBook = (nam, aut) => {
     const { navigate } = this.props.navigation;
     navigate('BookDet', {
       bookNam: nam,
@@ -119,7 +115,7 @@ class RankScreen extends React.PureComponent {
 
   _keyExtractor = (item, index) => `${item.name}${index}`;
 
-  onEndReached() {
+  onEndReached = () => {
     if (this.state.fetchFlag === true) return;
     this.setState(
       {

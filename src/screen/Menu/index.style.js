@@ -28,6 +28,16 @@ export default {
     color: '#EBEBEB',
     backgroundColor: '#2c2c2c'
   },
+  subItem: {
+    fontSize: 15,
+    fontWeight: '300',
+    padding: 10,
+    height: 42,
+    marginBottom: 6,
+    marginLeft: 20,
+    color: '#EBEBEB',
+    backgroundColor: '#2c2c2c'
+  },
   copyRight: {
     position: 'absolute',
     bottom: 10,
