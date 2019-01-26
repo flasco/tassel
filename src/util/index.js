@@ -1,6 +1,6 @@
 import { Platform, Dimensions } from 'react-native';
 
-export { NavigationActions } from 'react-navigation';
+export { NavigationActions, StackActions } from 'react-navigation'
 
 export { default as Storage } from './storage';
 

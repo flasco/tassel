@@ -4,16 +4,9 @@
  */
 
 import React, { PureComponent } from 'react';
-import {
-  Dimensions,
-  View,
-  PanResponder,
-  Animated,
-  Easing,
-  NativeModules,
-  Platform
-} from 'react-native';
+import { Dimensions, View, PanResponder, Animated, Easing } from 'react-native';
 
+import SystemSetting from 'react-native-system-setting';
 import StaticRenderer from 'react-native/Libraries/Components/StaticRenderer';
 import ViewPagerDataSource from './ViewPagerDataSource';
 
@@ -21,10 +14,6 @@ import ViewPagerDataSource from './ViewPagerDataSource';
 const deviceWidth = Dimensions.get('window').width;
 const LeftBoundary = deviceWidth / 4;
 const RightBoundary = deviceWidth - LeftBoundary;
-
-const IS_IOS = Platform.OS === 'ios';
-
-const Brightness = IS_IOS && NativeModules.Brightness;
 
 class ViewPager extends PureComponent {
   static defaultProps = {
@@ -35,15 +24,14 @@ class ViewPager extends PureComponent {
     getNextPage: () => {},
     getCurrentPage: () => {},
     getPrevPage: () => {},
-    renderPage: () => {},
-  }
+    renderPage: () => {}
+  };
   static DataSource = ViewPagerDataSource;
   constructor(props) {
     super(props);
-    Platform.OS === 'ios' &&
-      Brightness.get(x => {
-        this.brightVal = +x; //转型
-      });
+    SystemSetting.getBrightness(x => {
+      this.brightVal = +x; //转型
+    });
 
     const release = (e, gestureState) => {
       if (!this.shouldJmp) {
@@ -118,7 +106,7 @@ class ViewPager extends PureComponent {
           let dx = gestureState.dx;
           let offsetX = -dx / this.state.viewWidth + this.childIndex;
           this.state.scrollValue.setValue(offsetX);
-        } else if (finger === 2 && IS_IOS) {
+        } else if (finger === 2) {
           if (this.brightVal !== 0.0 && moveY > 0.0) {
             //下滑
             this.brightVal -= 0.01;
@@ -126,7 +114,7 @@ class ViewPager extends PureComponent {
               this.brightVal = 0.0;
             }
             requestAnimationFrame(() => {
-              Brightness.set(this.brightVal);
+              SystemSetting.setBrightness(this.brightVal);
             });
           } else if (this.brightVal !== 1.0 && moveY < 0.0) {
             //上滑
@@ -135,7 +123,7 @@ class ViewPager extends PureComponent {
               this.brightVal = 1.0;
             }
             requestAnimationFrame(() => {
-              Brightness.set(this.brightVal);
+              SystemSetting.setBrightness(this.brightVal);
             });
           }
           this.shouldJmp && (this.shouldJmp = false);

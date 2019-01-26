@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { Animated, Easing } from 'react-native';
-import { StackNavigator, addNavigationHelpers } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 import {
-  initializeListeners,
-  createReduxBoundAddListener,
-  createReactNavigationReduxMiddleware
+  reduxifyNavigator,
+  createReactNavigationReduxMiddleware,
+  createNavigationReducer,
 } from 'react-navigation-redux-helpers';
 
 import { connect } from 'react-redux';
@@ -26,7 +26,7 @@ ReadScreen.navigationOptions = ({ navigation }) => {
   return { header: null };
 };
 
-const Tassel = StackNavigator(
+const Tassel = createStackNavigator(
   {
     Home: { screen: BookListScreen },
     ChaL: { screen: CatalogScreen },
@@ -69,36 +69,24 @@ const Tassel = StackNavigator(
   }
 );
 
+export const routerReducer = createNavigationReducer(Tassel)
+
 export const routerMiddleware = createReactNavigationReduxMiddleware(
-  'root',
-  state => state.router
-);
-const addListener = createReduxBoundAddListener('root');
+    'root',
+    state => state.router
+)
+
+const App = reduxifyNavigator(Tassel, 'root')
 
 class Router extends PureComponent {
-  componentDidMount() {
-    initializeListeners('root', this.props.router);
-  }
-
   render() {
-    const { dispatch, router } = this.props;
-    const navigation = addNavigationHelpers({
-      dispatch,
-      state: router,
-      addListener
-    });
-    return <Tassel navigation={navigation} />;
+    const { dispatch, router } = this.props
+    return <App dispatch={dispatch} state={router} />
   }
 }
 
-export function routerReducer(state, action = {}) {
-  return Tassel.router.getStateForAction(action, state);
-}
-
-function select(state) {
-  return {
-    router: state.router
-  };
+function select({ router }) {
+  return { router };
 }
 
 export default connect(select)(Router);
