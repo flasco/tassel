@@ -67,8 +67,7 @@ class SearchScreen extends React.PureComponent {
   }
 
   renderRow(item) {
-    let rowData = item.item;
-    const { navigate } = this.props.navigation;
+    const rowData = item.item;
     return (
       <TouchableHighlight
         underlayColor="transparent"

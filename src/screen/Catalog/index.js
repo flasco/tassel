@@ -1,16 +1,16 @@
 import React from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   TouchableHighlight,
   Button,
-  InteractionManager
 } from 'react-native';
 import { LargeList } from 'react-native-largelist';
 import { HeaderBackButton } from 'react-navigation';
 
 import { connect } from 'react-redux';
+
+import { getAndroidStyle } from '../../util';
 
 import styles from './index.style';
 
@@ -28,7 +28,8 @@ class CatalogScreen extends React.PureComponent {
         />
       ),
       headerStyle: {
-        backgroundColor: '#000'
+        backgroundColor: '#000',
+        ...getAndroidStyle(),
       },
       headerRight: (
         <Button

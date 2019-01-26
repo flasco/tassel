@@ -29,9 +29,9 @@ function parseContent(str, width, cleanEmptyLine = true) {
   let lines = [];
   let currentLine = '';
   let currentLineWidth = 0;
-  for (let i in str) {
-    let s = str[i];
-    let code = s.charCodeAt();
+  for (let i = 0, j = str.length; i < j; i++) {
+    let s = str.charAt(i) || '';
+    const code = s.codePointAt();
     if (code == 8220 || code == 8221) {
       s = '"';
     } else if (code == 8216 || code == 8217) {

@@ -16,7 +16,7 @@ import SplashScreen from 'react-native-splash-screen';
 import SwipeableQuickActions from 'SwipeableQuickActions';
 import { connect } from 'react-redux';
 
-import { createAct, Storage, spliceLine } from '../../util';
+import { createAct, Storage, spliceLine, getAndroidStyle } from '../../util';
 
 import Menu from '../Menu';
 import Toast from '../../components/Toast';
@@ -30,7 +30,11 @@ class BookListScreen extends React.PureComponent {
     return {
       title: '古意流苏',
       headerBackTitle: ' ',
-      headerStyle: { backgroundColor: '#000', borderBottomWidth: 0 },
+      headerStyle: {
+        backgroundColor: '#000',
+        borderBottomWidth: 0,
+        ...getAndroidStyle(),
+      },
       headerRight: (
         <Icon
           name="ios-add"
@@ -67,7 +71,7 @@ class BookListScreen extends React.PureComponent {
   }
 
   onAppStateChange = async e => {
-    if (e === 'inactive' && this.props.operationNum > 0) {
+    if ((e === 'inactive' || e === 'background') && this.props.operationNum > 0) {
       this.props.dispatch(createAct('list/operationClear')());
       Storage.mapSave();
       await AsyncStorage.multiSet([
@@ -362,7 +366,11 @@ class BookListScreen extends React.PureComponent {
                 : styles.nightMode.container
             }
           >
-            <StatusBar barStyle="light-content" />
+            <StatusBar
+              translucent
+              backgroundColor={'#000'}
+              barStyle="light-content"
+            />
             <SwipeableFlatList
               data={list}
               bounceFirstRowOnMount={false} //屏蔽第一次滑动

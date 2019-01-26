@@ -58,7 +58,7 @@ class ReadScreen extends React.PureComponent {
   }
 
   onAppStateChange = e => {
-    if (e === 'inactive' && operationSum > 0) {
+    if ((e === 'inactive' || e === 'background') && operationSum > 0) {
       operationSum = 0;
       this.recordSave();
     }

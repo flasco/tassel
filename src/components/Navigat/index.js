@@ -87,6 +87,8 @@ export default class Navigat extends React.PureComponent {
         }}
       >
         <StatusBar
+          translucent
+          backgroundColor={'#000'}
           barStyle="light-content"
           hidden={!this.state.barShow}
           animation={true}

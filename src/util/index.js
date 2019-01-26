@@ -29,6 +29,16 @@ function isIphoneX() {
   );
 }
 
+export function getAndroidStyle() {
+  if (Platform.OS === 'android') {
+    return {
+      paddingTop: 30,
+      height: 80,
+    };
+  }
+  return {};
+}
+
 //判断是否为iphoneXR或XsMAX
 function isIphoneXR() {
   return (

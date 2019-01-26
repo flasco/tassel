@@ -4,7 +4,7 @@ import { HeaderBackButton } from 'react-navigation';
 import { Button } from 'react-native-elements';
 import { connect } from 'react-redux';
 
-import { createAct } from '../../util';
+import { createAct, getAndroidStyle } from '../../util';
 
 import { search } from '../../api/book';
 import { webSite } from '../../config';
@@ -22,7 +22,8 @@ class BookDetScreen extends React.PureComponent {
         />
       ),
       headerStyle: {
-        backgroundColor: '#000'
+        backgroundColor: '#000',
+        ...getAndroidStyle(),
       },
       headerTitleStyle: {
         color: '#ddd',

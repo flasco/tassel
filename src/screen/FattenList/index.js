@@ -4,21 +4,20 @@ import {
   View,
   TouchableHighlight,
   SwipeableFlatList,
-  StatusBar,
   Image
 } from 'react-native';
 import { Icon, Badge } from 'react-native-elements';
 import SwipeableQuickActions from 'SwipeableQuickActions';
 import { connect } from 'react-redux';
 import { HeaderBackButton } from 'react-navigation';
-import { createAct } from '../../util';
+import { createAct, getAndroidStyle } from '../../util';
 import styles from './index.style';
 
 class FattenListScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: '养肥区',
-      headerStyle: { backgroundColor: '#000' },
+      headerStyle: { backgroundColor: '#000', ...getAndroidStyle(), },
       headerTitleStyle: { color: '#ddd', alignSelf: 'center' },
       headerLeft: (
         <HeaderBackButton
