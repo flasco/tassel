@@ -36,6 +36,11 @@ react-native run-ios
 // this prj not pass test in Android
 ```
 ## 3. Change Log
+2019-01-26
+- [maintain] update dependencies.
+- [maintain] update react-native to `0.58.1`
+-----
+
 2018-12-9
 - [feature] support iphone X view.
 - [bugfix] fix update catalog bug.
