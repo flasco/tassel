@@ -6,7 +6,7 @@
 import React, { PureComponent } from 'react';
 import { Dimensions, View, PanResponder, Animated, Easing } from 'react-native';
 
-import SystemSetting from 'react-native-system-setting';
+import DeviceBrightness from 'react-native-device-brightness';
 import StaticRenderer from 'react-native/Libraries/Components/StaticRenderer';
 import ViewPagerDataSource from './ViewPagerDataSource';
 
@@ -29,9 +29,9 @@ class ViewPager extends PureComponent {
   static DataSource = ViewPagerDataSource;
   constructor(props) {
     super(props);
-    SystemSetting.getBrightness(x => {
+    DeviceBrightness.getBrightnessLevel().then(x => {
       this.brightVal = +x; //转型
-    });
+    })
 
     const release = (e, gestureState) => {
       if (!this.shouldJmp) {
@@ -114,7 +114,7 @@ class ViewPager extends PureComponent {
               this.brightVal = 0.0;
             }
             requestAnimationFrame(() => {
-              SystemSetting.setBrightness(this.brightVal);
+              DeviceBrightness.setBrightnessLevel(this.brightVal);
             });
           } else if (this.brightVal !== 1.0 && moveY < 0.0) {
             //上滑
@@ -123,7 +123,7 @@ class ViewPager extends PureComponent {
               this.brightVal = 1.0;
             }
             requestAnimationFrame(() => {
-              SystemSetting.setBrightness(this.brightVal);
+              DeviceBrightness.setBrightnessLevel(this.brightVal);
             });
           }
           this.shouldJmp && (this.shouldJmp = false);
