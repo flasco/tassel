@@ -7,6 +7,8 @@ const currenthours = new Date().getHours();
 const curPoi = currenthours >= 9 && currenthours < 22 ? 0 : 1;
 let Ip = serverIps[curPoi];
 
+const searchIp = 'https://koapi.leanapp.cn';
+
 export function changeServer() {
   let msg = '当前无需切换';
   if (Ip !== serverIps[0]) {
@@ -39,7 +41,7 @@ export async function latestLst(list) {
  * @param {String} url
  */
 export async function list(url) {
-  /m.xs/g.test(url) && (url = url + 'all.html');
+  // /m.xs/g.test(url) && (url = url + 'all.html');
   const data = await get(`${Ip}/v2/analysis?action=1&url=${url}`);
   if (data !== -1) {
     const n = data.map(item => {
@@ -59,6 +61,6 @@ export async function rnk(page, gender = 0) {
 }
 
 export async function search(name, author = '', pid = '') {
-  const data = await get(`${Ip}/v2/sear?name=${name}&aut=${author}&pid=${pid}`);
+  const data = await get(`${searchIp}/v2/sear?name=${name}&aut=${author}&pid=${pid}`);
   return data;
 }
