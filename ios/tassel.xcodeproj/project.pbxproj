@@ -1473,7 +1473,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = developer.flasco.tassel;
+				PRODUCT_BUNDLE_IDENTIFIER = develop.flasco.tassel;
 				PRODUCT_NAME = tassel;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1503,7 +1503,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = developer.flasco.tassel;
+				PRODUCT_BUNDLE_IDENTIFIER = develop.flasco.tassel;
 				PRODUCT_NAME = tassel;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
