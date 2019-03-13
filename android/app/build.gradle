@@ -94,16 +94,13 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    packagingOptions {
-        pickFirst 'lib/x86_64/libjsc.so'
-        pickFirst 'lib/arm64-v8a/libjsc.so'
-    }
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     defaultConfig {
         applicationId "com.tassel"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -140,17 +137,11 @@ android {
     }
 }
 
-configurations.all {
-    resolutionStrategy {
-        force 'org.webkit:android-jsc:r236355'
-    }
-}
-
 dependencies {
-    implementation project(':react-native-device-brightness')
-    implementation project(':react-native-splash-screen')
     implementation project(':react-native-vector-icons')
+    implementation project(':react-native-splash-screen')
     implementation project(':react-native-gesture-handler')
+    implementation project(':react-native-device-brightness')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules

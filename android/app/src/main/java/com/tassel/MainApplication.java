@@ -3,10 +3,10 @@ package com.tassel;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import org.capslock.RNDeviceBrightness.RNDeviceBrightness;
-import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import org.capslock.RNDeviceBrightness.RNDeviceBrightness;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -27,10 +27,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNDeviceBrightness(),
-            new SplashScreenReactPackage(),
             new VectorIconsPackage(),
-            new RNGestureHandlerPackage()
+            new SplashScreenReactPackage(),
+            new RNGestureHandlerPackage(),
+            new RNDeviceBrightness()
       );
     }
 
