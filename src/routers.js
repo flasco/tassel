@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Animated, Easing } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import {
-  reduxifyNavigator,
+  createReduxContainer,
   createReactNavigationReduxMiddleware,
   createNavigationReducer,
 } from 'react-navigation-redux-helpers';
@@ -72,11 +72,10 @@ const Tassel = createStackNavigator(
 export const routerReducer = createNavigationReducer(Tassel)
 
 export const routerMiddleware = createReactNavigationReduxMiddleware(
-    'root',
     state => state.router
 )
 
-const App = reduxifyNavigator(Tassel, 'root')
+const App = createReduxContainer(Tassel)
 
 class Router extends PureComponent {
   render() {
