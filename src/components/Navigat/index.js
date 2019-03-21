@@ -25,6 +25,7 @@ export default class Navigat extends React.PureComponent {
     show: new Animated.Value(1),
     barShow: false
   };
+
   DoCache = () => {
     this.props.showAlertSelected();
   };
