@@ -4,7 +4,7 @@ import { createStackNavigator } from 'react-navigation';
 import {
   createReduxContainer,
   createReactNavigationReduxMiddleware,
-  createNavigationReducer,
+  createNavigationReducer
 } from 'react-navigation-redux-helpers';
 
 import { connect } from 'react-redux';
@@ -18,13 +18,8 @@ import BookDetScreen from './screen/BookDet';
 import OriginScreen from './screen/Origin';
 import FattenListScreen from './screen/FattenList';
 
-SearchScreen.navigationOptions = ({ navigation }) => {
-  return { header: null };
-};
-
-ReadScreen.navigationOptions = ({ navigation }) => {
-  return { header: null };
-};
+SearchScreen.navigationOptions = () => ({ header: null });
+ReadScreen.navigationOptions = () => ({ header: null });
 
 const Tassel = createStackNavigator(
   {
@@ -69,18 +64,18 @@ const Tassel = createStackNavigator(
   }
 );
 
-export const routerReducer = createNavigationReducer(Tassel)
+export const routerReducer = createNavigationReducer(Tassel);
 
 export const routerMiddleware = createReactNavigationReduxMiddleware(
-    state => state.router
-)
+  state => state.router
+);
 
-const App = createReduxContainer(Tassel)
+const App = createReduxContainer(Tassel);
 
 class Router extends PureComponent {
   render() {
-    const { dispatch, router } = this.props
-    return <App dispatch={dispatch} state={router} />
+    const { dispatch, router } = this.props;
+    return <App dispatch={dispatch} state={router} />;
   }
 }
 
