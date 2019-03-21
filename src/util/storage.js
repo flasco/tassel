@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 let keyMap = [];
 get('Tassel@keyMap', [
   new Set(), // cacheMap
