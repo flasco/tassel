@@ -6,7 +6,6 @@ import {
   AppState,
   SwipeableFlatList,
   StatusBar,
-  AsyncStorage,
   Image,
   Alert
 } from 'react-native';
@@ -74,11 +73,11 @@ class BookListScreen extends React.PureComponent {
     if ((e === 'inactive' || e === 'background') && this.props.operationNum > 0) {
       this.props.dispatch(createAct('list/operationClear')());
       Storage.mapSave();
-      await AsyncStorage.multiSet([
+      await Storage.multiSet([
         ['appState', JSON.stringify(this.props.app)],
         ['booklist', JSON.stringify(this.props.list)],
         ['fattenList', JSON.stringify(this.props.fattenList)]
-      ]);
+      ], [2, 2, 2]);
     }
   };
 
