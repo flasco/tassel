@@ -18,7 +18,6 @@ import { connect } from 'react-redux';
 import { createAct, Storage, spliceLine, getAndroidStyle } from '../../util';
 
 import Menu from '../Menu';
-import Toast from '../../components/Toast';
 
 import styles from './index.style';
 
@@ -32,7 +31,7 @@ class BookListScreen extends React.PureComponent {
       headerStyle: {
         backgroundColor: '#000',
         borderBottomWidth: 0,
-        ...getAndroidStyle(),
+        ...getAndroidStyle()
       },
       headerRight: (
         <Icon
@@ -70,14 +69,18 @@ class BookListScreen extends React.PureComponent {
   }
 
   onAppStateChange = async e => {
-    if ((e === 'inactive' || e === 'background') && this.props.operationNum > 0) {
-      this.props.dispatch(createAct('list/operationClear')());
+    const { app, list, fattenList, dispatch, operationNum } = this.props;
+    if ((e === 'inactive' || e === 'background') && operationNum > 0) {
+      dispatch(createAct('list/operationClear')());
       Storage.mapSave();
-      await Storage.multiSet([
-        ['appState', JSON.stringify(this.props.app)],
-        ['booklist', JSON.stringify(this.props.list)],
-        ['fattenList', JSON.stringify(this.props.fattenList)]
-      ], [2, 2, 2]);
+      await Storage.multiSet(
+        [
+          ['appState', JSON.stringify(app)],
+          ['booklist', JSON.stringify(list)],
+          ['fattenList', JSON.stringify(fattenList)]
+        ],
+        [2, 2, 2]
+      );
     }
   };
 
@@ -90,33 +93,28 @@ class BookListScreen extends React.PureComponent {
     );
   }
 
-  callback = msg => {
-    Toast.show(msg);
-  };
-
   onRefresh = () => {
-    if (this.props.isInit) {
-      this.props.list != null &&
-        this.props.list.length > 0 &&
-        this.props.dispatch(
+    const { isInit, list, dispatch, fattenList, isFatten } = this.props;
+    if (isInit) {
+      list &&
+        list.length &&
+        dispatch(
           createAct('list/listUpdate')({
-            list: this.props.list,
-            fattenList: this.props.fattenList,
-            isFatten: this.props.isFatten,
-            callback: this.callback
+            list,
+            fattenList,
+            isFatten
           })
         );
     } else {
       setTimeout(() => {
-        this.props.isInit
-          ? this.props.list != null &&
-            this.props.list.length > 0 &&
-            this.props.dispatch(
+        isInit
+          ? list &&
+            list.length &&
+            dispatch(
               createAct('list/listUpdate')({
-                list: this.props.list,
-                fattenList: this.props.fattenList,
-                isFatten: this.props.isFatten,
-                callback: this.callback
+                list,
+                fattenList,
+                isFatten
               })
             )
           : this.onRefresh();
@@ -125,11 +123,12 @@ class BookListScreen extends React.PureComponent {
   };
 
   fattenBook = bookId => {
-    this.props.dispatch(
+    const { dispatch, fattenList, list } = this.props;
+    dispatch(
       createAct('list/fattenBook')({
-        fattenList: this.props.fattenList,
-        list: this.props.list,
-        bookId
+        list,
+        bookId,
+        fattenList
       })
     );
   };
@@ -150,19 +149,15 @@ class BookListScreen extends React.PureComponent {
   }
 
   renderRow = item => {
-    let rowData = item.item;
-    let rowID = item.index;
-    let SMode = this.props.app.sunnyMode;
-    let { navigate } = this.props.navigation;
+    const { item: rowData, index: rowID } = item;
+    const SMode = this.props.app.sunnyMode;
+    const { navigate } = this.props.navigation;
+    const styleMode = SMode ? styles.sunnyMode : styles.nightMode;
     if (rowData.img === '-1') {
       return (
         <TouchableHighlight
-          style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
-          underlayColor={
-            SMode
-              ? styles.sunnyMode.underlayColor
-              : styles.nightMode.underlayColor
-          }
+          style={styleMode.rowStyle}
+          underlayColor={styleMode.underlayColor}
           activeOpacity={0.7}
           onPress={() => navigate('FattenBlock')}
         >
@@ -173,15 +168,7 @@ class BookListScreen extends React.PureComponent {
             />
             <View style={{ paddingLeft: 15 }}>
               <View style={{ flexDirection: 'row' }}>
-                <Text
-                  style={
-                    SMode
-                      ? styles.sunnyMode.titleStyle
-                      : styles.nightMode.titleStyle
-                  }
-                >
-                  {rowData.bookName}
-                </Text>
+                <Text style={styleMode.titleStyle}>{rowData.bookName}</Text>
                 {this.props.isFatten && (
                   <Badge
                     value={`待杀`}
@@ -190,15 +177,7 @@ class BookListScreen extends React.PureComponent {
                   />
                 )}
               </View>
-              <Text
-                style={
-                  SMode
-                    ? styles.sunnyMode.subTitleStyle
-                    : styles.nightMode.subTitleStyle
-                }
-              >
-                {rowData.desc}
-              </Text>
+              <Text style={styleMode.subTitleStyle}>{rowData.desc}</Text>
             </View>
           </View>
         </TouchableHighlight>
@@ -206,12 +185,8 @@ class BookListScreen extends React.PureComponent {
     }
     return (
       <TouchableHighlight
-        style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
-        underlayColor={
-          SMode
-            ? styles.sunnyMode.underlayColor
-            : styles.nightMode.underlayColor
-        }
+        style={styleMode.rowStyle}
+        underlayColor={styleMode.underlayColor}
         activeOpacity={0.7}
         onLongPress={() => navigate('BookDet', { book: rowData })}
         onPress={() => {
@@ -230,15 +205,7 @@ class BookListScreen extends React.PureComponent {
           <Image source={{ uri: rowData.img }} style={styles.coverStyle} />
           <View style={{ paddingLeft: 15 }}>
             <View style={{ flexDirection: 'row' }}>
-              <Text
-                style={
-                  SMode
-                    ? styles.sunnyMode.titleStyle
-                    : styles.nightMode.titleStyle
-                }
-              >
-                {rowData.bookName}
-              </Text>
+              <Text style={styleMode.titleStyle}>{rowData.bookName}</Text>
               {rowData.isUpdate && (
                 <Badge
                   value={`更新`}
@@ -247,13 +214,7 @@ class BookListScreen extends React.PureComponent {
                 />
               )}
             </View>
-            <Text
-              style={
-                SMode
-                  ? styles.sunnyMode.subTitleStyle
-                  : styles.nightMode.subTitleStyle
-              }
-            >
+            <Text style={styleMode.subTitleStyle}>
               {rowData.updateNum > 10
                 ? `距上次点击已更新${rowData.updateNum}章`
                 : `${spliceLine(rowData.latestChapter, 15)}`}
@@ -266,16 +227,14 @@ class BookListScreen extends React.PureComponent {
 
   renderActions = item => {
     let SMode = this.props.app.sunnyMode;
-    let rowData = item.item;
-    let rowId = item.index;
+    const { item: rowData, index: rowId } = item;
+    const styleMode = SMode ? styles.sunnyMode : styles.nightMode;
     const fattenColor = SMode ? '#000' : '#ddd';
     if (rowData.img === '-1') return null;
     return (
       <SwipeableQuickActions
         style={{
-          backgroundColor: SMode
-            ? styles.sunnyMode.rowStyle.backgroundColor
-            : styles.nightMode.rowStyle.backgroundColor
+          backgroundColor: styleMode.rowStyle.backgroundColor
         }}
       >
         <TouchableHighlight
@@ -343,12 +302,9 @@ class BookListScreen extends React.PureComponent {
       list,
       app: { menuFlag, sunnyMode }
     } = this.props;
+    const styleMode = sunnyMode ? styles.sunnyMode : styles.nightMode;
     return (
-      <View
-        style={
-          sunnyMode ? styles.sunnyMode.container : styles.nightMode.container
-        }
-      >
+      <View style={styleMode.container}>
         <SideMenu
           menu={menu}
           isOpen={menuFlag}
@@ -358,13 +314,7 @@ class BookListScreen extends React.PureComponent {
           menuPosition={'right'}
           disableGestures={true}
         >
-          <View
-            style={
-              sunnyMode
-                ? styles.sunnyMode.container
-                : styles.nightMode.container
-            }
-          >
+          <View style={styleMode.container}>
             <StatusBar
               translucent
               backgroundColor={'#000'}
@@ -375,13 +325,7 @@ class BookListScreen extends React.PureComponent {
               bounceFirstRowOnMount={false} //屏蔽第一次滑动
               onRefresh={this.onRefresh}
               refreshing={this.props.loadingFlag}
-              ItemSeparatorComponent={() => (
-                <View
-                  style={
-                    sunnyMode ? styles.sunnyMode.solid : styles.nightMode.solid
-                  }
-                />
-              )}
+              ItemSeparatorComponent={() => <View style={styleMode.solid} />}
               maxSwipeDistance={100}
               renderQuickActions={this.renderActions}
               renderItem={this.renderRow}

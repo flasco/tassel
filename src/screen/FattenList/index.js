@@ -17,7 +17,7 @@ class FattenListScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: '养肥区',
-      headerStyle: { backgroundColor: '#000', ...getAndroidStyle(), },
+      headerStyle: { backgroundColor: '#000', ...getAndroidStyle() },
       headerTitleStyle: { color: '#ddd', alignSelf: 'center' },
       headerLeft: (
         <HeaderBackButton
@@ -42,18 +42,15 @@ class FattenListScreen extends React.PureComponent {
   };
 
   renderRow = item => {
-    let rowData = item.item;
-    let rowId = item.index;
-    let SMode = this.props.SMode;
-    let { navigate } = this.props.navigation;
+    const rowData = item.item;
+    const {
+      styleMode,
+      navigation: { navigate }
+    } = this.props;
     return (
       <TouchableHighlight
-        style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
-        underlayColor={
-          SMode
-            ? styles.sunnyMode.underlayColor
-            : styles.nightMode.underlayColor
-        }
+        style={styleMode.rowStyle}
+        underlayColor={styleMode.underlayColor}
         activeOpacity={0.7}
         onLongPress={() => {
           navigate('BookDet', { book: rowData });
@@ -63,34 +60,18 @@ class FattenListScreen extends React.PureComponent {
           <Image source={{ uri: rowData.img }} style={styles.coverStyle} />
           <View style={{ paddingLeft: 15 }}>
             <View style={{ flexDirection: 'row' }}>
-              <Text
-                style={
-                  SMode
-                    ? styles.sunnyMode.titleStyle
-                    : styles.nightMode.titleStyle
-                }
-              >
-                {rowData.bookName}
-              </Text>
+              <Text style={styleMode.titleStyle}>{rowData.bookName}</Text>
               {rowData.updateNum >= 30 && (
                 <Badge
                   value={`待杀`}
-                  containerStyle={
-                    SMode
-                      ? styles.sunnyMode.badgeStyle
-                      : styles.nightMode.badgeStyle
-                  }
+                  containerStyle={styleMode.badgeStyle}
                   textStyle={{ fontSize: 11 }}
                 />
               )}
             </View>
-            <Text
-              style={
-                SMode
-                  ? styles.sunnyMode.subTitleStyle
-                  : styles.nightMode.subTitleStyle
-              }
-            >{`已经养了${rowData.updateNum}章`}</Text>
+            <Text style={styleMode.subTitleStyle}>{`已经养了${
+              rowData.updateNum
+            }章`}</Text>
           </View>
         </View>
       </TouchableHighlight>
@@ -98,16 +79,13 @@ class FattenListScreen extends React.PureComponent {
   };
 
   renderActions = item => {
-    let SMode = this.props.SMode;
-    let rowData = item.item;
-    let rowId = item.index;
+    const { SMode, styleMode } = this.props;
+    const rowId = item.index;
     const fattenColor = SMode ? '#000' : '#ddd';
     return (
       <SwipeableQuickActions
         style={{
-          backgroundColor: SMode
-            ? styles.sunnyMode.rowStyle.backgroundColor
-            : styles.nightMode.rowStyle.backgroundColor
+          backgroundColor: styleMode.rowStyle.backgroundColor
         }}
       >
         <TouchableHighlight
@@ -137,19 +115,13 @@ class FattenListScreen extends React.PureComponent {
   };
 
   render() {
-    const { fattenList, SMode } = this.props;
+    const { fattenList, styleMode } = this.props;
     return (
-      <View
-        style={SMode ? styles.sunnyMode.container : styles.nightMode.container}
-      >
+      <View style={styleMode.container}>
         <SwipeableFlatList
           data={fattenList}
           bounceFirstRowOnMount={false} //屏蔽第一次滑动
-          ItemSeparatorComponent={() => (
-            <View
-              style={SMode ? styles.sunnyMode.solid : styles.nightMode.solid}
-            />
-          )}
+          ItemSeparatorComponent={() => <View style={styleMode.solid} />}
           maxSwipeDistance={80}
           renderQuickActions={this.renderActions}
           renderItem={this.renderRow}
@@ -163,7 +135,8 @@ class FattenListScreen extends React.PureComponent {
 function select(state) {
   return {
     fattenList: state.list.fattenList,
-    SMode: state.app.sunnyMode
+    SMode: state.app.sunnyMode,
+    styleMode: state.app.sunnyMode ? styles.sunnyMode : styles.nightMode
   };
 }
 

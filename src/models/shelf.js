@@ -1,5 +1,6 @@
 import { createAction, Storage } from '../util';
 import { refreshChapter, refreshSingleChapter } from '../util/getNet';
+import Toast from '../components/Toast';
 import { insertionSort } from '../util';
 
 export default {
@@ -47,7 +48,7 @@ export default {
         list[payload.id].plantformId = payload.change;
         list[payload.id].latestChapter = payload.latestChapter; // 修复换源之后无法刷新最新章节的bug
       } else {
-        alert('不在书架中，换源失败。');
+        Toast.show('不在书架中，换源失败。');
       }
       return { list, ...state };
     },
@@ -77,16 +78,15 @@ export default {
         createAction('originChange')({ id, change, latestChapter, bookName })
       );
     },
-    *listUpdate({ list, fattenList, isFatten, callback }, { call, put }) {
+    *listUpdate({ list, fattenList, isFatten }, { call, put }) {
       yield put(createAction('updateState')({ loadingFlag: true }));
       const resArr = yield call(Promise.all, [
         refreshChapter(list),
         refreshChapter(fattenList)
       ]);
 
-      let updateBook = 0,
-        updateNum = 0;
-      resArr[0] != null &&
+      let [updateBook, updateNum] = [0, 0];
+      Array.isArray(resArr[0]) &&
         resArr[0].filter((x, index) => {
           if (x !== '-1') {
             // -1 意味着是最新的，无需更新
@@ -99,7 +99,7 @@ export default {
             }
           }
         });
-      resArr[1] != null &&
+      Array.isArray(resArr[1]) &&
         resArr[1].filter((x, index) => {
           if (x !== '-1') {
             // -1 意味着是最新的，无需更新
@@ -112,7 +112,7 @@ export default {
             !isFatten && updateNum > 30 && (isFatten = true);
           }
         });
-      callback && callback(`${updateBook}本书有更新`);
+      Toast.show(`${updateBook}本书有更新`);
       yield put(
         createAction('updateState')({
           list,
