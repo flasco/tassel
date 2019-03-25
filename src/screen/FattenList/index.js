@@ -17,7 +17,11 @@ class FattenListScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: '养肥区',
-      headerStyle: { backgroundColor: '#000', ...getAndroidStyle() },
+      headerStyle: {
+        backgroundColor: '#000',
+        borderBottomWidth: 0,
+        ...getAndroidStyle()
+      },
       headerTitleStyle: { color: '#ddd', alignSelf: 'center' },
       headerLeft: (
         <HeaderBackButton

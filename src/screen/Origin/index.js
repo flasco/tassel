@@ -25,6 +25,7 @@ class OriginScreen extends React.PureComponent {
       ),
       headerStyle: {
         backgroundColor: '#000',
+        borderBottomWidth: 0,
         ...getAndroidStyle(),
       },
       headerTitleStyle: {

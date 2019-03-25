@@ -29,6 +29,7 @@ class CatalogScreen extends React.PureComponent {
       ),
       headerStyle: {
         backgroundColor: '#000',
+        borderBottomWidth: 0,
         ...getAndroidStyle(),
       },
       headerRight: (
