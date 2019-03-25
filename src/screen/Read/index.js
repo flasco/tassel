@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback
 } from 'react-native';
 
-import async from 'async';
+import queue from 'async/queue';
 import { connect } from 'react-redux';
 
 import Toast from '../../components/Toast';
@@ -44,7 +44,7 @@ class ReadScreen extends React.PureComponent {
     super(props);
     this.currentBook = props.navigation.state.params.book;
     AppState.addEventListener('change', this.onAppStateChange);
-    this.q = async.queue(this.fetchQueue, 5);
+    this.q = queue(this.fetchQueue, 5);
     this.q.drain = () => {
       Toast.show(`Task finished at ${finishTask}/${allTask}`);
       finishTask = 0;

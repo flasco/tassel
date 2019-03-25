@@ -23,7 +23,7 @@ class BookDetScreen extends React.PureComponent {
       ),
       headerStyle: {
         backgroundColor: '#000',
-        ...getAndroidStyle(),
+        ...getAndroidStyle()
       },
       headerTitleStyle: {
         color: '#ddd',
@@ -45,8 +45,10 @@ class BookDetScreen extends React.PureComponent {
 
   initx = async () => {
     if (this.state.isLoading) {
-      const name = this.props.navigation.state.params.bookNam,
-        author = this.props.navigation.state.params.bookAut;
+      const {
+        bookNam: name,
+        bookAut: author
+      } = this.props.navigation.state.params;
       const data = await search(name, author);
 
       if (data.length < 1 || data[0] == null) {
@@ -54,7 +56,8 @@ class BookDetScreen extends React.PureComponent {
         alert('本书没有记录！如果迫切需要加入本书，请及时反馈给开发人员~');
       } else {
         this.book = data[0];
-        Object.keys(this.book.source).length && this.setState({ isLoading: false });
+        Object.keys(this.book.source).length &&
+          this.setState({ isLoading: false });
         this.props.dispatch(
           createAct('list/setContain')({ flag: this.isContains(this.book) })
         );
@@ -68,14 +71,8 @@ class BookDetScreen extends React.PureComponent {
 
   isContains = book => {
     if (!book) return false;
-    return (
-      this.props.list.some(
-        x => x.author === book.author && x.bookName === book.bookName
-      ) ||
-      this.props.fattenList.some(
-        x => x.author === book.author && x.bookName === book.bookName
-      )
-    );
+    const isEQ = x => x.author === book.author && x.bookName === book.bookName;
+    return this.props.list.some(isEQ) || this.props.fattenList.some(isEQ);
   };
 
   componentWillUnmount() {
