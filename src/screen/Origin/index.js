@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { latest } from '../../api/book';
 import { webSite } from '../../config';
-import { createAct, spliceLine, getAndroidStyle } from '../../util';
+import { createAct, spliceLine, getDefaultTitleStyle } from '../../util';
 
 import styles from './index.style';
 
@@ -23,15 +23,7 @@ class OriginScreen extends React.PureComponent {
           }}
         />
       ),
-      headerStyle: {
-        backgroundColor: '#000',
-        borderBottomWidth: 0,
-        ...getAndroidStyle(),
-      },
-      headerTitleStyle: {
-        color: '#ddd',
-        alignSelf: 'center'
-      }
+      ...getDefaultTitleStyle(),
     };
   };
   constructor(props) {

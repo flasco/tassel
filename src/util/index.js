@@ -39,6 +39,20 @@ export function getAndroidStyle() {
   return {};
 }
 
+export function getDefaultTitleStyle() {
+  return {
+    headerStyle: {
+      backgroundColor: '#000',
+      borderBottomWidth: 0,
+      ...getAndroiStyle()
+    },
+    headerTitleStyle: {
+      color: '#ddd',
+      alignSelf: 'center'
+    }
+  };
+}
+
 //判断是否为iphoneXR或XsMAX
 function isIphoneXR() {
   return (

@@ -10,7 +10,7 @@ import { HeaderBackButton } from 'react-navigation';
 
 import { connect } from 'react-redux';
 
-import { getAndroidStyle } from '../../util';
+import { getDefaultTitleStyle } from '../../util';
 
 import styles from './index.style';
 
@@ -27,11 +27,7 @@ class CatalogScreen extends React.PureComponent {
           }}
         />
       ),
-      headerStyle: {
-        backgroundColor: '#000',
-        borderBottomWidth: 0,
-        ...getAndroidStyle(),
-      },
+      ...getDefaultTitleStyle(),
       headerRight: (
         <Button
           title="gDwn"
@@ -41,10 +37,6 @@ class CatalogScreen extends React.PureComponent {
           color="#ddd"
         />
       ),
-      headerTitleStyle: {
-        color: '#ddd',
-        alignSelf: 'center'
-      }
     };
   };
   constructor(props) {

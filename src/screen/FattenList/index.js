@@ -10,19 +10,14 @@ import { Icon, Badge } from 'react-native-elements';
 import SwipeableQuickActions from 'SwipeableQuickActions';
 import { connect } from 'react-redux';
 import { HeaderBackButton } from 'react-navigation';
-import { createAct, getAndroidStyle } from '../../util';
+import { createAct, getDefaultTitleStyle } from '../../util';
 import styles from './index.style';
 
 class FattenListScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: '养肥区',
-      headerStyle: {
-        backgroundColor: '#000',
-        borderBottomWidth: 0,
-        ...getAndroidStyle()
-      },
-      headerTitleStyle: { color: '#ddd', alignSelf: 'center' },
+      ...getDefaultTitleStyle(),
       headerLeft: (
         <HeaderBackButton
           title="返回"

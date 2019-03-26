@@ -4,7 +4,7 @@ import { HeaderBackButton } from 'react-navigation';
 import { Button } from 'react-native-elements';
 import { connect } from 'react-redux';
 
-import { createAct, getAndroidStyle } from '../../util';
+import { createAct, getDefaultTitleStyle } from '../../util';
 
 import { search } from '../../api/book';
 import { webSite } from '../../config';
@@ -21,15 +21,7 @@ class BookDetScreen extends React.PureComponent {
           onPress={() => navigation.goBack()}
         />
       ),
-      headerStyle: {
-        backgroundColor: '#000',
-        borderBottomWidth: 0,
-        ...getAndroidStyle()
-      },
-      headerTitleStyle: {
-        color: '#ddd',
-        alignSelf: 'center'
-      }
+      ...getDefaultTitleStyle(),
     };
   };
   constructor(props) {
@@ -88,61 +80,60 @@ class BookDetScreen extends React.PureComponent {
           <Text style={{ textAlign: 'center', marginTop: 12 }}>Loading...</Text>
         </View>
       );
-    } else {
-      const { img, bookName, author, plantformId, desc } = this.book;
-      const { contains, btnLoading } = this.props;
-      return (
-        <View style={styles.container}>
-          <View style={styles.firstView.container}>
-            <Image
-              style={styles.firstView.left.imgSize}
-              source={{ uri: img }}
-              defaultSource={require('../../assets/noImg.jpg')}
-            />
-            <View style={styles.firstView.right.container}>
-              <Text style={styles.firstView.right.tit}>{bookName}</Text>
-              <Text style={styles.firstView.right.subDes}>{author}</Text>
-              <Text style={styles.firstView.right.subDes}>
-                {webSite[plantformId]}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.secondView.container}>
-            <Button
-              title={contains ? '已存在' : '追书'}
-              disabled={btnLoading || contains}
-              disabledStyle={styles.secondView.firstButton.disabledStyle}
-              onPress={() => {
-                this.props.navigation.state.params.addBook(this.book);
-              }}
-              loading={btnLoading}
-              textStyle={
-                contains || btnLoading
-                  ? styles.secondView.firstButton.disText
-                  : styles.secondView.firstButton.text
-              }
-              buttonStyle={styles.secondView.firstButton.buttonStyle}
-            />
-            <Button
-              title="开始阅读"
-              onPress={() => {
-                navigate('Read', {
-                  book: this.book
-                });
-              }}
-              textStyle={styles.secondView.secondButton.text}
-              buttonStyle={styles.secondView.secondButton.buttonStyle}
-            />
-          </View>
-          <View style={styles.solid} />
-          <Text style={styles.Desc}>{desc}</Text>
-          <View style={styles.solid} />
-          <Text style={[styles.Desc, { textAlign: 'center' }]}>
-            To be continued...
-          </Text>
-        </View>
-      );
     }
+    const { img, bookName, author, plantformId, desc } = this.book;
+    const { contains, btnLoading } = this.props;
+    return (
+      <View style={styles.container}>
+        <View style={styles.firstView.container}>
+          <Image
+            style={styles.firstView.left.imgSize}
+            source={{ uri: img }}
+            defaultSource={require('../../assets/noImg.jpg')}
+          />
+          <View style={styles.firstView.right.container}>
+            <Text style={styles.firstView.right.tit}>{bookName}</Text>
+            <Text style={styles.firstView.right.subDes}>{author}</Text>
+            <Text style={styles.firstView.right.subDes}>
+              {webSite[plantformId]}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.secondView.container}>
+          <Button
+            title={contains ? '已存在' : '追书'}
+            disabled={btnLoading || contains}
+            disabledStyle={styles.secondView.firstButton.disabledStyle}
+            onPress={() => {
+              this.props.navigation.state.params.addBook(this.book);
+            }}
+            loading={btnLoading}
+            textStyle={
+              contains || btnLoading
+                ? styles.secondView.firstButton.disText
+                : styles.secondView.firstButton.text
+            }
+            buttonStyle={styles.secondView.firstButton.buttonStyle}
+          />
+          <Button
+            title="开始阅读"
+            onPress={() => {
+              navigate('Read', {
+                book: this.book
+              });
+            }}
+            textStyle={styles.secondView.secondButton.text}
+            buttonStyle={styles.secondView.secondButton.buttonStyle}
+          />
+        </View>
+        <View style={styles.solid} />
+        <Text style={styles.Desc}>{desc}</Text>
+        <View style={styles.solid} />
+        <Text style={[styles.Desc, { textAlign: 'center' }]}>
+          To be continued...
+        </Text>
+      </View>
+    );
   }
 }
 

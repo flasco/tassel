@@ -15,7 +15,7 @@ import SplashScreen from 'react-native-splash-screen';
 import SwipeableQuickActions from 'SwipeableQuickActions';
 import { connect } from 'react-redux';
 
-import { createAct, Storage, spliceLine, getAndroidStyle } from '../../util';
+import { createAct, Storage, spliceLine, getDefaultTitleStyle } from '../../util';
 
 import Menu from '../Menu';
 
@@ -28,11 +28,7 @@ class BookListScreen extends React.PureComponent {
     return {
       title: '古意流苏',
       headerBackTitle: ' ',
-      headerStyle: {
-        backgroundColor: '#000',
-        borderBottomWidth: 0,
-        ...getAndroidStyle()
-      },
+      ...getDefaultTitleStyle(),
       headerRight: (
         <Icon
           name="ios-add"
@@ -46,7 +42,6 @@ class BookListScreen extends React.PureComponent {
           iconStyle={{ marginRight: 15 }}
         />
       ),
-      headerTitleStyle: { color: '#ddd', alignSelf: 'center' }
     };
   };
   constructor(props) {
@@ -192,12 +187,10 @@ class BookListScreen extends React.PureComponent {
         onPress={() => {
           navigate('Read', { book: rowData });
           setTimeout(() => {
-            this.props.dispatch(
-              createAct('list/bookRead')({
-                list: this.props.list,
-                bookId: rowID
-              })
-            );
+            this.dispatChange('list/bookRead', {
+              list: this.props.list,
+              bookId: rowID
+            });
           }, 1000);
         }}
       >
@@ -292,13 +285,14 @@ class BookListScreen extends React.PureComponent {
     );
   };
 
+  menu = <Menu navigation={this.props.navigation} addBook={this.addBook} />;
+
+  dispatChange = (str, obj) => {
+    this.props.dispatch(createAct(str)(obj));
+  };
   render() {
     if (!this.props.isInit) return null;
-    const menu = (
-      <Menu navigation={this.props.navigation} addBook={this.addBook} />
-    );
     const {
-      dispatch,
       list,
       app: { menuFlag, sunnyMode }
     } = this.props;
@@ -306,11 +300,9 @@ class BookListScreen extends React.PureComponent {
     return (
       <View style={styleMode.container}>
         <SideMenu
-          menu={menu}
+          menu={this.menu}
           isOpen={menuFlag}
-          onChange={openFlag =>
-            dispatch(createAct('app/menuCtl')({ flag: openFlag }))
-          }
+          onChange={flag => this.dispatChange('app/menuCtl', { flag })}
           menuPosition={'right'}
           disableGestures={true}
         >

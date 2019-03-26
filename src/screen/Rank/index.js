@@ -10,7 +10,7 @@ import get from 'lodash/get';
 
 import { HeaderBackButton } from 'react-navigation';
 
-import { spliceLine, getAndroidStyle } from '../../util';
+import { spliceLine, getDefaultTitleStyle } from '../../util';
 
 import { rnk } from '../../api/book';
 
@@ -29,15 +29,7 @@ class RankScreen extends React.PureComponent {
           }}
         />
       ),
-      headerStyle: {
-        backgroundColor: '#000',
-        borderBottomWidth: 0,
-        ...getAndroidStyle(),
-      },
-      headerTitleStyle: {
-        color: '#ddd',
-        alignSelf: 'center'
-      }
+      ...getDefaultTitleStyle(),
     };
   };
   constructor(props) {
