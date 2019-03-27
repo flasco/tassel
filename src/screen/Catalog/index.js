@@ -6,7 +6,6 @@ import {
   Button,
 } from 'react-native';
 import { LargeList } from 'react-native-largelist';
-import { HeaderBackButton } from 'react-navigation';
 
 import { connect } from 'react-redux';
 
@@ -18,16 +17,7 @@ class CatalogScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: `${navigation.state.params.name}`,
-      headerLeft: (
-        <HeaderBackButton
-          title="返回"
-          tintColor={'#ddd'}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        />
-      ),
-      ...getDefaultTitleStyle(),
+      ...getDefaultTitleStyle(navigation),
       headerRight: (
         <Button
           title="gDwn"

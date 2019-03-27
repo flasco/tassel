@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, View, Image } from 'react-native';
-import { HeaderBackButton } from 'react-navigation';
 import { Button } from 'react-native-elements';
 import { connect } from 'react-redux';
 
@@ -14,14 +13,7 @@ class BookDetScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: `书籍详情`,
-      headerLeft: (
-        <HeaderBackButton
-          title="返回"
-          tintColor={'#ddd'}
-          onPress={() => navigation.goBack()}
-        />
-      ),
-      ...getDefaultTitleStyle(),
+      ...getDefaultTitleStyle(navigation),
     };
   };
   constructor(props) {

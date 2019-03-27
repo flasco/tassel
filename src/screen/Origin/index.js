@@ -14,16 +14,7 @@ class OriginScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: `${navigation.state.params.book.bookName}`,
-      headerLeft: (
-        <HeaderBackButton
-          title="返回"
-          tintColor={'#ddd'}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        />
-      ),
-      ...getDefaultTitleStyle(),
+      ...getDefaultTitleStyle(navigation)
     };
   };
   constructor(props) {
@@ -36,79 +27,67 @@ class OriginScreen extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    this.setState = (state, callback) => {
-      return;
-    };
+    this.setState = () => {};
   }
 
   getOrigin = async () => {
-    let originList = this.props.navigation.state.params.book.source;
-    let tasks = [],
-      list = [];
-    for (let i in originList) {
-      tasks.push(latest(originList[i]));
-    }
-    let res = await Promise.all(tasks);
+    const { source, plantformId } = this.props.navigation.state.params.book;
+    let tasks = [];
+    for (let i in source) tasks.push(latest(source[i]));
+    const res = await Promise.all(tasks);
     let j = 0;
-    for (let i in originList) {
+    for (let i in source) {
       this.dataList.push({
         site: i,
         latestChapter: res[j++],
-        isSelect: i === `${this.props.navigation.state.params.book.plantformId}`
+        isSelect: i === `${plantformId}`
       });
     }
     this.setState({ loading: false });
   };
 
+  originClick = (site, latestChapter) => {
+    const {
+      reLoad,
+      book: { plantformId, bookName }
+    } = this.props.navigation.state.params;
+
+    this.props.dispatch(
+      createAct('list/changeOrigin')({
+        id: 0, // 因为那时候已经因为排序而来到了第一名。
+        bookName,
+        change: site,
+        latestChapter
+      })
+    );
+    reLoad(site !== plantformId);
+    this.props.navigation.goBack();
+  };
+
   renderRow = item => {
-    let rowData = item.item;
     const { SMode } = this.props;
+    let { site, isSelect, latestChapter } = item.item;
+    const styleMode = SMode ? styles.sunnyMode : styles.nightMode;
     return (
       <TouchableHighlight
-        style={SMode ? styles.sunnyMode.rowStyle : styles.nightMode.rowStyle}
+        style={styleMode.rowStyle}
         underlayColor={'transparent'}
         activeOpacity={0.7}
-        onPress={() => {
-          let boo =
-            rowData.site !==
-            this.props.navigation.state.params.book.plantformId;
-          this.props.dispatch(
-            createAct('list/changeOrigin')({
-              id: 0, // 因为那时候已经因为排序而来到了第一名。
-              change: rowData.site,
-              latestChapter: rowData.latestChapter,
-              bookName: this.props.navigation.state.params.book.bookName
-            })
-          );
-          this.props.navigation.state.params.reLoad(boo);
-          this.props.navigation.goBack();
-        }}
+        onPress={() => this.originClick(site, latestChapter)}
       >
         <View>
           <View style={{ flexDirection: 'row' }}>
-            <Text
-              style={
-                SMode
-                  ? styles.sunnyMode.titleStyle
-                  : styles.nightMode.titleStyle
-              }
-            >
-              {webSite[rowData.site]}
-            </Text>
-            {rowData.isSelect && (
+            <Text style={styleMode.titleStyle}>{webSite[site]}</Text>
+            {isSelect && (
               <Badge
                 value={`当前选择`}
-                containerStyle={
-                  SMode
-                    ? styles.sunnyMode.badgeStyle
-                    : styles.nightMode.badgeStyle
-                }
+                containerStyle={styleMode.badgeStyle}
                 textStyle={{ fontSize: 11 }}
               />
             )}
           </View>
-          <Text style={styles.sunnyMode.subTitleStyle}>
-            {`${spliceLine(rowData.latestChapter, 23)}`}
+          <Text style={styleMode.subTitleStyle}>
+            {`${spliceLine(latestChapter, 23)}`}
           </Text>
         </View>
       </TouchableHighlight>
@@ -117,36 +96,26 @@ class OriginScreen extends React.PureComponent {
 
   render() {
     const { SMode } = this.props;
-    if (this.state.loading)
-      return (
-        <View
-          style={
-            SMode ? styles.sunnyMode.container : styles.nightMode.container
-          }
+    const styleMode = SMode ? styles.sunnyMode : styles.nightMode;
+    let content;
+    if (this.state.loading) {
+      content = (
+        <Text
+          style={[
+            { marginTop: 15, textAlign: 'center' },
+            SMode ? null : { color: '#ddd' }
+          ]}
         >
-          <Text
-            style={[
-              { marginTop: 15, textAlign: 'center' },
-              SMode ? null : { color: '#ddd' }
-            ]}
-          >
-            Please Wait...
-          </Text>
-        </View>
+          Please Wait...
+        </Text>
       );
-    return (
-      <View
-        style={SMode ? styles.sunnyMode.container : styles.nightMode.container}
-      >
+    } else {
+      content = (
         <FlatList
           style={{ flex: 1 }}
           data={this.dataList}
           renderItem={this.renderRow}
-          ItemSeparatorComponent={() => (
-            <View
-              style={SMode ? styles.sunnyMode.solid : styles.nightMode.solid}
-            />
-          )}
+          ItemSeparatorComponent={() => <View style={styleMode.solid} />}
           getItemLayout={(data, index) => ({
             length: 70,
             offset: 71 * index,
@@ -154,8 +123,10 @@ class OriginScreen extends React.PureComponent {
           })} //行高38，分割线1，所以offset=39
           keyExtractor={(item, index) => `${index}`}
         />
-      </View>
-    );
+      );
+    }
+
+    return <View style={styleMode.container}>{content}</View>;
   }
 }
 

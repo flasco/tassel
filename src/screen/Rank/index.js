@@ -8,8 +8,6 @@ import {
 import React from 'react';
 import get from 'lodash/get';
 
-import { HeaderBackButton } from 'react-navigation';
-
 import { spliceLine, getDefaultTitleStyle } from '../../util';
 
 import { rnk } from '../../api/book';
@@ -20,16 +18,7 @@ class RankScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: '起点排行',
-      headerLeft: (
-        <HeaderBackButton
-          title="返回"
-          tintColor={'#ddd'}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        />
-      ),
-      ...getDefaultTitleStyle(),
+      ...getDefaultTitleStyle(navigation),
     };
   };
   constructor(props) {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Text, View, FlatList, TouchableHighlight } from 'react-native';
 
 import { SearchBar } from 'react-native-elements';
@@ -8,42 +8,30 @@ import { judgeIphoneX } from '../../util';
 import { search } from '../../api/book';
 
 class SearchScreen extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.renderRow = this.renderRow.bind(this);
-    this.SearchBook = this.SearchBook.bind(this);
-    this.pressFunc = this.pressFunc.bind(this);
-
-    this.state = {
-      text: '',
-      dataSource: '',
-      hint: '输入后点击 done 即可搜索书籍。'
-    };
-  }
+  state = {
+    text: '',
+    dataSource: '',
+    hint: '输入后点击 done 即可搜索书籍。'
+  };
 
   componentDidMount() {
-    let bookNam = this.props.navigation.state.params.bookNam || '';
-    if (bookNam !== '') {
+    const { bookNam: bookName = '' } = this.props.navigation.state.params;
+    if (bookName !== '') {
       this.setState(
         {
-          text: bookNam
+          text: bookName
         },
-        () => {
-          this.SearchBook(bookNam);
-        }
+        () => this.searchBook(bookName)
       );
     }
   }
 
   componentWillUnmount() {
     //重写组件的setState方法，直接返回空
-    this.setState = (state, callback) => {
-      return;
-    };
+    this.setState = () => {};
   }
 
-  async SearchBook(text) {
+  searchBook = async text => {
     let data = await search(text);
     if (data === 'error...' || data === -1) {
       this.setState({
@@ -56,17 +44,17 @@ class SearchScreen extends React.PureComponent {
         hint: `搜索到${data.length}条相关数据。`
       });
     }
-  }
+  };
 
-  pressFunc(rowData) {
+  pressFunc = rowData => {
     const { navigate } = this.props.navigation;
     navigate('BookDet', {
       book: rowData,
       addBook: this.props.navigation.state.params.addBook
     });
-  }
+  };
 
-  renderRow(item) {
+  renderRow = item => {
     const rowData = item.item;
     return (
       <TouchableHighlight
@@ -83,7 +71,7 @@ class SearchScreen extends React.PureComponent {
         </View>
       </TouchableHighlight>
     );
-  }
+  };
 
   render() {
     return (
@@ -101,7 +89,7 @@ class SearchScreen extends React.PureComponent {
             icon={{ color: '#86939e', name: 'search' }}
             onSubmitEditing={() => {
               if (this.state.text !== '') {
-                this.SearchBook(this.state.text);
+                this.searchBook(this.state.text);
               }
             }}
             placeholder="输入关键字"

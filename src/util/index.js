@@ -1,6 +1,8 @@
+import React from 'react';
 import { Platform, Dimensions } from 'react-native';
 
-export { NavigationActions, StackActions } from 'react-navigation'
+export { NavigationActions, StackActions } from 'react-navigation';
+import { HeaderBackButton } from 'react-navigation';
 
 export { default as Storage } from './storage';
 
@@ -33,24 +35,37 @@ export function getAndroidStyle() {
   if (Platform.OS === 'android') {
     return {
       paddingTop: 30,
-      height: 80,
+      height: 80
     };
   }
   return {};
 }
 
-export function getDefaultTitleStyle() {
-  return {
+export function getDefaultTitleStyle(navigation = null) {
+  const options = {
     headerStyle: {
       backgroundColor: '#000',
       borderBottomWidth: 0,
-      ...getAndroiStyle()
+      ...getAndroidStyle()
     },
     headerTitleStyle: {
       color: '#ddd',
       alignSelf: 'center'
     }
   };
+
+  if (navigation) {
+    options.headerLeft = (
+      <HeaderBackButton
+        title="返回"
+        tintColor={'#ddd'}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      />
+    );
+  }
+  return options;
 }
 
 //判断是否为iphoneXR或XsMAX

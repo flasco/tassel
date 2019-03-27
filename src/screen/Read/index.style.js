@@ -12,26 +12,30 @@ export default {
     textAlign: 'center',
     marginTop: 7
   },
-  SunnyMode_container: {
-    backgroundColor: '#acc7a7'
+  sunnyMode: {
+    container: {
+      backgroundColor: '#acc7a7'
+    },
+    title: {
+      color: '#576457'
+    },
+    text: {
+      color: '#0d2a0f'
+    },
   },
-  SunnyMode_Title: {
-    color: '#576457'
-  },
-  SunnyMode_text: {
-    color: '#0d2a0f'
-  },
-  MoonMode_container: {
-    backgroundColor: '#0c0c0c'
-  },
-  MoonMode_Title: {
-    color: '#474747'
-  },
-  MoonMode_text: {
-    color: '#5b5b5b'
-  },
-  MoonMode_Bottom: {
-    color: '#424242'
+  moonMode: {
+    container: {
+      backgroundColor: '#0c0c0c'
+    },
+    title: {
+      color: '#474747'
+    },
+    text: {
+      color: '#5b5b5b'
+    },
+    bottom: {
+      color: '#424242'
+    }
   },
   container: {
     flex: 1

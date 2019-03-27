@@ -15,7 +15,12 @@ import SplashScreen from 'react-native-splash-screen';
 import SwipeableQuickActions from 'SwipeableQuickActions';
 import { connect } from 'react-redux';
 
-import { createAct, Storage, spliceLine, getDefaultTitleStyle } from '../../util';
+import {
+  createAct,
+  Storage,
+  spliceLine,
+  getDefaultTitleStyle
+} from '../../util';
 
 import Menu from '../Menu';
 
@@ -41,14 +46,12 @@ class BookListScreen extends React.PureComponent {
           size={42}
           iconStyle={{ marginRight: 15 }}
         />
-      ),
+      )
     };
   };
   constructor(props) {
     super(props);
     tht = this;
-    this.addBook = this.addBook.bind(this);
-    this.deleteBook = this.deleteBook.bind(this);
     AppState.addEventListener('change', this.onAppStateChange);
   }
 
@@ -79,14 +82,14 @@ class BookListScreen extends React.PureComponent {
     }
   };
 
-  deleteBook(deleteId) {
+  deleteBook = deleteId => {
     this.props.dispatch(
       createAct('list/listDelete')({
         list: this.props.list,
         bookId: deleteId
       })
     );
-  }
+  };
 
   onRefresh = () => {
     const { isInit, list, dispatch, fattenList, isFatten } = this.props;
@@ -128,7 +131,7 @@ class BookListScreen extends React.PureComponent {
     );
   };
 
-  addBook(data) {
+  addBook = data => {
     this.props.dispatch(
       createAct('list/listAdd')({
         list: this.props.list,
@@ -141,7 +144,7 @@ class BookListScreen extends React.PureComponent {
         }
       })
     );
-  }
+  };
 
   renderRow = item => {
     const { item: rowData, index: rowID } = item;

@@ -81,15 +81,10 @@ class ReadScreen extends React.PureComponent {
   };
 
   initConf = async (needRefresh = false) => {
-    bookRecordFlag = `${this.currentBook.bookName}_${
-      this.currentBook.plantformId
-    }_record`;
-    chapterLstFlag = `${this.currentBook.bookName}_${
-      this.currentBook.plantformId
-    }_list`;
-    bookMapFlag = `${this.currentBook.bookName}_${
-      this.currentBook.plantformId
-    }_map`;
+    const { bookName, plantformId, source } = this.currentBook;
+    bookRecordFlag = `${bookName}_${plantformId}_record`;
+    chapterLstFlag = `${bookName}_${plantformId}_list`;
+    bookMapFlag = `${bookName}_${plantformId}_map`;
 
     const storageResArr = await Storage.multiGet([
       bookRecordFlag,
@@ -104,9 +99,7 @@ class ReadScreen extends React.PureComponent {
     };
     if (this.chapterLst.length === 0 || needRefresh) {
       Toast.show('章节内容走心抓取中...');
-      this.chapterLst = await list(
-        this.currentBook.source[this.currentBook.plantformId]
-      );
+      this.chapterLst = await list(source[plantformId]);
       if (this.chapterLst.length === 0) {
         this.setState({
           currentItem: {
@@ -137,7 +130,7 @@ class ReadScreen extends React.PureComponent {
     });
   };
 
-  download_Chapter = async size => {
+  downloadChapter = async size => {
     const i = this.bookRecord.recordChapterNum,
       j = this.chapterLst.length;
     const End = i + size < j ? i + size : j;
@@ -169,44 +162,27 @@ class ReadScreen extends React.PureComponent {
         cancelButtonIndex: 2
       },
       buttonIndex => {
-        let operateArr = [50, 150];
-        buttonIndex !== 2 && this.download_Chapter(operateArr[buttonIndex]);
+        const operateArr = [50, 150];
+        buttonIndex !== 2 && this.downloadChapter(operateArr[buttonIndex]);
       }
     );
   };
 
   renderPage = (data, pageID) => {
     const { SMode } = this.props;
+    const styleMode = SMode ? styles.sunnyMode : styles.moonMode;
     const title = spliceLine(this.state.currentItem.title, 25);
     return (
-      <View
-        style={[
-          styles.container,
-          SMode ? styles.SunnyMode_container : styles.MoonMode_container
-        ]}
-      >
-        <Text
-          style={[
-            styles.title,
-            SMode ? styles.SunnyMode_Title : styles.MoonMode_Title
-          ]}
-        >
-          {title}
-        </Text>
-        <Text
-          style={[
-            styles.textsize,
-            SMode ? styles.SunnyMode_text : styles.MoonMode_text
-          ]}
-          numberOfLines={22}
-        >
+      <View style={[styles.container, styleMode.container]}>
+        <Text style={[styles.title, styleMode.title]}>{title}</Text>
+        <Text style={[styles.textsize, styleMode.text]} numberOfLines={22}>
           {data}
         </Text>
         <View style={styles.bottView}>
-          <Text style={[styles.bottom1, !SMode && styles.MoonMode_Bottom]}>
+          <Text style={[styles.bottom1, !SMode && styles.moonMode.bottom]}>
             {new Date().toTimeString().substring(0, 5)}
           </Text>
-          <Text style={[styles.bottom2, !SMode && styles.MoonMode_Bottom]}>
+          <Text style={[styles.bottom2, !SMode && styles.moonMode.bottom]}>
             {`${+pageID + 1}/${this.pageCount}`}{' '}
           </Text>
         </View>
@@ -235,7 +211,7 @@ class ReadScreen extends React.PureComponent {
   getNet = async (index, direct) => {
     index = index <= this.chapterLst.length - 1 && index > -1 ? index : 0; //修复index的越界问题
     this.bookRecord.recordChapterNum = index;
-    let nurl = this.chapterLst[index].key;
+    const nurl = this.chapterLst[index].key;
     if (
       this.chapterMap[nurl] === undefined ||
       typeof this.chapterMap[nurl] === 'string'
@@ -335,7 +311,7 @@ class ReadScreen extends React.PureComponent {
       }}
     >
       <View style={{ flex: 1 }}>
-        <Text style={[styles.centr, !SMode && styles.MoonMode_text]}>
+        <Text style={[styles.centr, !SMode && styles.moonMode.text]}>
           Loading...
         </Text>
       </View>
@@ -357,13 +333,9 @@ class ReadScreen extends React.PureComponent {
 
   render() {
     const { SMode, navigation } = this.props;
+    const styleMode = SMode ? styles.sunnyMode : styles.moonMode;
     return (
-      <View
-        style={[
-          styles.container,
-          SMode ? styles.SunnyMode_container : styles.MoonMode_container
-        ]}
-      >
+      <View style={[styles.container, styleMode.container]}>
         <Navigat
           ref={r => (this.nav = r)}
           navigation={navigation}

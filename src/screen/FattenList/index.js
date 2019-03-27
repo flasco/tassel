@@ -9,7 +9,6 @@ import {
 import { Icon, Badge } from 'react-native-elements';
 import SwipeableQuickActions from 'SwipeableQuickActions';
 import { connect } from 'react-redux';
-import { HeaderBackButton } from 'react-navigation';
 import { createAct, getDefaultTitleStyle } from '../../util';
 import styles from './index.style';
 
@@ -17,23 +16,12 @@ class FattenListScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: '养肥区',
-      ...getDefaultTitleStyle(),
-      headerLeft: (
-        <HeaderBackButton
-          title="返回"
-          tintColor={'#ddd'}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        />
-      )
+      ...getDefaultTitleStyle(navigation)
     };
   };
 
   componentWillUnmount() {
-    this.setState = (state, callback) => {
-      return;
-    };
+    this.setState = () => {};
   }
 
   moveBook = bookId => {
