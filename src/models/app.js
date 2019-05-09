@@ -1,3 +1,4 @@
+import { siteMap } from '../api/book';
 import { createAction, Storage } from '../util';
 
 export default {
@@ -5,14 +6,16 @@ export default {
   state: {
     menuFlag: false,
     sunnyMode: true,
+    siteMap: {},
     readNum: 0
   },
   reducers: {
-    updateState(state, { payload }) {
+    initState(state, { payload }) {
       return {
         ...state,
         sunnyMode: payload.sunnyMode,
-        readNum: payload.readNum
+        readNum: payload.readNum,
+        siteMap: payload.siteMap
       };
     },
     readNumAdd(state, { payload }) {
@@ -33,10 +36,10 @@ export default {
   },
   effects: {
     *appInit(action, { call, put }) {
-      const appState = yield call(Storage.get, 'appState');
-      if (appState != null) {
-        yield put(createAction('updateState')({ ...appState }));
-      }
+      const appState = yield call(Storage.get, 'appState', {});
+      const sites = yield call(siteMap) || {};
+      appState.siteMap = sites;
+      yield put(createAction('initState')(appState));
     },
     *menuSwitch(action, { call, put }) {
       yield put(createAction('modeSwitch')());

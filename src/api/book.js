@@ -64,3 +64,8 @@ export async function search(name, author = '', pid = '') {
   const data = await get(`${searchIp}/v2/sear?name=${name}&aut=${author}&pid=${pid}`);
   return data;
 }
+
+export async function siteMap() {
+  const data = await get(`http://localhost:3000/v2/site-map`);
+  return data;
+}

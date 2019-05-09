@@ -1,11 +1,9 @@
 import React from 'react';
 import { Text, View, FlatList, TouchableHighlight } from 'react-native';
-import { HeaderBackButton } from 'react-navigation';
 import { Badge } from 'react-native-elements';
 import { connect } from 'react-redux';
 
 import { latest } from '../../api/book';
-import { webSite } from '../../config';
 import { createAct, spliceLine, getDefaultTitleStyle } from '../../util';
 
 import styles from './index.style';
@@ -65,7 +63,7 @@ class OriginScreen extends React.PureComponent {
   };
 
   renderRow = item => {
-    const { SMode } = this.props;
+    const { SMode, webSite } = this.props;
     let { site, isSelect, latestChapter } = item.item;
     const styleMode = SMode ? styles.sunnyMode : styles.nightMode;
     return (
@@ -132,7 +130,8 @@ class OriginScreen extends React.PureComponent {
 
 function select(state) {
   return {
-    SMode: state.app.sunnyMode
+    SMode: state.app.sunnyMode,
+    webSite: state.app.siteMap,
   };
 }
 

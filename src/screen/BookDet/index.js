@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { createAct, getDefaultTitleStyle } from '../../util';
 
 import { search } from '../../api/book';
-import { webSite } from '../../config';
 import styles from './index.style';
 
 class BookDetScreen extends React.PureComponent {
@@ -74,7 +73,7 @@ class BookDetScreen extends React.PureComponent {
       );
     }
     const { img, bookName, author, plantformId, desc } = this.book;
-    const { contains, btnLoading } = this.props;
+    const { contains, btnLoading, webSite } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.firstView.container}>
@@ -131,6 +130,7 @@ class BookDetScreen extends React.PureComponent {
 
 function select(state) {
   return {
+    webSite: state.app.siteMap,
     list: state.list.list,
     fattenList: state.list.fattenList,
     btnLoading: state.list.btnLoading,
