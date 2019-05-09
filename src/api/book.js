@@ -1,38 +1,41 @@
 import { spliceLine } from '../util';
 import { get, post } from '../util/request';
 
-import { serverIps } from '../config';
+import { serverIps, searchIp } from '../config';
 
-const currenthours = new Date().getHours();
-const curPoi = currenthours >= 9 && currenthours < 22 ? 0 : 1;
-let Ip = serverIps[curPoi];
+const getIp = (() => {
+  let prevIp;
+  let lockTime = Date.now();
 
-const searchIp = 'https://koapi.leanapp.cn';
+  return () => {
+    const current = Date.now();
+    if (prevIp == null || current - lockTime > 3600 * 1000) {
+      const currenthours = new Date().getHours();
+      const curPoi = currenthours >= 9 && currenthours < 22 ? 0 : 1;
+      prevIp = serverIps[curPoi];
+      lockTime = current;
+    }
+    return prevIp;
+  };
+})();
 
-export function changeServer() {
-  let msg = '当前无需切换';
-  if (Ip !== serverIps[0]) {
-    Ip = serverIps[0];
-    msg = '服务器已切换至主线';
-  } else if (Ip !== serverIps[1]) {
-    Ip = serverIps[1];
-    msg = '服务器已切换至备用';
-  }
+export function serverInfo() {
+  let msg = getIp() === serverIps[0] ? '服务器当前为主线' : '服务器当前为备用';
   alert(msg);
 }
 
 export async function content(url, showMsg = true) {
-  const data = await get(`${Ip}/v2/analysis?action=2&url=${url}`, showMsg);
+  const data = await get(`${getIp()}/v2/analysis?action=2&url=${url}`, showMsg);
   return data;
 }
 
 export async function latest(url) {
-  const data = await get(`${Ip}/v2/analysis?action=3&url=${url}`);
+  const data = await get(`${getIp()}/v2/analysis?action=3&url=${url}`);
   return data;
 }
 
 export async function latestLst(list) {
-  const data = await post(`${Ip}/v2/analysis`, list);
+  const data = await post(`${getIp()}/v2/analysis`, list);
   return data;
 }
 
@@ -42,7 +45,7 @@ export async function latestLst(list) {
  */
 export async function list(url) {
   // /m.xs/g.test(url) && (url = url + 'all.html');
-  const data = await get(`${Ip}/v2/analysis?action=1&url=${url}`);
+  const data = await get(`${getIp()}/v2/analysis?action=1&url=${url}`);
   if (data !== -1) {
     const n = data.map(item => {
       return {
@@ -56,16 +59,18 @@ export async function list(url) {
 }
 
 export async function rnk(page, gender = 0) {
-  const data = await get(`${Ip}/v2/rnklist?p=${page}&gender=${gender}`);
+  const data = await get(`${getIp()}/v2/rnklist?p=${page}&gender=${gender}`);
   return data;
 }
 
 export async function search(name, author = '', pid = '') {
-  const data = await get(`${searchIp}/v2/sear?name=${name}&aut=${author}&pid=${pid}`);
+  const data = await get(
+    `${searchIp}/v2/sear?name=${name}&aut=${author}&pid=${pid}`
+  );
   return data;
 }
 
 export async function siteMap() {
-  const data = await get(`http://localhost:3000/v2/site-map`);
+  const data = await get(`${getIp()}/v2/site-map`);
   return data;
 }

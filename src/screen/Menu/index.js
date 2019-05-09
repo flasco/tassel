@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity, Linking } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { connect } from 'react-redux';
 
-import { changeServer } from '../../api/book';
+import { serverInfo } from '../../api/book';
 import { createAct, NavigationActions, Storage } from '../../util';
 
 import styles from './index.style';
@@ -19,7 +19,7 @@ class Menu extends React.PureComponent {
   }
 
   leanMore = () => {
-    changeServer();
+    serverInfo();
   };
 
   cleanData = () => {
@@ -78,7 +78,7 @@ class Menu extends React.PureComponent {
         </Collapsible>
 
         <TouchableOpacity onPress={this.leanMore}>
-          <Text style={styles.item}>切换服务器</Text>
+          <Text style={styles.item}>查看服务器</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.cleanData}>
           <Text style={styles.item}>清理所有缓存</Text>
