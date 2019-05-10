@@ -37,8 +37,8 @@ export default {
   effects: {
     *appInit(action, { call, put }) {
       const appState = yield call(Storage.get, 'appState', {});
-      const sites = yield call(siteMap) || {};
-      appState.siteMap = sites;
+      const sites = yield call(siteMap);
+      if (sites !== -1) appState.siteMap = sites;
       yield put(createAction('initState')(appState));
     },
     *menuSwitch(action, { call, put }) {
