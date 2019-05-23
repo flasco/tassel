@@ -31,7 +31,7 @@ class ViewPager extends PureComponent {
     super(props);
     DeviceBrightness.getBrightnessLevel().then(x => {
       this.brightVal = +x; //转型
-    })
+    });
 
     const release = (e, gestureState) => {
       if (!this.shouldJmp) {

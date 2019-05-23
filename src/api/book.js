@@ -15,6 +15,7 @@ const getIp = (() => {
       prevIp = serverIps[curPoi];
       lockTime = current;
     }
+    // return 'http://localhost:3000';
     return prevIp;
   };
 })();
@@ -22,6 +23,11 @@ const getIp = (() => {
 export function serverInfo() {
   let msg = getIp() === serverIps[0] ? '服务器当前为主线' : '服务器当前为备用';
   alert(msg);
+}
+
+export async function sourceRank() {
+  const data = await get(`${getIp()}/v2/source-rank`);
+  return data;
 }
 
 export async function content(url, showMsg = true) {

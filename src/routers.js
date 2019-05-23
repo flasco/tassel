@@ -17,6 +17,7 @@ import RankScreen from './screen/Rank';
 import BookDetScreen from './screen/BookDet';
 import OriginScreen from './screen/Origin';
 import FattenListScreen from './screen/FattenList';
+import SourceRankScreen from './screen/SourceRank';
 
 SearchScreen.navigationOptions = () => ({ header: null });
 ReadScreen.navigationOptions = () => ({ header: null });
@@ -30,7 +31,8 @@ const Tassel = createStackNavigator(
     RnkL: { screen: RankScreen },
     BookDet: { screen: BookDetScreen },
     Origin: { screen: OriginScreen },
-    FattenBlock: { screen: FattenListScreen }
+    FattenBlock: { screen: FattenListScreen },
+    SourceRank: { screen: SourceRankScreen }
   },
   {
     mode: 'modal',
