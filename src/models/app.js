@@ -14,7 +14,7 @@ export default {
       return {
         ...state,
         sunnyMode: payload.sunnyMode,
-        readNum: payload.readNum,
+        readNum: payload.readNum || 0,
         siteMap: payload.siteMap
       };
     },
