@@ -4,7 +4,7 @@
 
 ## 1. introduction
 
-This is a novel reader app powered by react-native `0.58.1`.
+This is a novel reader app powered by react-native `0.58.6`.
 
 it have shelf, fattenList, read page, record and so on.
 
@@ -28,14 +28,19 @@ it still be consummated, but compare with my previous projects, I think it can b
 ### 2.1 dependence require
 node version 7.6+
 ### 2.2 run
-```js
-// install dependence
+```bash
+# install dependence
 yarn install
-// run project
-react-native run-ios
-// this prj not pass test in Android
+# run project
+yarn run-ios
+# this prj not pass test in Android
 ```
 ## 3. Change Log
+2019-06-05
+- [maintain] update dependencies.
+- [bugfix] fix some bug.
+-----
+
 2019-01-26
 - [maintain] update dependencies.
 - [maintain] update react-native to `0.58.1`
