@@ -15,7 +15,7 @@
     "dva-core": "^1.4.0",
     "lodash": "^4.17.11",
     "react": "16.8.3",
-    "react-native": "0.59.9",
+    "react-native": "0.59.10",
     "react-native-collapsible": "^1.4.0",
     "react-native-device-brightness": "^1.2.0",
     "react-native-elements": "0.19.1",

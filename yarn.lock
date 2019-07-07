@@ -5167,10 +5167,10 @@ react-native-vector-icons@^6.4.1:
     prop-types "^15.6.2"
     yargs "^13.2.2"
 
-react-native@0.59.9:
-  version "0.59.9"
-  resolved "https://registry.npm.taobao.org/react-native/download/react-native-0.59.9.tgz#c94ee4fa35121720c05235a2dd6cdd2784bf5177"
-  integrity sha1-yU7k+jUSFyDAUjWi3WzdJ4S/UXc=
+react-native@0.59.10:
+  version "0.59.10"
+  resolved "https://registry.npm.taobao.org/react-native/download/react-native-0.59.10.tgz#352f381e382f93a0403be499c9e384bf51c2591c"
+  integrity sha1-NS84Hjgvk6BAO+SZyeOEv1HCWRw=
   dependencies:
     "@babel/runtime" "^7.0.0"
     "@react-native-community/cli" "^1.2.1"
