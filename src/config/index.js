@@ -1,5 +1,5 @@
 export const serverIps = [
-  'https://tasselstorage1.cn-e1.leanapp.cn',
+  'https://5hmmnxt7ywzh.cn-e1.leanapp.cn',
   'https://tasselstorage2.cn-e1.leanapp.cn'
 ];
 
