@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Toast from '@components/Toast';
+import Toast from '@components/toast';
 
 export async function get(url, showMsg = true, timeout = 5000) {
   try {

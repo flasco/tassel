@@ -12,8 +12,8 @@ import {
 import queue from 'async/queue';
 import { connect } from 'react-redux';
 
-import Toast from '@components/Toast';
-import ViewPager from '@components/viewPager';
+import Toast from '@components/toast';
+import ViewPager from '@components/view-pager';
 import getContextArr from '@util/getContextArr';
 import Navigat from '@components/navigation';
 import { content, list } from '@api/book';
