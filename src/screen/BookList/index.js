@@ -4,24 +4,18 @@ import {
   View,
   TouchableHighlight,
   AppState,
-  SwipeableFlatList,
   StatusBar,
   Image,
-  Alert
+  Alert,
 } from 'react-native';
 import { Icon, Badge } from 'react-native-elements';
 import SideMenu from 'react-native-side-menu';
 import SplashScreen from 'react-native-splash-screen';
-import SwipeableQuickActions from '@components/SwipeableQuickActions';
 import { connect } from 'react-redux';
 
-import {
-  createAct,
-  Storage,
-  spliceLine,
-  getDefaultTitleStyle
-} from '@util';
-
+import SwipeableQuickActions from '@components/quick-actions';
+import SwipeableFlatList from '@components/swipeable-list';
+import { createAct, Storage, spliceLine, getDefaultTitleStyle } from '@util';
 import Menu from '@screen/Menu';
 
 import styles from './index.style';
@@ -46,7 +40,7 @@ class BookListScreen extends React.PureComponent {
           size={42}
           iconStyle={{ marginRight: 15 }}
         />
-      )
+      ),
     };
   };
   constructor(props) {
@@ -75,7 +69,7 @@ class BookListScreen extends React.PureComponent {
         [
           ['appState', JSON.stringify(app)],
           ['booklist', JSON.stringify(list)],
-          ['fattenList', JSON.stringify(fattenList)]
+          ['fattenList', JSON.stringify(fattenList)],
         ],
         [2, 2, 2]
       );
@@ -86,7 +80,7 @@ class BookListScreen extends React.PureComponent {
     this.props.dispatch(
       createAct('list/listDelete')({
         list: this.props.list,
-        bookId: deleteId
+        bookId: deleteId,
       })
     );
   };
@@ -100,7 +94,7 @@ class BookListScreen extends React.PureComponent {
           createAct('list/listUpdate')({
             list,
             fattenList,
-            isFatten
+            isFatten,
           })
         );
     } else {
@@ -112,7 +106,7 @@ class BookListScreen extends React.PureComponent {
               createAct('list/listUpdate')({
                 list,
                 fattenList,
-                isFatten
+                isFatten,
               })
             )
           : this.onRefresh();
@@ -126,7 +120,7 @@ class BookListScreen extends React.PureComponent {
       createAct('list/fattenBook')({
         list,
         bookId,
-        fattenList
+        fattenList,
       })
     );
   };
@@ -140,8 +134,8 @@ class BookListScreen extends React.PureComponent {
           latestChapter: '待检测',
           latestRead: new Date().getTime(),
           isUpdate: false,
-          updateNum: 0
-        }
+          updateNum: 0,
+        },
       })
     );
   };
@@ -192,7 +186,7 @@ class BookListScreen extends React.PureComponent {
           setTimeout(() => {
             this.dispatChange('list/bookRead', {
               list: this.props.list,
-              bookId: rowID
+              bookId: rowID,
             });
           }, 1000);
         }}
@@ -230,7 +224,7 @@ class BookListScreen extends React.PureComponent {
     return (
       <SwipeableQuickActions
         style={{
-          backgroundColor: styleMode.rowStyle.backgroundColor
+          backgroundColor: styleMode.rowStyle.backgroundColor,
         }}
       >
         <TouchableHighlight
@@ -243,7 +237,7 @@ class BookListScreen extends React.PureComponent {
               flexDirection: 'column',
               alignItems: 'center',
               flex: 1,
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <Icon
@@ -260,14 +254,14 @@ class BookListScreen extends React.PureComponent {
           onPress={() => {
             Alert.alert('Warning', '真的要删除掉本书吗？', [
               {
-                text: 'Cancel'
+                text: 'Cancel',
               },
               {
                 text: 'Delete',
                 onPress: () => {
                   this.deleteBook(rowId);
-                }
-              }
+                },
+              },
             ]);
           }}
         >
@@ -277,7 +271,7 @@ class BookListScreen extends React.PureComponent {
               flexDirection: 'column',
               alignItems: 'center',
               flex: 1,
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <Icon name="ios-trash" type="ionicon" color="red" size={24} />
@@ -297,7 +291,7 @@ class BookListScreen extends React.PureComponent {
     if (!this.props.isInit) return null;
     const {
       list,
-      app: { menuFlag, sunnyMode }
+      app: { menuFlag, sunnyMode },
     } = this.props;
     const styleMode = sunnyMode ? styles.sunnyMode : styles.nightMode;
     return (
@@ -341,7 +335,7 @@ function select({ list, app }) {
     isFatten: list.isFatten,
     fattenList: list.fattenList,
     loadingFlag: list.loadingFlag,
-    operationNum: list.operationNum
+    operationNum: list.operationNum,
   };
 }
 

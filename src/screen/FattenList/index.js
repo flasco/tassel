@@ -1,13 +1,8 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  TouchableHighlight,
-  SwipeableFlatList,
-  Image
-} from 'react-native';
+import { Text, View, TouchableHighlight, Image } from 'react-native';
 import { Icon, Badge } from 'react-native-elements';
-import SwipeableQuickActions from '@components/SwipeableQuickActions';
+import SwipeableQuickActions from '@components/quick-actions';
+import SwipeableFlatList from '@components/swipeable-list';
 import { connect } from 'react-redux';
 import { createAct, getDefaultTitleStyle } from '@util';
 import styles from './index.style';
@@ -16,7 +11,7 @@ class FattenListScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: '养肥区',
-      ...getDefaultTitleStyle(navigation)
+      ...getDefaultTitleStyle(navigation),
     };
   };
 
@@ -32,7 +27,7 @@ class FattenListScreen extends React.PureComponent {
     const rowData = item.item;
     const {
       styleMode,
-      navigation: { navigate }
+      navigation: { navigate },
     } = this.props;
     return (
       <TouchableHighlight
@@ -56,9 +51,9 @@ class FattenListScreen extends React.PureComponent {
                 />
               )}
             </View>
-            <Text style={styleMode.subTitleStyle}>{`已经养了${
-              rowData.updateNum
-            }章`}</Text>
+            <Text
+              style={styleMode.subTitleStyle}
+            >{`已经养了${rowData.updateNum}章`}</Text>
           </View>
         </View>
       </TouchableHighlight>
@@ -72,7 +67,7 @@ class FattenListScreen extends React.PureComponent {
     return (
       <SwipeableQuickActions
         style={{
-          backgroundColor: styleMode.rowStyle.backgroundColor
+          backgroundColor: styleMode.rowStyle.backgroundColor,
         }}
       >
         <TouchableHighlight
@@ -85,7 +80,7 @@ class FattenListScreen extends React.PureComponent {
               flexDirection: 'column',
               alignItems: 'center',
               flex: 1,
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <Icon
@@ -123,7 +118,7 @@ function select(state) {
   return {
     fattenList: state.list.fattenList,
     SMode: state.app.sunnyMode,
-    styleMode: state.app.sunnyMode ? styles.sunnyMode : styles.nightMode
+    styleMode: state.app.sunnyMode ? styles.sunnyMode : styles.nightMode,
   };
 }
 

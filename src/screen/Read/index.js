@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import Toast from '@components/Toast';
 import ViewPager from '@components/viewPager';
 import getContextArr from '@util/getContextArr';
-import Navigat from '@components/Navigat';
+import Navigat from '@components/navigation';
 import { content, list } from '@api/book';
 
 import {

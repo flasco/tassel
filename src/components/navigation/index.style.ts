@@ -1,5 +1,12 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, TextProps } from 'react-native';
 const { width } = Dimensions.get('window');
+
+interface IStyleProps {
+  footerItems: {
+    [key: string]: TextProps;
+  },
+  [key: string]: TextProps;
+}
 
 export default {
   originText: {
@@ -10,7 +17,7 @@ export default {
     right: 12,
     position: 'absolute'
   },
-  Fotter: {
+  footer: {
     alignItems: 'center',
     backgroundColor: '#000',
     zIndex: 2,
@@ -36,4 +43,4 @@ export default {
   fontCenter: {
     textAlign: 'center'
   }
-};
+} as IStyleProps;

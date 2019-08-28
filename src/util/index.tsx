@@ -6,11 +6,11 @@ import { HeaderBackButton } from 'react-navigation';
 
 export { default as Storage } from './storage';
 
-export const delay = time => new Promise(resolve => setTimeout(resolve, time));
+export const delay = (time: number) => new Promise(resolve => setTimeout(resolve, time));
 
-export const createAction = type => payload => ({ type, payload });
+export const createAction = (type: string) => (payload: any) => ({ type, payload });
 
-export const createAct = type => payload => ({ type, ...payload });
+export const createAct = (type: string) => (payload: any) => ({ type, ...payload });
 
 // iPhoneX Xs
 const X_WIDTH = 375;
@@ -42,7 +42,7 @@ export function getAndroidStyle() {
 }
 
 export function getDefaultTitleStyle(navigation = null) {
-  const options = {
+  const options: any = {
     headerStyle: {
       backgroundColor: '#000',
       borderBottomWidth: 0,
@@ -79,8 +79,8 @@ function isIphoneXR() {
 
 export const judgeIphoneX = isIphoneX() || isIphoneXR();
 
-export function insertionSort(arr) {
-  let preIndex, current;
+export function insertionSort(arr: any[]) {
+  let preIndex: any, current: any;
   for (let i = 1, len = arr.length; i < len; i++) {
     preIndex = i - 1;
     current = arr[i];
@@ -93,18 +93,6 @@ export function insertionSort(arr) {
   return arr;
 }
 
-/**
- * Fisher–Yates 洗牌算法, 将数组随机排列
- * @param {*} arr
- */
-export function shuffle(arr) {
-  let i = arr.length;
-  while (i) {
-    let j = Math.floor(Math.random() * i--); // 获取一个随机的小于i的数，用floor进行取整
-    [arr[j], arr[i]] = [arr[i], arr[j]]; // 两个数进行交换
-  }
-}
-
-export function spliceLine(str, count) {
+export function spliceLine(str: string, count: number) {
   return str.length > count ? str.substr(0, count) + '...' : str;
 }
