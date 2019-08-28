@@ -3,9 +3,9 @@ import { Text, View, FlatList, TouchableHighlight } from 'react-native';
 
 import { SearchBar } from 'react-native-elements';
 import styles from './index.style';
-import { judgeIphoneX } from '../../util';
+import { judgeIphoneX } from '@util';
 
-import { search } from '../../api/book';
+import { search } from '@api/book';
 
 class SearchScreen extends React.PureComponent {
   state = {

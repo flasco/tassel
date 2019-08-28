@@ -1,9 +1,9 @@
 import { Text, View } from 'react-native';
 import React from 'react';
 
-import { getDefaultTitleStyle } from '../../util';
+import { getDefaultTitleStyle } from '@util';
 
-import { sourceRank } from '../../api/book';
+import { sourceRank } from '@api/book';
 
 import styles from './index.style';
 

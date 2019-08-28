@@ -12,7 +12,7 @@ import {
 import { Icon, Badge } from 'react-native-elements';
 import SideMenu from 'react-native-side-menu';
 import SplashScreen from 'react-native-splash-screen';
-import SwipeableQuickActions from 'SwipeableQuickActions';
+import SwipeableQuickActions from '@components/SwipeableQuickActions';
 import { connect } from 'react-redux';
 
 import {
@@ -20,9 +20,9 @@ import {
   Storage,
   spliceLine,
   getDefaultTitleStyle
-} from '../../util';
+} from '@util';
 
-import Menu from '../Menu';
+import Menu from '@screen/Menu';
 
 import styles from './index.style';
 
@@ -161,7 +161,7 @@ class BookListScreen extends React.PureComponent {
         >
           <View style={{ flexDirection: 'row' }}>
             <Image
-              source={require('../../assets/noImg.jpg')}
+              source={require('@assets/noImg.jpg')}
               style={styles.coverStyle}
             />
             <View style={{ paddingLeft: 15 }}>

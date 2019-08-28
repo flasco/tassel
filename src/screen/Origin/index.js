@@ -3,8 +3,8 @@ import { Text, View, FlatList, TouchableHighlight } from 'react-native';
 import { Badge } from 'react-native-elements';
 import { connect } from 'react-redux';
 
-import { latest } from '../../api/book';
-import { createAct, spliceLine, getDefaultTitleStyle } from '../../util';
+import { latest } from '@api/book';
+import { createAct, spliceLine, getDefaultTitleStyle } from '@util';
 
 import styles from './index.style';
 

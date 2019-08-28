@@ -8,9 +8,9 @@ import {
 import React from 'react';
 import get from 'lodash/get';
 
-import { spliceLine, getDefaultTitleStyle } from '../../util';
+import { spliceLine, getDefaultTitleStyle } from '@util';
 
-import { rnk } from '../../api/book';
+import { rnk } from '@api/book';
 
 import styles from './index.style';
 

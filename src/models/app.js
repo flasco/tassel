@@ -1,5 +1,5 @@
-import { siteMap } from '../api/book';
-import { createAction, Storage } from '../util';
+import { siteMap } from '@api/book';
+import { createAction, Storage } from '@util';
 
 export default {
   namespace: 'app',

@@ -9,7 +9,7 @@ import { LargeList } from 'react-native-largelist';
 
 import { connect } from 'react-redux';
 
-import { getDefaultTitleStyle } from '../../util';
+import { getDefaultTitleStyle } from '@util';
 
 import styles from './index.style';
 

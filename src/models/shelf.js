@@ -1,7 +1,6 @@
-import { createAction, Storage } from '../util';
-import { refreshChapter, refreshSingleChapter } from '../util/getNet';
-import Toast from '../components/Toast';
-import { insertionSort } from '../util';
+import { createAction, Storage, insertionSort } from '@util';
+import { refreshChapter, refreshSingleChapter } from '@util/getNet';
+import Toast from '@components/Toast';
 
 export default {
   namespace: 'list',

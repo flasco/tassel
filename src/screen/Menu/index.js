@@ -3,8 +3,8 @@ import { Text, View, TouchableOpacity, Linking } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { connect } from 'react-redux';
 
-import { serverInfo } from '../../api/book';
-import { createAct, NavigationActions, Storage } from '../../util';
+import { serverInfo } from '@api/book';
+import { createAct, NavigationActions, Storage } from '@util';
 
 import styles from './index.style';
 

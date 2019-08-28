@@ -7,9 +7,9 @@ import {
   Image
 } from 'react-native';
 import { Icon, Badge } from 'react-native-elements';
-import SwipeableQuickActions from 'SwipeableQuickActions';
+import SwipeableQuickActions from '@components/SwipeableQuickActions';
 import { connect } from 'react-redux';
-import { createAct, getDefaultTitleStyle } from '../../util';
+import { createAct, getDefaultTitleStyle } from '@util';
 import styles from './index.style';
 
 class FattenListScreen extends React.PureComponent {

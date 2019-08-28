@@ -3,9 +3,9 @@ import { Text, View, Image } from 'react-native';
 import { Button } from 'react-native-elements';
 import { connect } from 'react-redux';
 
-import { createAct, getDefaultTitleStyle } from '../../util';
+import { createAct, getDefaultTitleStyle } from '@util';
 
-import { search } from '../../api/book';
+import { search } from '@api/book';
 import styles from './index.style';
 
 class BookDetScreen extends React.PureComponent {
@@ -80,7 +80,7 @@ class BookDetScreen extends React.PureComponent {
           <Image
             style={styles.firstView.left.imgSize}
             source={{ uri: img }}
-            defaultSource={require('../../assets/noImg.jpg')}
+            defaultSource={require('@assets/noImg.jpg')}
           />
           <View style={styles.firstView.right.container}>
             <Text style={styles.firstView.right.tit}>{bookName}</Text>

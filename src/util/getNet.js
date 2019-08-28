@@ -1,5 +1,5 @@
-import { list, latest, latestLst } from '../api/book';
-import { Storage, spliceLine } from './index';
+import { list, latest, latestLst } from '@api/book';
+import { Storage, spliceLine } from '@util';
 
 export async function refreshChapter(booklist) {
   try {
