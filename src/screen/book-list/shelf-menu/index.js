@@ -75,13 +75,6 @@ class Menu extends React.PureComponent {
           >
             <Text style={styles.subItem}>起点女生</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() =>
-              this.navigate('SourceRank', { addBook: this.props.addBook, gender: 1 })
-            }
-          >
-            <Text style={styles.subItem}>书源排行</Text>
-          </TouchableOpacity>
         </Collapsible>
 
         <TouchableOpacity onPress={this.leanMore}>

@@ -10,14 +10,13 @@ import {
 import { connect } from 'react-redux';
 
 import BookListScreen from './screen/book-list';
-import CatalogScreen from './screen/Catalog';
-import ReadScreen from './screen/Read';
-import SearchScreen from './screen/Search';
-import RankScreen from './screen/Rank';
+import CatalogScreen from './screen/book-catalog';
+import ReadScreen from './screen/book-read';
+import SearchScreen from './screen/book-search';
+import RankScreen from './screen/book-rank';
 import BookDetScreen from './screen/book-detail';
-import OriginScreen from './screen/Origin';
-import FattenListScreen from './screen/FattenList';
-import SourceRankScreen from './screen/SourceRank';
+import OriginScreen from './screen/book-origin';
+import FattenListScreen from './screen/book-fatten';
 
 SearchScreen.navigationOptions = () => ({ header: null });
 ReadScreen.navigationOptions = () => ({ header: null });
@@ -32,7 +31,6 @@ const Tassel = createStackNavigator(
     BookDet: { screen: BookDetScreen },
     Origin: { screen: OriginScreen },
     FattenBlock: { screen: FattenListScreen },
-    SourceRank: { screen: SourceRankScreen }
   },
   {
     mode: 'modal',
