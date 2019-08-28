@@ -9,12 +9,12 @@ import {
 
 import { connect } from 'react-redux';
 
-import BookListScreen from './screen/BookList';
+import BookListScreen from './screen/book-list';
 import CatalogScreen from './screen/Catalog';
 import ReadScreen from './screen/Read';
 import SearchScreen from './screen/Search';
 import RankScreen from './screen/Rank';
-import BookDetScreen from './screen/BookDet';
+import BookDetScreen from './screen/book-detail';
 import OriginScreen from './screen/Origin';
 import FattenListScreen from './screen/FattenList';
 import SourceRankScreen from './screen/SourceRank';

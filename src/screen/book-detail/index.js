@@ -39,7 +39,9 @@ class BookDetScreen extends React.PureComponent {
         // 如果后台没有搜索到本书会返回一段字符串。
         alert('本书没有记录！如果迫切需要加入本书，请及时反馈给开发人员~');
       } else {
-        this.book = data[0];
+        const book = data.find(item => item.bookName.includes(name));
+        if (book == null) this.book = data[0];
+        else this.book = book;
         Object.keys(this.book.source).length &&
           this.setState({ isLoading: false });
         this.props.dispatch(

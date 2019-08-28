@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import SwipeableQuickActions from '@components/quick-actions';
 import SwipeableFlatList from '@components/swipeable-list';
 import { createAct, Storage, spliceLine, getDefaultTitleStyle } from '@util';
-import Menu from '@screen/Menu';
+import Menu from './shelf-menu';
 
 import styles from './index.style';
 
