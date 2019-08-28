@@ -71,7 +71,7 @@ export async function rnk(page, gender = 0) {
 
 export async function search(name, author = '', pid = '') {
   const data = await get(
-    `${searchIp}/v2/sear?name=${name}&aut=${author}&pid=${pid}`
+    `${getIp()}/v2/sear?name=${name}&aut=${author}&pid=${pid}`
   );
   return data;
 }

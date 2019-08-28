@@ -1,6 +1,6 @@
 export const serverIps = [
-  'https://5hmmnxt7ywzh.cn-e1.leanapp.cn',
-  'https://m5kvxu6mkpsy.cn-e1.leanapp.cn'
+  'https://tassel-1.avosapps.us',
+  'https://tassel-2.avosapps.us'
 ];
 
 export const searchIp = 'https://tassel-1.avosapps.us';
