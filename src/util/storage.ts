@@ -28,19 +28,13 @@ function clear(type = 0) {
   }
 }
 
-function get(key, defaultValue = null) {
+function get(key: string, defaultValue = null): Promise<any> {
   return AsyncStorage.getItem(key).then(value =>
     value !== null ? JSON.parse(value) : defaultValue
   );
 }
 
-/**
- *
- * @param {string} key
- * @param {*} value
- * @param {number} type 存储的级别定义
- */
-function set(key, value, type = 0) {
+function set(key: string, value: any, type = 0): void {
   if (type > -1 && type < 3) {
     //type = 0 默认是cache
     keyMap[type].add(key);
@@ -48,7 +42,7 @@ function set(key, value, type = 0) {
   }
 }
 
-function multiSet(array, types) {
+function multiSet(array: any[], types: number[]) {
   for (let i = 0, j = array.length; i < j; i++) {
     keyMap[types[i]].add(array[i][0]);
   }
@@ -58,14 +52,14 @@ function multiSet(array, types) {
  *
  * @param {string} key
  */
-function remove(key) {
+function remove(key: string) {
   return AsyncStorage.removeItem(key);
 }
 /**
  *
  * @param {string} keys
  */
-function multiGet(keys) {
+function multiGet(keys: string[]): Promise<any> {
   return AsyncStorage.multiGet([...keys]).then(stores => {
     const data = {};
     stores.forEach((result, i, store) => {
@@ -75,7 +69,7 @@ function multiGet(keys) {
   });
 }
 
-function multiRemove(keys) {
+function multiRemove(keys: string[]) {
   return AsyncStorage.multiRemove([...keys]);
 }
 
