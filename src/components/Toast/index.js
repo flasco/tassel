@@ -1,6 +1,6 @@
 import React from 'react';
-import RootView from './RootView';
-import ToastView, { LONG } from './ToastView';
+import RootView from './root-view';
+import ToastView, { LONG } from './toast-view';
 
 class Toast {
   static show(msg) {
