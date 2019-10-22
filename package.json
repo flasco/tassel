@@ -6,7 +6,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "update": "yarn upgrade-interactive",
-    "run-ios": "react-native run-ios --simulator 'iPhone 6 Plus'",
+    "run-ios": "react-native run-ios --simulator 'iPhone 8 Plus'",
     "run-ios-xr": "react-native run-ios --simulator 'iPhone XR'"
   },
   "dependencies": {

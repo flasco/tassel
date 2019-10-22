@@ -20,8 +20,6 @@ import Menu from './shelf-menu';
 
 import styles from './index.style';
 
-let tht;
-
 class BookListScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
@@ -32,7 +30,7 @@ class BookListScreen extends React.PureComponent {
         <Icon
           name="ios-add"
           onPress={() => {
-            tht.props.dispatch(createAct('app/menuSwitch')());
+            navigation.getParam('menuSwitch')();
           }}
           underlayColor={'transparent'}
           type="ionicon"
@@ -43,13 +41,19 @@ class BookListScreen extends React.PureComponent {
       ),
     };
   };
+
+  _menuSwitch = () => {
+    this.props.dispatch(createAct('app/menuSwitch')());
+  }
+
   constructor(props) {
     super(props);
-    tht = this;
     AppState.addEventListener('change', this.onAppStateChange);
   }
 
   componentDidMount() {
+    this.props.navigation.setParams({ menuSwitch: this._menuSwitch });
+
     setTimeout(() => {
       SplashScreen.hide();
     }, 2000);

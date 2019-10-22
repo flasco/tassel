@@ -22,7 +22,7 @@ class CatalogScreen extends React.PureComponent {
         <Button
           title="gDwn"
           onPress={() => {
-            that.list.scrollToEnd(false);
+            navigation.getParam('scrollEnd')();
           }}
           color="#ddd"
         />
@@ -31,15 +31,16 @@ class CatalogScreen extends React.PureComponent {
   };
   constructor(props) {
     super(props);
-    that = this;
     this.data = props.navigation.state.params.bookChapterLst;
     this.currentChapterNum = props.navigation.state.params.chap;
   }
 
+  componentDidMount() {
+    this.props.navigation.setParams({ scrollEnd: this._scrollEnd });
+  }
+
   componentWillUnmount() {
-    this.setState = (state, callback) => {
-      return;
-    };
+    this.setState = () => null;
   }
 
   itemRender = (section, index) => {
@@ -82,6 +83,10 @@ class CatalogScreen extends React.PureComponent {
       </View>
     );
   };
+
+  _scrollEnd = () => {
+    this.list.scrollToEnd(false);
+  }
 
   render() {
     return (
