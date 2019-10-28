@@ -8,10 +8,11 @@ import {
   Animated,
   Dimensions,
   Easing,
+  Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Foundation';
 import { HeaderBackButton, NavigationScreenProp } from 'react-navigation';
-import { judgeIphoneX } from '../../util';
+import { judgeIphoneX } from '@util';
 
 import styles from './index.style';
 
@@ -40,9 +41,9 @@ interface IFooterItemProps {
 
 const FooterItem: React.FC<IFooterItemProps> = ({ onPress, icon, title }) => {
   return (
-    <TouchableOpacity style={styles.footerItems.container} onPress={onPress}>
+    <TouchableOpacity style={styles.item} onPress={onPress}>
       <Icon name={icon} size={20} color={'#aaa'} />
-      <Text style={styles.footerItems.text}>{title}</Text>
+      <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -50,7 +51,7 @@ const FooterItem: React.FC<IFooterItemProps> = ({ onPress, icon, title }) => {
 export default class Navigat extends React.PureComponent<INavigateProps> {
   state = {
     show: new Animated.Value(1),
-    barShow: false,
+    barShow: false
   };
 
   DoCache = () => {
@@ -63,10 +64,10 @@ export default class Navigat extends React.PureComponent<INavigateProps> {
       name: this.props.currentBook.bookName,
       bookChapterLst: this.props.bookChapterLst,
       chap: this.props.currentRecord.recordChapterNum,
-      callback: url => {
+      callback: (url: string) => {
         this.clickShow(false);
         this.props.getChapterUrl(url);
-      },
+      }
     });
   };
   isAnimate = false;
@@ -77,22 +78,22 @@ export default class Navigat extends React.PureComponent<INavigateProps> {
     Animated.timing(this.state.show, {
       toValue: status ? 0 : 1,
       duration: 120,
-      easing: Easing.out(Easing.poly(4)),
+      easing: Easing.out(Easing.poly(4))
     }).start(event => {
       if (event.finished) {
         this.isAnimate = false;
       }
     });
     this.setState({
-      barShow: status,
+      barShow: status
     });
   };
 
   JmptoChooseSource = () => {
     this.props.navigation.navigate('Origin', {
       book: this.props.currentBook,
-      reLoad: needRefresh => this.props.reLoad(needRefresh),
-      callback: url => this.props.getChapterUrl(url),
+      reLoad: (needRefresh: boolean) => this.props.reLoad(needRefresh),
+      callback: (url: string) => this.props.getChapterUrl(url)
     });
   };
 
@@ -102,10 +103,10 @@ export default class Navigat extends React.PureComponent<INavigateProps> {
         style={{
           height: this.state.show.interpolate({
             inputRange: [0, 1],
-            outputRange: BAR_OUTPUT,
+            outputRange: BAR_OUTPUT
           }),
           backgroundColor: '#000',
-          paddingTop: 20,
+          paddingTop: 20
         }}
       >
         <View
@@ -114,7 +115,7 @@ export default class Navigat extends React.PureComponent<INavigateProps> {
             position: 'absolute',
             bottom: 0,
             right: 0,
-            left: 0,
+            left: 0
           }}
         >
           <HeaderBackButton
@@ -126,7 +127,7 @@ export default class Navigat extends React.PureComponent<INavigateProps> {
             }}
           />
           <Text
-            style={styles.originText}
+            style={styles.origin}
             onPress={() => {
               this.JmptoChooseSource();
             }}
@@ -154,23 +155,23 @@ export default class Navigat extends React.PureComponent<INavigateProps> {
     {
       title: '切换',
       icon: 'burst',
-      onPress: () => this.props.SModeChange(),
+      onPress: () => this.props.SModeChange()
     },
     {
       title: '目录',
       icon: 'list',
-      onPress: this.JmptoChapterList,
+      onPress: this.JmptoChapterList
     },
     {
       title: '缓存',
       icon: 'download',
-      onPress: () => this.DoCache(),
+      onPress: () => this.DoCache()
     },
     {
       title: '设置',
       icon: 'widget',
-      onPress: () => alert('coming soon...'),
-    },
+      onPress: () => Alert.alert('coming soon...')
+    }
   ];
 
   renderFooter = () => {
@@ -181,10 +182,10 @@ export default class Navigat extends React.PureComponent<INavigateProps> {
           {
             height: this.state.show.interpolate({
               inputRange: [0, 1],
-              outputRange: BOTTOM_OUTPUT,
+              outputRange: BOTTOM_OUTPUT
             }),
-            paddingBottom: judgeIphoneX ? 20 : 0,
-          },
+            paddingBottom: judgeIphoneX ? 20 : 0
+          }
         ]}
       >
         {this.footerOptMap.map(({ title, icon, onPress }, index) => (
@@ -204,12 +205,12 @@ export default class Navigat extends React.PureComponent<INavigateProps> {
           width,
           zIndex: this.state.show.interpolate({
             inputRange: [0, 1],
-            outputRange: BAR_OUTPUT,
+            outputRange: BAR_OUTPUT
           }),
           opacity: this.state.show.interpolate({
             inputRange: [0, 1],
-            outputRange: [1, 0],
-          }),
+            outputRange: [1, 0]
+          })
         }}
       >
         <StatusBar

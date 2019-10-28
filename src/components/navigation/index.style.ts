@@ -1,15 +1,8 @@
-import { Dimensions, TextProps } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 const { width } = Dimensions.get('window');
 
-interface IStyleProps {
-  footerItems: {
-    [key: string]: TextProps;
-  },
-  [key: string]: TextProps;
-}
-
-export default {
-  originText: {
+export default StyleSheet.create({
+  origin: {
     padding: 12,
     color: '#ddd',
     fontSize: 17,
@@ -27,20 +20,15 @@ export default {
     left: 0,
     flexDirection: 'row'
   },
-  footerItems: {
-    container: {
-      flex: 1,
-      flexDirection: 'column',
-      height: '100%',
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-    text: {
-      color: '#aaa',
-      fontSize: 12
-    }
+  item: {
+    flex: 1,
+    flexDirection: 'column',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  fontCenter: {
-    textAlign: 'center'
+  text: {
+    color: '#aaa',
+    fontSize: 12
   }
-} as IStyleProps;
+});
