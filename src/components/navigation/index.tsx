@@ -54,11 +54,11 @@ export default class Navigat extends React.PureComponent<INavigateProps> {
     barShow: false
   };
 
-  DoCache = () => {
+  doCache = () => {
     this.props.showAlertSelected();
   };
 
-  JmptoChapterList = () => {
+  jmptoChapterList = () => {
     this.props.navigation.navigate('ChaL', {
       url: this.props.currentBook.url,
       name: this.props.currentBook.bookName,
@@ -89,7 +89,7 @@ export default class Navigat extends React.PureComponent<INavigateProps> {
     });
   };
 
-  JmptoChooseSource = () => {
+  jmptoChooseSource = () => {
     this.props.navigation.navigate('Origin', {
       book: this.props.currentBook,
       reLoad: (needRefresh: boolean) => this.props.reLoad(needRefresh),
@@ -129,7 +129,7 @@ export default class Navigat extends React.PureComponent<INavigateProps> {
           <Text
             style={styles.origin}
             onPress={() => {
-              this.JmptoChooseSource();
+              this.jmptoChooseSource();
             }}
           >
             换源
@@ -160,12 +160,12 @@ export default class Navigat extends React.PureComponent<INavigateProps> {
     {
       title: '目录',
       icon: 'list',
-      onPress: this.JmptoChapterList
+      onPress: this.jmptoChapterList
     },
     {
       title: '缓存',
       icon: 'download',
-      onPress: () => this.DoCache()
+      onPress: () => this.doCache()
     },
     {
       title: '设置',
